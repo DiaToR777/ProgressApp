@@ -17,6 +17,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using ProgressApp.ViewModels;
 
 namespace ProgressApp
 {
@@ -28,22 +29,9 @@ namespace ProgressApp
         public MainWindow()
         {
             InitializeComponent();
-            MainContent.Content = new TodayView();
+
+            DataContext = new MainViewModel();
         }
 
-        private void Today_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new TodayView();
-        }
-
-        private void Table_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new TableView();
-        }
-
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            MainContent.Content = new SettingsView();
-        }
     }
 }

@@ -1,28 +1,46 @@
 ﻿<Window x:Class="ProgressApp.MainWindow"
+        xmlns:conv="clr-namespace:ProgressApp.Converters"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProgressApp"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="ProgressApp"
+        Height="600"
+        Width="900">
+    <Window.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+
+
     <Grid>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="160"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-
+        <Grid.ColumnDefinitions>
             <!-- Левая панель -->
-            <StackPanel Grid.Column="0" Background="#1e1e1e">
-                <Button Content="Сегодня" Click="Today_Click"/>
-                <Button Content="Таблица" Click="Table_Click"/>
-                <Button Content="Настройки" Click="Settings_Click"/>
-            </StackPanel>
-
+            <ColumnDefinition Width="160"/>
             <!-- Контент -->
-            <ContentControl x:Name="MainContent" Grid.Column="1"/>
-        </Grid>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
+        <!-- Навигация -->
+        <StackPanel Grid.Column="0"
+                    Background="#1e1e1e"
+                    Visibility="{Binding IsNavigationVisible,
+                                         Converter={StaticResource BoolToVisibilityConverter}}">
+
+            <Button Content="Сегодня"
+                    Margin="10"
+                    Command="{Binding ShowTodayCommand}"/>
+
+            <Button Content="Таблица"
+                    Margin="10"
+                    Command="{Binding ShowTableCommand}"/>
+
+            <Button Content="Настройки"
+                    Margin="10"
+                    Command="{Binding ShowSettingsCommand}"/>
+        </StackPanel>
+
+        <!-- Контент -->
+        <ContentControl Grid.Column="1"
+                        Content="{Binding CurrentView}"
+                        Margin="10"/>
     </Grid>
 </Window>
