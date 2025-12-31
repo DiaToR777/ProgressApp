@@ -66,31 +66,19 @@ namespace ProgressApp.Data
         // Метод для ініціалізації БД
         public void Initialize()
         {
+
+            if (!Settings.Any())
+            {
+                Settings.AddRange(
+                    new AppSettings { Key = "Username"},
+                    new AppSettings { Key = "Goal"}
+                );
+                SaveChanges();
+            }
             // Створює БД якщо не існує
             Database.EnsureCreated();
 
             // Додаємо початкові налаштування якщо їх немає
-            if (!Settings.Any())
-            {
-                Settings.AddRange(
-                    new AppSettings
-                    {
-                        Key = SettingsKeys.StartDate,
-                        Value = DateTime.Now.ToString("yyyy-MM-dd")
-                    },
-                    new AppSettings
-                    {
-                        Key = SettingsKeys.Username,
-                        Value = "Користувач"
-                    },
-                    new AppSettings
-                    {
-                        Key = SettingsKeys.Goal,
-                        Value = "Стати кращою версією себе"
-                    }
-                );
-                SaveChanges();
-            }
         }
     }
 }

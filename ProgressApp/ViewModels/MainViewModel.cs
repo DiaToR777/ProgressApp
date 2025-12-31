@@ -1,4 +1,6 @@
-﻿using ProgressApp.Views.Settings;
+﻿using ProgressApp.Services;
+using ProgressApp.Views.InitialSetup;
+using ProgressApp.Views.Settings;
 using ProgressApp.Views.Table;
 using ProgressApp.Views.Today;
 using System;
@@ -14,6 +16,7 @@ namespace ProgressApp.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        private readonly SettingsService _settingsService;
         private object? _currentView;
         private bool _isNavigationVisible = true;
 
@@ -43,18 +46,50 @@ namespace ProgressApp.ViewModels
 
         public MainViewModel()
         {
+            _settingsService = new SettingsService();
+
+            if (_settingsService.IsFirstRun())
+            {
+                ShowInitialsSetup();
+            }
+            else
+            {
+                ShowToday();
+            }
+
+
             ShowTodayCommand = new RelayCommand(_ => ShowToday());
             ShowTableCommand = new RelayCommand(_ => ShowTable());
             ShowSettingsCommand = new RelayCommand(_ => ShowSettings());
 
-            // стартовый экран
-            CurrentView = new TodayView();
-        }
 
+            //стартовый экран
+            //CurrentView = new TodayView();
+        }
+        private void ShowInitialsSetup()
+        {
+            IsNavigationVisible = false;
+
+            var view = new InitialSetupView();
+            CurrentView = view;
+            view.Completed = IsCompleted; 
+
+            OnPropertyChanged(nameof(CurrentView));
+            OnPropertyChanged(nameof(IsNavigationVisible));
+
+        }
+        private void IsCompleted()
+        {
+            IsNavigationVisible = true;
+            ShowToday();
+        }
         private void ShowToday()
         {
             CurrentView = new TodayView();
             IsNavigationVisible = true;
+
+            OnPropertyChanged(nameof(CurrentView));
+            OnPropertyChanged(nameof(IsNavigationVisible));
         }
 
         private void ShowTable()
