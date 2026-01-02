@@ -1,4 +1,5 @@
 ﻿using ProgressApp.Services;
+using ProgressApp.ViewModels.InitialSetup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,26 +22,12 @@ namespace ProgressApp.Views.InitialSetup
     public partial class InitialSetupView : UserControl
     {
         public Action? Completed;
-
-        private readonly SettingsService _settings = new();
-
         public InitialSetupView()
         {
             InitializeComponent();
+            DataContext = new InitialSetupViewModel();
         }
 
-        private void Start_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(txtUsername.Text))
-                return;
-
-            _settings.SaveInitial(
-                txtUsername.Text,
-                txtGoal.Text
-            );
-
-            Completed?.Invoke();
-        }
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using ProgressApp.Services;
+using ProgressApp.ViewModels.InitialSetup;
 using ProgressApp.Views.InitialSetup;
 using ProgressApp.Views.Settings;
 using ProgressApp.Views.Table;
@@ -62,17 +63,20 @@ namespace ProgressApp.ViewModels
             ShowTableCommand = new RelayCommand(_ => ShowTable());
             ShowSettingsCommand = new RelayCommand(_ => ShowSettings());
 
-
-            //стартовый экран
-            //CurrentView = new TodayView();
         }
         private void ShowInitialsSetup()
         {
+            var vm = new InitialSetupViewModel();
+
+            vm.Completed = () =>
+            {
+                IsNavigationVisible = true;
+                ShowToday();
+            };
+
+            CurrentView = new InitialSetupView { DataContext = vm };
             IsNavigationVisible = false;
 
-            var view = new InitialSetupView();
-            CurrentView = view;
-            view.Completed = IsCompleted; 
 
             OnPropertyChanged(nameof(CurrentView));
             OnPropertyChanged(nameof(IsNavigationVisible));
