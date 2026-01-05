@@ -17,6 +17,7 @@ namespace ProgressApp.Views.Table
         public TableView()
         {
             InitializeComponent();
+
             _service = new JournalService();
             DataContext = this;
             LoadTable();
