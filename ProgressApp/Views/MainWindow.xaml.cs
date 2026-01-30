@@ -8,8 +8,6 @@ namespace ProgressApp
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext = new MainViewModel();
         }
     }
 }

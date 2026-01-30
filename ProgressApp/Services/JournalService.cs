@@ -14,16 +14,9 @@ namespace ProgressApp.Services
     {
         private readonly ProgressDbContext _context;
 
-        public JournalService()
+        public JournalService(ProgressDbContext context)
         {
-
-            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            var folder = Path.Combine(desktop, "ProgressApp");
-            Directory.CreateDirectory(folder);
-
-            _context = new ProgressDbContext(Path.Combine(folder, "progress.db"));
-            //_context.Initialize();
-
+            _context = context;
         }
 
         public JournalEntry? GetToday()

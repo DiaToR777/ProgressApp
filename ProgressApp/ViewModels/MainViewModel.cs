@@ -1,5 +1,7 @@
-﻿using ProgressApp.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ProgressApp.Services;
 using ProgressApp.ViewModels.InitialSetup;
+using ProgressApp.ViewModels.Today;
 using ProgressApp.Views.InitialSetup;
 using ProgressApp.Views.Settings;
 using ProgressApp.Views.Table;
@@ -17,7 +19,9 @@ namespace ProgressApp.ViewModels
 {
     public class MainViewModel : INotifyPropertyChanged
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly SettingsService _settingsService;
+
         private object? _currentView;
         private bool _isNavigationVisible = true;
 
@@ -45,9 +49,10 @@ namespace ProgressApp.ViewModels
         public ICommand ShowTableCommand { get; }
         public ICommand ShowSettingsCommand { get; }
 
-        public MainViewModel()
+        public MainViewModel(SettingsService settings, IServiceProvider serviceProvider)
         {
-            _settingsService = new SettingsService();
+            _settingsService = settings;
+            _serviceProvider = serviceProvider;
 
             if (_settingsService.IsFirstRun())
             {
@@ -66,8 +71,7 @@ namespace ProgressApp.ViewModels
         }
         private void ShowInitialsSetup()
         {
-            var vm = new InitialSetupViewModel();
-
+            var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
             vm.Completed = () =>
             {
                 IsNavigationVisible = true;
@@ -89,16 +93,14 @@ namespace ProgressApp.ViewModels
         }
         private void ShowToday()
         {
-            CurrentView = new TodayView();
-            IsNavigationVisible = true;
-
-            OnPropertyChanged(nameof(CurrentView));
-            OnPropertyChanged(nameof(IsNavigationVisible));
+            var vm = _serviceProvider.GetRequiredService<TodayViewModel>();
+            CurrentView = new TodayView { DataContext = vm }; // Обов'язково так!
         }
-
         private void ShowTable()
         {
-            CurrentView = new TableView();
+            var service = _serviceProvider.GetRequiredService<JournalService>();
+
+            CurrentView = new TableView(service);
             IsNavigationVisible = true;
         }
 

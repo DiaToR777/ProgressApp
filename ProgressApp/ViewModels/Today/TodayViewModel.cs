@@ -1,5 +1,4 @@
-﻿using ProgressApp.Model.Journal;
-using ProgressApp.Services;
+﻿using ProgressApp.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,7 +29,7 @@ namespace ProgressApp.ViewModels.Today
             get => _selectedResult;
             set { _selectedResult = value; OnPropertyChanged(); }
         }
-        public IEnumerable<DayResult> AllResults => (IEnumerable<DayResult>)Enum.GetValues(typeof(DayResult));
+        public Array AllResults => Enum.GetValues(typeof(DayResult));
         public RelayCommand SaveCommand { get; }
         private void LoadToday()
         {
@@ -47,9 +46,9 @@ namespace ProgressApp.ViewModels.Today
             }
         }
 
-        public TodayViewModel()
+        public TodayViewModel(JournalService service)
         {
-            _service = new JournalService();
+            _service = service;
             SaveCommand = new RelayCommand(SaveEntry);
 
             LoadToday(); // Загружаем данные при старте

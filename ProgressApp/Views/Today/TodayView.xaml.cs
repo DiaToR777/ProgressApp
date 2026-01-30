@@ -8,7 +8,6 @@ namespace ProgressApp.Views.Today
         public TodayView()
         {
             InitializeComponent();
-            DataContext = new TodayViewModel();
         }
     }
 }

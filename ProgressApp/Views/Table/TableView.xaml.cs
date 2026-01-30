@@ -14,11 +14,11 @@ namespace ProgressApp.Views.Table
     {
         private JournalService _service;
 
-        public TableView()
+        public TableView(JournalService service)
         {
             InitializeComponent();
 
-            _service = new JournalService();
+            _service = service;
             DataContext = this;
             LoadTable();
         }

@@ -12,14 +12,9 @@ namespace ProgressApp.Services
     public class SettingsService
     {
         private ProgressDbContext _context;
-        public SettingsService()
+        public SettingsService(ProgressDbContext context)
         {
-            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            var folder = Path.Combine(desktop, "ProgressApp");
-            Directory.CreateDirectory(folder);
-
-            _context = new ProgressDbContext(Path.Combine(folder, "progress.db"));
-            _context.Initialize();
+            _context = context;
         }
 
         public bool IsFirstRun()

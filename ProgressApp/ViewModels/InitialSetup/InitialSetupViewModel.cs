@@ -14,7 +14,7 @@ namespace ProgressApp.ViewModels.InitialSetup
 {
     public class InitialSetupViewModel : INotifyPropertyChanged
     {
-        private readonly SettingsService _settings = new();
+        private readonly SettingsService _settings;
 
 
         private string _username = string.Empty;
@@ -42,8 +42,9 @@ namespace ProgressApp.ViewModels.InitialSetup
 
         public Action? Completed { get; set; }
 
-        public InitialSetupViewModel()
+        public InitialSetupViewModel(SettingsService settings)
         {
+            _settings = settings;
             FinishCommand = new RelayCommand(_ => Finish());
         }
 

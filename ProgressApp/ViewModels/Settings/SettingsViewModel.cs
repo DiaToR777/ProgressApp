@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProgressApp.Views.Settings
+namespace ProgressApp.ViewModels.Settings
 {
-    internal class SettingsView
+    public class SettingsViewModel
     {
     }
 }
