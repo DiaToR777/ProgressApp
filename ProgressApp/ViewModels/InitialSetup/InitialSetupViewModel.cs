@@ -14,7 +14,7 @@ namespace ProgressApp.ViewModels.InitialSetup
 {
     public class InitialSetupViewModel : INotifyPropertyChanged
     {
-        private readonly SettingsService _settings;
+        private readonly SettingsService _settingsService;
 
 
         private string _username = string.Empty;
@@ -44,14 +44,23 @@ namespace ProgressApp.ViewModels.InitialSetup
 
         public InitialSetupViewModel(SettingsService settings)
         {
-            _settings = settings;
+            _settingsService = settings;
             FinishCommand = new RelayCommand(_ => Finish());
         }
 
         private void Finish()
         {
-            _settings.SaveInitial(Username, Goal);
-            Completed?.Invoke();
+            try
+            {
+                _settingsService.SaveSettings(Username, Goal);
+                MessageBox.Show("Збережено!");
+                Completed?.Invoke();
+            }
+            catch (ArgumentException ex) // Ловимо тільки наші "логічні" помилки
+            {
+                MessageBox.Show(ex.Message, "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

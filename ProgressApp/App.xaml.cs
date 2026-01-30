@@ -4,6 +4,7 @@ using ProgressApp.Data;
 using ProgressApp.Services;
 using ProgressApp.ViewModels;
 using ProgressApp.ViewModels.InitialSetup;
+using ProgressApp.ViewModels.Settings;
 using ProgressApp.ViewModels.Table;
 using ProgressApp.ViewModels.Today;
 using System.Configuration;
@@ -44,6 +45,7 @@ namespace ProgressApp
             services.AddTransient<InitialSetupViewModel>();// Transient, бо дані мають оновлюватися при відкритті
             services.AddSingleton<MainViewModel>();
             services.AddTransient<TodayViewModel>();
+            services.AddTransient<SettingsViewModel>();
             _serviceProvider = services.BuildServiceProvider();
         }
         protected override void OnStartup(StartupEventArgs e)

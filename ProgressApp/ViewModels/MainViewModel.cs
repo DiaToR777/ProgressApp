@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Services;
 using ProgressApp.ViewModels.InitialSetup;
+using ProgressApp.ViewModels.Settings;
 using ProgressApp.ViewModels.Table;
 using ProgressApp.ViewModels.Today;
 using ProgressApp.Views.InitialSetup;
@@ -110,10 +111,10 @@ namespace ProgressApp.ViewModels
 
         private void ShowSettings()
         {
-            CurrentView = new SettingsView();
+            var vm = _serviceProvider.GetRequiredService<SettingsViewModel>();
+            CurrentView = new SettingsView { DataContext = vm };
             IsNavigationVisible = true;
         }
-
         public event PropertyChangedEventHandler? PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string? name = null)

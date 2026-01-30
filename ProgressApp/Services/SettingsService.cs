@@ -23,13 +23,24 @@ namespace ProgressApp.Services
             return usernameSetting == null || string.IsNullOrWhiteSpace(usernameSetting.Value);
         }
 
-        public void SaveInitial(string username, string goal)
-        {
-            var user = _context.Settings.First(s => s.Key == SettingsKeys.Username);
-            user.Value = username;
+        public string GetUserName()
+    => _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Username)?.Value ?? "";
+        public string GetGoal()
+    => _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Goal)?.Value ?? "";
 
-            var g = _context.Settings.First(s => s.Key == SettingsKeys.Goal);
-            g.Value = goal;
+        public void SaveSettings(string username, string goal)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+                throw new ArgumentException("Ім'я не може бути порожнім!");
+
+            if (string.IsNullOrWhiteSpace(goal))
+                throw new ArgumentException("Ціль має бути заповнена!");
+
+            var u = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Username);
+            if (u != null) u.Value = username;
+
+            var g = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Goal);
+            if (g != null) g.Value = goal;
 
             _context.SaveChanges();
         }
