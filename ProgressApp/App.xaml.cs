@@ -4,6 +4,7 @@ using ProgressApp.Data;
 using ProgressApp.Services;
 using ProgressApp.ViewModels;
 using ProgressApp.ViewModels.InitialSetup;
+using ProgressApp.ViewModels.Table;
 using ProgressApp.ViewModels.Today;
 using System.Configuration;
 using System.Data;
@@ -39,6 +40,7 @@ namespace ProgressApp
             services.AddSingleton<JournalService>();
 
             // 4. Реєстрація ViewModels
+            services.AddTransient<TableViewModel>();
             services.AddTransient<InitialSetupViewModel>();// Transient, бо дані мають оновлюватися при відкритті
             services.AddSingleton<MainViewModel>();
             services.AddTransient<TodayViewModel>();

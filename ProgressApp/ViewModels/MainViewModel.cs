@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Services;
 using ProgressApp.ViewModels.InitialSetup;
+using ProgressApp.ViewModels.Table;
 using ProgressApp.ViewModels.Today;
 using ProgressApp.Views.InitialSetup;
 using ProgressApp.Views.Settings;
@@ -35,6 +36,16 @@ namespace ProgressApp.ViewModels
             }
         }
 
+        private void ShowTable()
+        {
+            // 1. Беремо саме ViewModel (вона вже містить у собі логіку та дані)
+            var vm = _serviceProvider.GetRequiredService<TableViewModel>();
+
+            // 2. Створюємо View і передаємо їй цю модель як контекст
+            CurrentView = new TableView { DataContext = vm };
+
+            IsNavigationVisible = true;
+        }
         public bool IsNavigationVisible
         {
             get => _isNavigationVisible;
@@ -95,13 +106,6 @@ namespace ProgressApp.ViewModels
         {
             var vm = _serviceProvider.GetRequiredService<TodayViewModel>();
             CurrentView = new TodayView { DataContext = vm }; // Обов'язково так!
-        }
-        private void ShowTable()
-        {
-            var service = _serviceProvider.GetRequiredService<JournalService>();
-
-            CurrentView = new TableView(service);
-            IsNavigationVisible = true;
         }
 
         private void ShowSettings()
