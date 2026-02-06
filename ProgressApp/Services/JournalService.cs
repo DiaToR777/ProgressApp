@@ -1,12 +1,6 @@
 ﻿using ProgressApp.Data;
 using ProgressApp.Model.Journal;
 using ProgressApp.Model.Settings;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProgressApp.Services
 {
@@ -61,7 +55,7 @@ namespace ProgressApp.Services
                 if (entry.Result == DayResult.Success)
                     streak++;
                 else
-                    streak = 0; // сброс стрика при Relapse
+                    streak = 0; 
             }
 
             return streak;

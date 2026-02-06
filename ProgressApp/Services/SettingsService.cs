@@ -1,12 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProgressApp.Data;
+﻿using ProgressApp.Data;
 using ProgressApp.Model.Settings;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 namespace ProgressApp.Services
 {
     public class SettingsService
@@ -28,7 +22,17 @@ namespace ProgressApp.Services
         public string GetGoal()
     => _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Goal)?.Value ?? "";
 
-        public void SaveSettings(string username, string goal)
+        public AppTheme GetTheme()
+        {
+            var themeValue = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Theme)?.Value;
+
+            //if (string.IsNullOrEmpty(themeValue))
+            //    return AppTheme.Light;
+
+            return Enum.TryParse(themeValue, out AppTheme result) ? result : AppTheme.Light;
+        }
+            
+        public void SaveSettings(string username, string goal, AppTheme theme)
         {
             if (string.IsNullOrWhiteSpace(username))
                 throw new ArgumentException("Ім'я не може бути порожнім!");
@@ -42,7 +46,12 @@ namespace ProgressApp.Services
             var g = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Goal);
             if (g != null) g.Value = goal;
 
+            var t = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Theme);
+            if (t != null) t.Value = theme.ToString();
+
             _context.SaveChanges();
         }
+
     }
+
 }

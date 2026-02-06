@@ -8,13 +8,8 @@ using ProgressApp.Views.InitialSetup;
 using ProgressApp.Views.Settings;
 using ProgressApp.Views.Table;
 using ProgressApp.Views.Today;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace ProgressApp.ViewModels
@@ -39,10 +34,8 @@ namespace ProgressApp.ViewModels
 
         private void ShowTable()
         {
-            // 1. Беремо саме ViewModel (вона вже містить у собі логіку та дані)
             var vm = _serviceProvider.GetRequiredService<TableViewModel>();
 
-            // 2. Створюємо View і передаємо їй цю модель як контекст
             CurrentView = new TableView { DataContext = vm };
 
             IsNavigationVisible = true;
@@ -106,7 +99,7 @@ namespace ProgressApp.ViewModels
         private void ShowToday()
         {
             var vm = _serviceProvider.GetRequiredService<TodayViewModel>();
-            CurrentView = new TodayView { DataContext = vm }; // Обов'язково так!
+            CurrentView = new TodayView { DataContext = vm };
         }
 
         private void ShowSettings()

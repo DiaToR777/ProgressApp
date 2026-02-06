@@ -52,7 +52,7 @@ namespace ProgressApp.ViewModels.InitialSetup
         {
             try
             {
-                _settingsService.SaveSettings(Username, Goal);
+                _settingsService.SaveSettings(Username, Goal, AppTheme.Light);
                 MessageBox.Show("Збережено!");
                 Completed?.Invoke();
             }

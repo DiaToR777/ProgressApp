@@ -1,11 +1,7 @@
 ﻿using ProgressApp.Services;
-using System;
-using System.Collections.Generic;
+using ProgressApp.Themes;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,8 +12,10 @@ namespace ProgressApp.ViewModels.Settings
         private readonly SettingsService _settingsService;
         private string _username;
         private string _goal;
+        private AppTheme _selectedTheme;
 
-        public string Username // Має збігатися з Binding у XAML
+
+        public string Username
         {
             get => _username;
             set { _username = value; OnPropertyChanged(); }
@@ -27,33 +25,54 @@ namespace ProgressApp.ViewModels.Settings
             get => _goal;
             set { _goal = value; OnPropertyChanged(); }
         }
+
+        public AppTheme SelectedTheme
+        {
+            get => _selectedTheme;
+            set
+            {
+                if (_selectedTheme == value) return;
+
+                _selectedTheme = value;
+                
+                OnPropertyChanged();
+            }
+        }
+
+        public Array AllThemes => Enum.GetValues(typeof(AppTheme));
+
         public ICommand SaveSettingsCommand { get; }
         public SettingsViewModel(SettingsService settingsService)
         {
             _settingsService = settingsService;
 
-            // Завантажуємо дані при старті
             Username = _settingsService.GetUserName();
             Goal = _settingsService.GetGoal();
+            SelectedTheme = _settingsService.GetTheme();
 
             SaveSettingsCommand = new RelayCommand(_ =>
             {
                 try
                 {
-                    _settingsService.SaveSettings(Username, Goal);
+                    _settingsService.SaveSettings(Username, Goal, SelectedTheme);
+                    ThemeManager.ApplyTheme(SelectedTheme);
                     MessageBox.Show("Налаштування збережено!");
                 }
-                catch (ArgumentException ex) // Ловимо тільки наші "логічні" помилки
+                catch (ArgumentException ex) 
                 {
                     MessageBox.Show(ex.Message, "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
 
-                    // Відкочуємо значення, щоб у UI було те, що реально лежить в базі
                     Username = _settingsService.GetUserName();
                     Goal = _settingsService.GetGoal();
                     return;
                 }
             });
+
+            OnPropertyChanged(nameof(Username));
+            OnPropertyChanged(nameof(Goal));
+            OnPropertyChanged(nameof(SelectedTheme));
         }
+        
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

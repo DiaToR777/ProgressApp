@@ -1,11 +1,6 @@
 ﻿using ProgressApp.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace ProgressApp.ViewModels.Today
@@ -51,7 +46,7 @@ namespace ProgressApp.ViewModels.Today
             _service = service;
             SaveCommand = new RelayCommand(SaveEntry);
 
-            LoadToday(); // Загружаем данные при старте
+            LoadToday();
         }
         private void SaveEntry(object? obj)
         {
