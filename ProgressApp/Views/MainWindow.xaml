@@ -5,7 +5,8 @@
         xmlns:local="clr-namespace:ProgressApp"
         Title="ProgressApp"
         Height="600"
-        Width="900">
+        Width="900"
+        Background="{DynamicResource WindowBackground}">
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
     </Window.Resources>
@@ -20,22 +21,24 @@
         </Grid.ColumnDefinitions>
 
         <!-- Навигация -->
-        <StackPanel Grid.Column="0"
-                    Background="#1e1e1e"
+        <StackPanel Grid.Column="0" Background="{DynamicResource ControlBackground}"
                     Visibility="{Binding IsNavigationVisible,
                                          Converter={StaticResource BoolToVisibilityConverter}}">
 
             <Button Content="Сегодня"
                     Margin="10"
-                    Command="{Binding ShowTodayCommand}"/>
+                    Command="{Binding ShowTodayCommand}"
+                    />
 
             <Button Content="Таблица"
                     Margin="10"
-                    Command="{Binding ShowTableCommand}"/>
+                    Command="{Binding ShowTableCommand}"
+                    />
 
             <Button Content="Настройки"
                     Margin="10"
-                    Command="{Binding ShowSettingsCommand}"/>
+                    Command="{Binding ShowSettingsCommand}"
+                    />
         </StackPanel>
 
         <!-- Контент -->

@@ -8,6 +8,126 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/DarkTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            </Style>
+
+            <Style TargetType="ComboBox">
+                <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="ComboBox">
+                            <Grid>
+                                <ToggleButton x:Name="ToggleButton" 
+                                  Background="{TemplateBinding Background}"
+                                  BorderBrush="{TemplateBinding BorderBrush}"
+                                  BorderThickness="{TemplateBinding BorderThickness}"
+                                  Grid.ColumnSpan="2"
+                                  Focusable="false"
+                                  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                  ClickMode="Press">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border x:Name="Border" 
+                                        Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                        CornerRadius="2">
+                                                <Path x:Name="Arrow" 
+                                          Fill="{DynamicResource PrimaryText}" 
+                                          HorizontalAlignment="Right" 
+                                          VerticalAlignment="Center" 
+                                          Margin="0,0,8,0" 
+                                          Data="M 0 0 L 4 4 L 8 0 Z" />
+                                            </Border>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+
+                                <ContentPresenter Name="ContentSite" IsHitTestVisible="False" 
+                                      Content="{TemplateBinding SelectionBoxItem}"
+                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                      ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                      Margin="8,3,23,3" 
+                                      VerticalAlignment="Center" 
+                                      HorizontalAlignment="Left" />
+
+                                <Popup Name="Popup" Placement="Bottom" 
+                           IsOpen="{TemplateBinding IsDropDownOpen}" 
+                           AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                                    <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <Border x:Name="DropDownBorder" 
+                                    Background="{DynamicResource ControlBackground}" 
+                                    BorderThickness="1" 
+                                    BorderBrush="{DynamicResource AccentColor}"/>
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            
+            <Style TargetType="Label">
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+            </Style>
+
+            <Style TargetType="TextBox">
+                <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
+                <Setter Property="Padding" Value="5"/>
+            </Style>
+
+            <Style TargetType="DataGrid">
+                <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+                <Setter Property="RowBackground" Value="{DynamicResource ControlBackground}"/>
+                <Setter Property="AlternatingRowBackground" Value="#252525"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
+                <Setter Property="HorizontalGridLinesBrush" Value="#333333"/>
+                <Setter Property="VerticalGridLinesBrush" Value="#333333"/>
+            </Style>
+            
+            <Style TargetType="Button" x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}">
+                <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
+                <Setter Property="BorderBrush" Value="Transparent" />
+            </Style>
+
+            <Style TargetType="DataGridRowHeader">
+                <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />
+            </Style>
+            
+            <Style TargetType="DataGridCell">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
+
+            <Style TargetType="DataGridColumnHeader">
+                <Setter Property="Background" Value="#2D2D2D"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
+                <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
+                <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="8,4"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

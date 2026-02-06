@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:ProgressApp.ViewModels.Today"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance Type=vm:TodayViewModel}"> 
+             d:DataContext="{d:DesignInstance Type=vm:TodayViewModel}"
+             > 
     
     <StackPanel Margin="20">
 		<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
@@ -13,21 +14,24 @@
             <TextBlock Text="{Binding CurrentDate}"
 					   Margin="10,7,0,0"
 					   FontSize="14"
-					   Foreground="Gray"/>
+					   />
 		</StackPanel>
 
 		<Label Content="Описание дня:"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                  Height="120"
-                 AcceptsReturn="True"/>
+                 AcceptsReturn="True"
+                 />
 
         <Label Content="Результат:"/>
         <ComboBox ItemsSource="{Binding AllResults}" 
           SelectedItem="{Binding SelectedResult}" 
-          Margin="0,0,0,10"/>
+          Margin="0,0,0,10"
+                  />
 
         <Button Content="Сохранить"
                 Margin="0,10"
-                Command="{Binding SaveCommand}"/>
+                Command="{Binding SaveCommand}"
+                />
     </StackPanel>
 </UserControl>

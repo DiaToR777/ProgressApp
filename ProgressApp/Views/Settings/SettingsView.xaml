@@ -28,12 +28,10 @@
 
 			<Separator Margin="0,10"/>
 
-			<TextBlock Text="Управление данными" FontSize="16" FontWeight="SemiBold" Margin="0,10,0,10" Foreground="Gray"/>
+			<TextBlock Text="Управление данными" FontSize="16" FontWeight="SemiBold" Margin="0,10,0,10"/>
 
 			<Button Content="Сохранить изменения"
                     Command="{Binding SaveSettingsCommand}"
-                    Background="#2d2d2d"
-                    Foreground="White"
                     Padding="10,5"/>
 
 			<Button Content="Сбросить все данные (Опасно!)"
@@ -45,7 +43,6 @@
 
 			<TextBlock Text="Версия приложения: 1.0.0"
                        Margin="0,30,0,0"
-                       Foreground="LightGray"
                        FontSize="10"
                        HorizontalAlignment="Center"/>
 		</StackPanel>
