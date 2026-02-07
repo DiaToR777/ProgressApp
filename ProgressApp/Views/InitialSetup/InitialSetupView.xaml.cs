@@ -1,6 +1,4 @@
-﻿using ProgressApp.Services;
-using ProgressApp.ViewModels.InitialSetup;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace ProgressApp.Views.InitialSetup
 {

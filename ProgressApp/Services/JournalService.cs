@@ -1,6 +1,5 @@
 ﻿using ProgressApp.Data;
 using ProgressApp.Model.Journal;
-using ProgressApp.Model.Settings;
 
 namespace ProgressApp.Services
 {
@@ -49,20 +48,20 @@ namespace ProgressApp.Services
                            .ToList();
         }
 
-        public int GetStreak(List<JournalEntry> entries)
-        {
-            int streak = 0;
+        //public int GetStreak(List<JournalEntry> entries)
+        //{
+        //    int streak = 0;
 
-            foreach (var entry in entries)
-            {
-                if (entry.Result == DayResult.Success)
-                    streak++;
-                else
-                    streak = 0; 
-            }
+        //    foreach (var entry in entries)
+        //    {
+        //        if (entry.Result == DayResult.Success)
+        //            streak++;
+        //        else
+        //            streak = 0; 
+        //    }
 
-            return streak;
-        }
+        //    return streak;
+        //}
     }
 }
 

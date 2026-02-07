@@ -1,13 +1,8 @@
 ﻿using ProgressApp.Model.Journal;
 using ProgressApp.Services;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProgressApp.ViewModels.Table
 {
@@ -15,9 +10,7 @@ namespace ProgressApp.ViewModels.Table
     {
         private readonly JournalService _service;
         private JournalEntry? _selectedEntry;
-
-        // Список записів для таблиці
-        public ObservableCollection<JournalEntry> Entries { get; set; }
+        public ObservableCollection<JournalEntry> Entries { get; }
 
         public JournalEntry? SelectedEntry
         {
@@ -27,7 +20,6 @@ namespace ProgressApp.ViewModels.Table
         public TableViewModel(JournalService service)
         {
             _service = service;
-            // Завантажуємо дані
             var data = _service.GetAllEntries().OrderByDescending(e => e.Date);
             Entries = new ObservableCollection<JournalEntry>(data);
         }

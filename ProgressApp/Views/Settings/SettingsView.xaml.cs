@@ -1,5 +1,4 @@
-﻿using ProgressApp.ViewModels.Settings;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace ProgressApp.Views.Settings;
 

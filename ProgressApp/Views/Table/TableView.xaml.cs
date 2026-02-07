@@ -1,12 +1,4 @@
-﻿using ProgressApp.Model.Journal;
-using ProgressApp.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace ProgressApp.Views.Table
 {
@@ -16,24 +8,5 @@ namespace ProgressApp.Views.Table
         {
             InitializeComponent();
         }
-
-        //private void LoadTable()
-        //{
-        //    dgJournal.ItemsSource = _service.GetAllEntries()
-        //         .OrderByDescending(e => e.Date)
-        //        .Select(e => new
-        //        {
-        //            Date = e.Date,
-        //            Result = e.Result switch
-        //            {
-        //                DayResult.Success => "✔",
-        //                DayResult.Relapse => "✖",
-        //                DayResult.PartialSuccess => "➖",
-        //                _ => ""
-        //            }
-        //        })
-        //        .ToList();
-
-        //}
     }
 }

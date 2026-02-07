@@ -91,11 +91,6 @@ namespace ProgressApp.ViewModels
             OnPropertyChanged(nameof(IsNavigationVisible));
 
         }
-        private void IsCompleted()
-        {
-            IsNavigationVisible = true;
-            ShowToday();
-        }
         private void ShowToday()
         {
             var vm = _serviceProvider.GetRequiredService<TodayViewModel>();

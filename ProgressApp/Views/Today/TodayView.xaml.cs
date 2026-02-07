@@ -1,5 +1,4 @@
-﻿using ProgressApp.ViewModels.Today;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace ProgressApp.Views.Today
 {

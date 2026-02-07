@@ -1,12 +1,6 @@
 ﻿using ProgressApp.Services;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -53,10 +47,9 @@ namespace ProgressApp.ViewModels.InitialSetup
             try
             {
                 _settingsService.SaveSettings(Username, Goal, AppTheme.Light);
-                MessageBox.Show("Збережено!");
                 Completed?.Invoke();
             }
-            catch (ArgumentException ex) // Ловимо тільки наші "логічні" помилки
+            catch (ArgumentException ex) 
             {
                 MessageBox.Show(ex.Message, "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;

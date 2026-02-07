@@ -27,10 +27,9 @@ namespace ProgressApp.Data
             });
 
             base.OnModelCreating(modelBuilder);
-        }        // Метод для ініціалізації БД
+        }        
         public void Initialize()
         {
-            // Використовуй Migrate(), щоб працювали міграції, а не просто створення файлу
             Database.Migrate();
 
             if (!Settings.Any())
