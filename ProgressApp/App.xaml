@@ -114,19 +114,48 @@
             </Style>
 
             <Style TargetType="DataGridColumnHeader">
-                <Setter Property="Background" Value="#2D2D2D"/>
+                <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
                 <Setter Property="Padding" Value="5"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
                 <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                
             </Style>
-
             <Style TargetType="Button">
                 <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Padding" Value="8,4"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="2"
+                        SnapsToDevicePixels="true">
+                                <ContentPresenter x:Name="contentPresenter" 
+                                      Focusable="False" 
+                                      HorizontalAlignment="Center" 
+                                      Margin="{TemplateBinding Padding}" 
+                                      VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource HoverBackground}"/>
+                                </Trigger>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter TargetName="border" Property="Background" Value="{DynamicResource DisabledBackground}"/>
+                                    <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource DisabledBackground}"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource DisabledForeground}"/>
+                                    <Setter Property="Opacity" Value="0.6"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
             </Style>
         </ResourceDictionary>
     </Application.Resources>

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Data;
 using ProgressApp.Services;
+using ProgressApp.Themes;
 using ProgressApp.ViewModels;
 using ProgressApp.ViewModels.InitialSetup;
 using ProgressApp.ViewModels.Settings;
@@ -55,12 +56,18 @@ namespace ProgressApp
             {
                 var db = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
                 db.Initialize();
+
+                var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
+
+                ThemeManager.ApplyTheme(settings.GetTheme());
+
             }
 
             var mainVM = _serviceProvider.GetRequiredService<MainViewModel>();
             var mainWindow = new MainWindow { DataContext = mainVM };
             mainWindow.Show();
         }
+
     }
 
 }

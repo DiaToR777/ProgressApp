@@ -26,8 +26,8 @@ namespace ProgressApp.Services
         {
             var themeValue = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Theme)?.Value;
 
-            //if (string.IsNullOrEmpty(themeValue))
-            //    return AppTheme.Light;
+            if (string.IsNullOrEmpty(themeValue))
+                return AppTheme.Light;
 
             return Enum.TryParse(themeValue, out AppTheme result) ? result : AppTheme.Light;
         }

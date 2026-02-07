@@ -4,4 +4,7 @@
     <SolidColorBrush x:Key="ControlBackground" Color="#FFFFFF"/>
     <SolidColorBrush x:Key="PrimaryText" Color="#121212"/>
     <SolidColorBrush x:Key="AccentColor" Color="#6200EE"/>
+    <SolidColorBrush x:Key="DisabledBackground" Color="#E0E0E0"/>
+    <SolidColorBrush x:Key="DisabledForeground" Color="#A0A0A0"/>
+    <SolidColorBrush x:Key="HoverBackground" Color="#E5E5E5"/>
 </ResourceDictionary>
