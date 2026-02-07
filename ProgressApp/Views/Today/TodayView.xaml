@@ -1,25 +1,37 @@
 ﻿<UserControl x:Class="ProgressApp.Views.Today.TodayView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:ProgressApp.ViewModels.Today"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:TodayViewModel}"
+             > 
+    
     <StackPanel Margin="20">
 		<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
 			<TextBlock Text="Сегодня" FontSize="22" FontWeight="Bold"/>
-			<TextBlock x:Name="txtDate"
+            <TextBlock Text="{Binding CurrentDate}"
 					   Margin="10,7,0,0"
 					   FontSize="14"
-					   Foreground="Gray"/>
+					   />
 		</StackPanel>
 
 		<Label Content="Описание дня:"/>
-        <TextBox x:Name="txtDescription"
+        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                  Height="120"
-                 AcceptsReturn="True"/>
+                 AcceptsReturn="True"
+                 />
 
         <Label Content="Результат:"/>
-        <ComboBox x:Name="cbResult"/>
+        <ComboBox ItemsSource="{Binding AllResults}" 
+          SelectedItem="{Binding SelectedResult}" 
+          Margin="0,0,0,10"
+                  />
 
         <Button Content="Сохранить"
                 Margin="0,10"
-                Click="Save_Click"/>
+                Command="{Binding SaveCommand}"
+                />
     </StackPanel>
 </UserControl>

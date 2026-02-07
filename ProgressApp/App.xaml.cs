@@ -1,5 +1,14 @@
-﻿using System.Configuration;
-using System.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ProgressApp.Data;
+using ProgressApp.Services;
+using ProgressApp.Themes;
+using ProgressApp.ViewModels;
+using ProgressApp.ViewModels.InitialSetup;
+using ProgressApp.ViewModels.Settings;
+using ProgressApp.ViewModels.Table;
+using ProgressApp.ViewModels.Today;
+using System.IO;
 using System.Windows;
 
 namespace ProgressApp
@@ -7,8 +16,55 @@ namespace ProgressApp
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
+    /// 
     public partial class App : Application
     {
+        public ServiceProvider _serviceProvider;
+
+        public App()
+        {
+            var services = new ServiceCollection();
+
+            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var folder = Path.Combine(appData, "ProgressApp");
+
+            // КРИТИЧНИЙ МОМЕНТ: Створюємо папку, якщо її немає
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+            var dbPath = Path.Combine(folder, "progress.db");
+
+            services.AddDbContext<ProgressDbContext>(options =>
+                options.UseSqlite($"Data Source={dbPath}"));
+
+            services.AddSingleton<SettingsService>();
+            services.AddSingleton<JournalService>();
+
+            services.AddTransient<TableViewModel>();
+            services.AddTransient<InitialSetupViewModel>();
+            services.AddSingleton<MainViewModel>();
+            services.AddTransient<TodayViewModel>();
+            services.AddTransient<SettingsViewModel>();
+            _serviceProvider = services.BuildServiceProvider();
+        }
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+                db.Initialize();
+
+                var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
+
+                ThemeManager.ApplyTheme(settings.GetTheme());
+            }
+
+            var mainVM = _serviceProvider.GetRequiredService<MainViewModel>();
+            var mainWindow = new MainWindow { DataContext = mainVM };
+            mainWindow.Show();
+        }
+
     }
 
 }

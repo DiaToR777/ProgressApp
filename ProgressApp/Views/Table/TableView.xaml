@@ -8,22 +8,18 @@
 		</Grid.ColumnDefinitions>
 
 		<!-- Таблица -->
-		<DataGrid x:Name="dgJournal"
-				  AutoGenerateColumns="False"
-				  IsReadOnly="True"
-				  SelectionMode="Single"
-				  SelectionChanged="Journal_SelectionChanged">
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Дата"
-									Binding="{Binding Date, StringFormat=dd.MM.yyyy}"
-									Width="120"/>
-				<DataGridTextColumn Header="Результат"
-									Binding="{Binding Result}"
-									Width="*"/>
-			</DataGrid.Columns>
-		</DataGrid>
-
-		<!-- Детали -->
+        <DataGrid ItemsSource="{Binding Entries}"
+          SelectedItem="{Binding SelectedEntry}"
+          AutoGenerateColumns="False"
+          IsReadOnly="True"
+          SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat=dd.MM.yyyy}" Width="120"/>
+                <DataGridTextColumn Header="Результат" Binding="{Binding Result}" Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <!-- Детали -->
 		<StackPanel Grid.Column="1" Margin="20,0">
 			<TextBlock Text="Детали дня"
 					   FontSize="18"

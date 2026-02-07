@@ -1,12 +1,5 @@
 ﻿using ProgressApp.Data;
 using ProgressApp.Model.Journal;
-using ProgressApp.Model.Settings;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ProgressApp.Services
 {
@@ -14,16 +7,9 @@ namespace ProgressApp.Services
     {
         private readonly ProgressDbContext _context;
 
-        public JournalService()
+        public JournalService(ProgressDbContext context)
         {
-
-            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            var folder = Path.Combine(desktop, "ProgressApp");
-            Directory.CreateDirectory(folder);
-
-            _context = new ProgressDbContext(Path.Combine(folder, "progress.db"));
-            _context.Initialize();
-
+            _context = context;
         }
 
         public JournalEntry? GetToday()
@@ -35,6 +21,9 @@ namespace ProgressApp.Services
         public void SaveToday(string description, DayResult result)
         {
             var entry = GetToday();
+
+            if (string.IsNullOrWhiteSpace(description))
+                throw new ArgumentException("Опис дня не може бути порожнім!");
 
             if (entry == null)
             {
@@ -59,20 +48,20 @@ namespace ProgressApp.Services
                            .ToList();
         }
 
-        public int GetStreak(List<JournalEntry> entries)
-        {
-            int streak = 0;
+        //public int GetStreak(List<JournalEntry> entries)
+        //{
+        //    int streak = 0;
 
-            foreach (var entry in entries)
-            {
-                if (entry.Result == DayResult.Success)
-                    streak++;
-                else
-                    streak = 0; // сброс стрика при Relapse
-            }
+        //    foreach (var entry in entries)
+        //    {
+        //        if (entry.Result == DayResult.Success)
+        //            streak++;
+        //        else
+        //            streak = 0; 
+        //    }
 
-            return streak;
-        }
+        //    return streak;
+        //}
     }
 }
 
