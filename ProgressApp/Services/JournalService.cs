@@ -23,6 +23,9 @@ namespace ProgressApp.Services
         {
             var entry = GetToday();
 
+            if (string.IsNullOrWhiteSpace(description))
+                throw new ArgumentException("Опис дня не може бути порожнім!");
+
             if (entry == null)
             {
                 entry = new JournalEntry

@@ -50,24 +50,22 @@ namespace ProgressApp.ViewModels.Settings
             Goal = _settingsService.GetGoal();
             SelectedTheme = _settingsService.GetTheme();
 
-            SaveSettingsCommand = new RelayCommand(_ =>
-            {
-                try
-                {
-                    _settingsService.SaveSettings(Username, Goal, SelectedTheme);
-                    ThemeManager.ApplyTheme(SelectedTheme);
-                    MessageBox.Show("Налаштування збережено!");
-                }
-                catch (ArgumentException ex) 
-                {
-                    MessageBox.Show(ex.Message, "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
-
-                    Username = _settingsService.GetUserName();
-                    Goal = _settingsService.GetGoal();
-                    return;
-                }
-            });
-
+            SaveSettingsCommand = new RelayCommand(
+                    execute: _ =>
+                    {
+                        try
+                        {
+                            _settingsService.SaveSettings(Username, Goal, SelectedTheme);
+                            ThemeManager.ApplyTheme(SelectedTheme);
+                            MessageBox.Show("Налаштування збережено!");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    },
+                    canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
+                );
             OnPropertyChanged(nameof(Username));
             OnPropertyChanged(nameof(Goal));
             OnPropertyChanged(nameof(SelectedTheme));

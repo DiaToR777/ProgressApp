@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Input;
 
 namespace ProgressApp.ViewModels.Today
 {
@@ -25,10 +26,11 @@ namespace ProgressApp.ViewModels.Today
             set { _selectedResult = value; OnPropertyChanged(); }
         }
         public Array AllResults => Enum.GetValues(typeof(DayResult));
-        public RelayCommand SaveCommand { get; }
+        public ICommand SaveCommand { get; }
         private void LoadToday()
         {
             var entry = _service.GetToday();
+
 
             if (entry != null)
             {
@@ -44,11 +46,24 @@ namespace ProgressApp.ViewModels.Today
         public TodayViewModel(JournalService service)
         {
             _service = service;
-            SaveCommand = new RelayCommand(SaveEntry);
 
+            SaveCommand = new RelayCommand(
+                    execute: _ =>
+                    {
+                        try
+                        {
+                            SaveEntry();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    },
+                    canExecute: _ => !string.IsNullOrWhiteSpace(Description)
+                );
             LoadToday();
         }
-        private void SaveEntry(object? obj)
+        private void SaveEntry()
         {
             _service.SaveToday(Description, SelectedResult);
             MessageBox.Show("Запись сохранена!");
