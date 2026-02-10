@@ -10,26 +10,27 @@
     
     <StackPanel Margin="20">
 		<StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-			<TextBlock Text="Сегодня" FontSize="22" FontWeight="Bold"/>
-            <TextBlock Text="{Binding CurrentDate}"
+            <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Today]}"
+                       FontSize="22" FontWeight="Bold"/>
+            <TextBlock Text="{Binding CurrentDate, StringFormat=dd MMMM yyyy}"
 					   Margin="10,7,0,0"
 					   FontSize="14"
 					   />
 		</StackPanel>
 
-		<Label Content="Описание дня:"/>
+        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DayDescription]}"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                  Height="120"
                  AcceptsReturn="True"
                  />
 
-        <Label Content="Результат:"/>
+        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_Result]}"/>
         <ComboBox ItemsSource="{Binding AllResults}" 
           SelectedItem="{Binding SelectedResult}" 
           Margin="0,0,0,10"
                   />
 
-        <Button Content="Сохранить"
+        <Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_SaveDay]}"
                 Margin="0,10"
                 Command="{Binding SaveCommand}"
                 />

@@ -14,25 +14,41 @@
           IsReadOnly="True"
           SelectionMode="Single">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Дата" Binding="{Binding Date, StringFormat=dd.MM.yyyy}" Width="120"/>
-                <DataGridTextColumn Header="Результат" Binding="{Binding Result}" Width="*"/>
+                <DataGridTextColumn Header="{Binding Source={StaticResource Langs}, Path=[DataGrid_Date]}"
+                                    Binding="{Binding Date, StringFormat=dd.MM.yyyy}"
+                                    Width="120"/>
+
+                <DataGridTextColumn Header="{Binding Source={StaticResource Langs}, Path=[DataGrid_Result]}"
+                                    Binding="{Binding Result}"
+                                    Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
         
         <!-- Детали -->
 		<StackPanel Grid.Column="1" Margin="20,0">
-			<TextBlock Text="Детали дня"
+            <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_DayDatails]}"
 					   FontSize="18"
 					   Margin="0,0,0,10"/>
 
-			<TextBlock Text="{Binding SelectedEntry.Date,
-                          StringFormat=Дата: dd MMMM yyyy}"/>
-
-			<TextBlock Text="{Binding SelectedEntry.Result,
-                          StringFormat=Результат: {0}}"
-					   Margin="0,5"/>
-
-			<TextBlock Text="Описание:" Margin="0,10,0,0"/>
+            <TextBlock Margin="0,5">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0}: {1:dd MMMM yyyy}">
+                        <Binding Source="{StaticResource Langs}" Path="[DataGrid_Date]" />
+                        <Binding Path="SelectedEntry.Date" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            
+            <TextBlock Margin="0,5">
+                <TextBlock.Text>
+                    <MultiBinding StringFormat="{}{0} {1}">
+                        <Binding Source="{StaticResource Langs}" Path="[DataGrid_Result]" />
+                        <Binding Path="SelectedEntry.Result" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+            <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Description]}"
+                       Margin="0,10,0,0"/>
 			<TextBox Text="{Binding SelectedEntry.Description}"
 					 IsReadOnly="True"
 					 TextWrapping="Wrap"

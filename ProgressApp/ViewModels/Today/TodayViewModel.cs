@@ -12,7 +12,7 @@ namespace ProgressApp.ViewModels.Today
         private string _description;
         private DayResult _selectedResult;
 
-        public string CurrentDate { get; } = DateTime.Today.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"));
+        public DateOnly CurrentDate { get; } = DateOnly.FromDateTime(DateTime.Now);
 
         public string Description
         {
