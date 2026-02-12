@@ -37,7 +37,8 @@ namespace ProgressApp.Data
                 Settings.AddRange(
                     new AppSettings { Key = "Username", Value = "" },
                     new AppSettings { Key = "Goal", Value = "" },
-                    new AppSettings { Key = "Theme", Value = "Light" }
+                    new AppSettings { Key = "Theme", Value = "Light" },
+                    new AppSettings { Key = "Language", Value = "en-US" }
                 );
                 SaveChanges();
             }

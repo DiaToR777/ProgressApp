@@ -153,6 +153,9 @@
   <data name="Title_SaveChanges" xml:space="preserve">
     <value>Зберегти зміни</value>
   </data>
+  <data name="Title_SelectLanguage" xml:space="preserve">
+    <value>Зміна мови</value>
+  </data>
   <data name="Title_Start" xml:space="preserve">
     <value>Начать</value>
   </data>

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ProgressApp"
              xmlns:loc="clr-namespace:ProgressApp.Localization.Manager"
+             
              >
     
     
@@ -12,8 +13,7 @@
                 <ResourceDictionary Source="Themes/LightTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-                <loc:TranslationSource x:Key="Langs" />
-
+            <x:Static Member="loc:TranslationSource.Instance" x:Key="Langs" />
             <Style TargetType="TextBlock">
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
             </Style>

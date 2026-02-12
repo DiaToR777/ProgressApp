@@ -1,6 +1,11 @@
-﻿using ProgressApp.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using ProgressApp.Localization;
+using ProgressApp.Localization.Manager;
+using ProgressApp.Localization.Models;
+using ProgressApp.Services;
 using ProgressApp.Themes;
 using System.ComponentModel;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -9,6 +14,20 @@ namespace ProgressApp.ViewModels.Settings
 {
     public class SettingsViewModel : INotifyPropertyChanged
     {
+        public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
+        private LanguageModel _selectedLanguage;
+        public LanguageModel SelectedLanguage
+        {
+            get => _selectedLanguage;
+            set
+            {
+                if (1==1)
+                {
+                    // Саме цей виклик має штовхнути TranslationSource
+                    TranslationSource.Instance.CurrentCulture = new CultureInfo(value.CultureCode);
+                }
+            }
+        }
         private readonly SettingsService _settingsService;
         private string _username;
         private string _goal;
@@ -38,6 +57,7 @@ namespace ProgressApp.ViewModels.Settings
                 OnPropertyChanged();
             }
         }
+
 
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
@@ -69,6 +89,7 @@ namespace ProgressApp.ViewModels.Settings
             OnPropertyChanged(nameof(Username));
             OnPropertyChanged(nameof(Goal));
             OnPropertyChanged(nameof(SelectedTheme));
+            OnPropertyChanged(nameof(AvailableLanguages));
         }
         
         public event PropertyChangedEventHandler? PropertyChanged;

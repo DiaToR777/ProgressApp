@@ -169,6 +169,15 @@ namespace ProgressApp.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Language change.
+        /// </summary>
+        public static string Title_SelectLanguage {
+            get {
+                return ResourceManager.GetString("Title_SelectLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Start.
         /// </summary>
         public static string Title_Start {

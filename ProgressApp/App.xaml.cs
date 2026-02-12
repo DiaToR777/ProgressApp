@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Data;
+using ProgressApp.Localization.Manager;
 using ProgressApp.Services;
 using ProgressApp.Themes;
 using ProgressApp.ViewModels;
@@ -58,6 +59,9 @@ namespace ProgressApp
                 var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
 
                 ThemeManager.ApplyTheme(settings.GetTheme());
+
+                var savedLanguage = db.Settings.FirstOrDefault(s => s.Key == "Language")?.Value ?? "en-US";
+                TranslationSource.Instance.ChangeLanguage(savedLanguage);
             }
 
             var mainVM = _serviceProvider.GetRequiredService<MainViewModel>();
