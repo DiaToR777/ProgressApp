@@ -1,6 +1,11 @@
-﻿public enum DayResult
+﻿using System.ComponentModel;
+
+public enum DayResult
 {
-    Success = 1,      // Успішний день
-    Relapse = 0,      // Зрив
-    PartialSuccess = 2 // Частковий успіх (наприклад, були спокуси але втримався)
+    [Description("Result_Success")]
+    Success = 1,
+    [Description("Result_Relapse")]
+    Relapse = 0,      
+    [Description("Result_Partial")]
+    PartialSuccess = 2 
 }

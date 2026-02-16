@@ -135,6 +135,15 @@
   <data name="NavBtn_Table" xml:space="preserve">
     <value>Таблиця</value>
   </data>
+  <data name="Result_Partial" xml:space="preserve">
+    <value>Частковий успіх</value>
+  </data>
+  <data name="Result_Relapse" xml:space="preserve">
+    <value>Рецедив</value>
+  </data>
+  <data name="Result_Success" xml:space="preserve">
+    <value>Успіх</value>
+  </data>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Управління даними</value>
   </data>

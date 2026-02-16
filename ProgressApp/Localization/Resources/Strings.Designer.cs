@@ -115,6 +115,33 @@ namespace ProgressApp.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Partial Succes.
+        /// </summary>
+        public static string Result_Partial {
+            get {
+                return ResourceManager.GetString("Result_Partial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Relapse.
+        /// </summary>
+        public static string Result_Relapse {
+            get {
+                return ResourceManager.GetString("Result_Relapse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Success.
+        /// </summary>
+        public static string Result_Success {
+            get {
+                return ResourceManager.GetString("Result_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Data management.
         /// </summary>
         public static string Title_DataManagement {

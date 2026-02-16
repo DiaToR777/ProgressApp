@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProgressApp.Localization;
+﻿using ProgressApp.Localization;
 using ProgressApp.Localization.Manager;
 using ProgressApp.Localization.Models;
 using ProgressApp.Services;
-using ProgressApp.Themes;
+using ProgressApp.Themes.Managers;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -15,24 +14,23 @@ namespace ProgressApp.ViewModels.Settings
     public class SettingsViewModel : INotifyPropertyChanged
     {
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
+
+        private readonly SettingsService _settingsService;
+        private string _username;
+        private string _goal;
+        private AppTheme _selectedTheme;
         private LanguageModel _selectedLanguage;
+
         public LanguageModel SelectedLanguage
         {
             get => _selectedLanguage;
             set
             {
-                if (1==1)
-                {
-                    // Саме цей виклик має штовхнути TranslationSource
-                    TranslationSource.Instance.CurrentCulture = new CultureInfo(value.CultureCode);
-                }
+                if (_selectedLanguage == value) return;
+                _selectedLanguage = value;
+                OnPropertyChanged();
             }
         }
-        private readonly SettingsService _settingsService;
-        private string _username;
-        private string _goal;
-        private AppTheme _selectedTheme;
-
 
         public string Username
         {
@@ -53,11 +51,10 @@ namespace ProgressApp.ViewModels.Settings
                 if (_selectedTheme == value) return;
 
                 _selectedTheme = value;
-                
+
                 OnPropertyChanged();
             }
         }
-
 
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
@@ -69,14 +66,17 @@ namespace ProgressApp.ViewModels.Settings
             Username = _settingsService.GetUserName();
             Goal = _settingsService.GetGoal();
             SelectedTheme = _settingsService.GetTheme();
+            SelectedLanguage = _settingsService.GetLanguage();
 
             SaveSettingsCommand = new RelayCommand(
                     execute: _ =>
                     {
                         try
                         {
-                            _settingsService.SaveSettings(Username, Goal, SelectedTheme);
+                            _settingsService.SaveSettings(Username, Goal, SelectedTheme, SelectedLanguage);
                             ThemeManager.ApplyTheme(SelectedTheme);
+                            TranslationSource.Instance.CurrentCulture = new CultureInfo(SelectedLanguage.CultureCode);
+
                             MessageBox.Show("Налаштування збережено!");
                         }
                         catch (Exception ex)
@@ -91,7 +91,7 @@ namespace ProgressApp.ViewModels.Settings
             OnPropertyChanged(nameof(SelectedTheme));
             OnPropertyChanged(nameof(AvailableLanguages));
         }
-        
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));

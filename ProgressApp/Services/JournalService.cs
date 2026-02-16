@@ -1,5 +1,5 @@
 ﻿using ProgressApp.Data;
-using ProgressApp.Model.Journal;
+using ProgressApp.Models.Journal;
 
 namespace ProgressApp.Services
 {

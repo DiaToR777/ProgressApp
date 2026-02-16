@@ -3,16 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ProgressApp"
              xmlns:loc="clr-namespace:ProgressApp.Localization.Manager"
-             
-             >
-    
-    
+             xmlns:helpers="clr-namespace:ProgressApp.Localization.Helpers" >
+
+
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/LightTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <helpers:EnumToLocalizationConverter x:Key="EnumConverter" />
+            
             <x:Static Member="loc:TranslationSource.Instance" x:Key="Langs" />
             <Style TargetType="TextBlock">
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
@@ -80,7 +81,7 @@
                     </Setter.Value>
                 </Setter>
             </Style>
-            
+
             <Style TargetType="Label">
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
             </Style>
@@ -101,7 +102,7 @@
                 <Setter Property="HorizontalGridLinesBrush" Value="#333333"/>
                 <Setter Property="VerticalGridLinesBrush" Value="#333333"/>
             </Style>
-            
+
             <Style TargetType="Button" x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}">
                 <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
                 <Setter Property="BorderBrush" Value="Transparent" />
@@ -111,7 +112,7 @@
                 <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}" />
             </Style>
-            
+
             <Style TargetType="DataGridCell">
                 <Setter Property="Background" Value="Transparent"/>
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
@@ -124,7 +125,7 @@
                 <Setter Property="Padding" Value="5"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
                 <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                
+
             </Style>
             <Style TargetType="Button">
                 <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>

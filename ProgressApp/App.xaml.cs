@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Data;
 using ProgressApp.Localization.Manager;
 using ProgressApp.Services;
-using ProgressApp.Themes;
+using ProgressApp.Themes.Managers;
 using ProgressApp.ViewModels;
 using ProgressApp.ViewModels.InitialSetup;
 using ProgressApp.ViewModels.Settings;
@@ -29,7 +29,6 @@ namespace ProgressApp
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var folder = Path.Combine(appData, "ProgressApp");
 
-            // КРИТИЧНИЙ МОМЕНТ: Створюємо папку, якщо її немає
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
@@ -68,7 +67,6 @@ namespace ProgressApp
             var mainWindow = new MainWindow { DataContext = mainVM };
             mainWindow.Show();
         }
-
     }
 
 }

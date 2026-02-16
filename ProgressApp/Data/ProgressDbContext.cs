@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProgressApp.Model.Journal;
-using ProgressApp.Model.Settings;
+using ProgressApp.Models.Journal;
+using ProgressApp.Models.Settings;
 
 namespace ProgressApp.Data
 {

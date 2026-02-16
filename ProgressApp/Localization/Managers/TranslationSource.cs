@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
 using System.Resources;
+using System.Windows;
+using System.Windows.Markup;
 
 namespace ProgressApp.Localization.Manager
 {
@@ -35,11 +37,22 @@ namespace ProgressApp.Localization.Manager
         {
             try
             {
-                CurrentCulture = new CultureInfo(cultureCode);            
+                CurrentCulture = new CultureInfo(cultureCode);
+                UpdateVisualLanguage();
             }
             catch
             {
                 CurrentCulture = new CultureInfo("en-US");
+                UpdateVisualLanguage();
+            }
+        }
+
+        public void UpdateVisualLanguage()
+        {
+            var lang = XmlLanguage.GetLanguage(currentCulture.IetfLanguageTag);
+            if (Application.Current?.MainWindow != null)
+            {
+                Application.Current.MainWindow.Language = lang;
             }
         }
         public event PropertyChangedEventHandler? PropertyChanged;
