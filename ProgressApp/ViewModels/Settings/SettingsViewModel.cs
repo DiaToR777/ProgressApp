@@ -2,6 +2,7 @@
 using ProgressApp.Localization.Manager;
 using ProgressApp.Localization.Models;
 using ProgressApp.Services;
+using ProgressApp.Services.Message;
 using ProgressApp.Themes.Managers;
 using System.ComponentModel;
 using System.Globalization;
@@ -16,6 +17,8 @@ namespace ProgressApp.ViewModels.Settings
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
         private readonly SettingsService _settingsService;
+        private readonly IMessageService _messageService;
+
         private string _username;
         private string _goal;
         private AppTheme _selectedTheme;
@@ -59,9 +62,10 @@ namespace ProgressApp.ViewModels.Settings
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
         public ICommand SaveSettingsCommand { get; }
-        public SettingsViewModel(SettingsService settingsService)
+        public SettingsViewModel(SettingsService settingsService, IMessageService messageService)
         {
             _settingsService = settingsService;
+            _messageService = messageService;
 
             Username = _settingsService.GetUserName();
             Goal = _settingsService.GetGoal();
@@ -77,7 +81,7 @@ namespace ProgressApp.ViewModels.Settings
                             ThemeManager.ApplyTheme(SelectedTheme);
                             TranslationSource.Instance.CurrentCulture = new CultureInfo(SelectedLanguage.CultureCode);
 
-                            MessageBox.Show("Налаштування збережено!");
+                            _messageService.ShowInfo("Msg_SettingsSaved");
                         }
                         catch (Exception ex)
                         {

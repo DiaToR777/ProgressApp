@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Data;
 using ProgressApp.Localization.Manager;
 using ProgressApp.Services;
+using ProgressApp.Services.Message;
 using ProgressApp.Themes.Managers;
 using ProgressApp.ViewModels;
 using ProgressApp.ViewModels.InitialSetup;
@@ -46,6 +47,7 @@ namespace ProgressApp
             services.AddSingleton<MainViewModel>();
             services.AddTransient<TodayViewModel>();
             services.AddTransient<SettingsViewModel>();
+            services.AddSingleton<IMessageService, MessageService>();
             _serviceProvider = services.BuildServiceProvider();
         }
         protected override void OnStartup(StartupEventArgs e)

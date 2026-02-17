@@ -129,6 +129,12 @@
   <data name="DataGrid_Result" xml:space="preserve">
     <value>Результат</value>
   </data>
+  <data name="Msg_RecordSaved" xml:space="preserve">
+    <value>Запис збережений!</value>
+  </data>
+  <data name="Msg_SettingsSaved" xml:space="preserve">
+    <value>Налаштування збережено</value>
+  </data>
   <data name="NavBtn_Settings" xml:space="preserve">
     <value>Налаштування</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="Title_Description" xml:space="preserve">
     <value>Опис</value>
+  </data>
+  <data name="Title_Information" xml:space="preserve">
+    <value>Інформація</value>
   </data>
   <data name="Title_ProfileSettings" xml:space="preserve">
     <value>Налаштування профілю</value>

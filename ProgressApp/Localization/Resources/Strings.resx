@@ -129,6 +129,12 @@
   <data name="DataGrid_Result" xml:space="preserve">
     <value>Result</value>
   </data>
+  <data name="Msg_RecordSaved" xml:space="preserve">
+    <value>Record saved!</value>
+  </data>
+  <data name="Msg_SettingsSaved" xml:space="preserve">
+    <value>Settings saved</value>
+  </data>
   <data name="NavBtn_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
@@ -155,6 +161,9 @@
   </data>
   <data name="Title_Description" xml:space="preserve">
     <value>Description</value>
+  </data>
+  <data name="Title_Information" xml:space="preserve">
+    <value>Information</value>
   </data>
   <data name="Title_ProfileSettings" xml:space="preserve">
     <value>Profile settings</value>

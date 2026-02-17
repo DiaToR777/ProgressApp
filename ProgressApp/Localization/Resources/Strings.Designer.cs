@@ -19,7 +19,7 @@ namespace ProgressApp.Localization.Resources {
     // с помощью такого средства, как ResGen или Visual Studio.
     // Чтобы добавить или удалить член, измените файл .ResX и снова запустите ResGen
     // с параметром /str или перестройте свой проект VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Strings {
@@ -93,6 +93,24 @@ namespace ProgressApp.Localization.Resources {
         public static string DataGrid_Result {
             get {
                 return ResourceManager.GetString("DataGrid_Result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Record saved!.
+        /// </summary>
+        public static string Msg_RecordSaved {
+            get {
+                return ResourceManager.GetString("Msg_RecordSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Settings saved.
+        /// </summary>
+        public static string Msg_SettingsSaved {
+            get {
+                return ResourceManager.GetString("Msg_SettingsSaved", resourceCulture);
             }
         }
         
@@ -174,6 +192,15 @@ namespace ProgressApp.Localization.Resources {
         public static string Title_Description {
             get {
                 return ResourceManager.GetString("Title_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Information.
+        /// </summary>
+        public static string Title_Information {
+            get {
+                return ResourceManager.GetString("Title_Information", resourceCulture);
             }
         }
         

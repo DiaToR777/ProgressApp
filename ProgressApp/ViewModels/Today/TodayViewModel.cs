@@ -1,5 +1,6 @@
 ﻿using ProgressApp.Localization.Helpers;
 using ProgressApp.Services;
+using ProgressApp.Services.Message;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -10,6 +11,7 @@ namespace ProgressApp.ViewModels.Today
     public class TodayViewModel : INotifyPropertyChanged
     {
         private readonly JournalService _service;
+        private readonly IMessageService _messageService;
 
 
         private string _description;
@@ -35,9 +37,11 @@ namespace ProgressApp.ViewModels.Today
         }    
         public ICommand SaveCommand { get; }
 
-        public TodayViewModel(JournalService service)
+        public TodayViewModel(JournalService service, IMessageService messageService)
         {
             _service = service;
+            _messageService = messageService;
+
 
             AllResult = Enum.GetValues(typeof(DayResult))
                             .Cast<DayResult>()
@@ -80,7 +84,7 @@ namespace ProgressApp.ViewModels.Today
         private void SaveEntry()
         {
             _service.SaveToday(Description, SelectedResult);
-            MessageBox.Show("Запись сохранена!");
+            _messageService.ShowInfo("Msg_RecordSaved");
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
