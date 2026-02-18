@@ -6,7 +6,6 @@ using ProgressApp.Services.Message;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ProgressApp.ViewModels.InitialSetup
@@ -15,8 +14,6 @@ namespace ProgressApp.ViewModels.InitialSetup
     {
         private readonly SettingsService _settingsService;
         private readonly IMessageService _messageService;
-
-
 
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
@@ -70,7 +67,21 @@ namespace ProgressApp.ViewModels.InitialSetup
         {
             _settingsService = settings;
             SelectedLanguage = _settingsService.GetLanguage();
-            FinishCommand = new RelayCommand(_ => Finish());
+
+            FinishCommand = new RelayCommand(
+                execute: _ =>
+                {
+                    try
+                    {
+                        Finish();
+                    }
+                    catch (Exception ex)
+                    {
+                        _messageService.ShowError(ex.Message);
+                    }
+                },
+                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
+              );
         }
 
         private void Finish()
