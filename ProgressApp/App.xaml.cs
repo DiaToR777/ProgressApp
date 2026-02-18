@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Data;
+using ProgressApp.Localization.Manager;
 using ProgressApp.Services;
-using ProgressApp.Themes;
+using ProgressApp.Services.Message;
+using ProgressApp.Themes.Managers;
 using ProgressApp.ViewModels;
 using ProgressApp.ViewModels.InitialSetup;
 using ProgressApp.ViewModels.Settings;
@@ -28,7 +30,6 @@ namespace ProgressApp
             var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var folder = Path.Combine(appData, "ProgressApp");
 
-            // КРИТИЧНИЙ МОМЕНТ: Створюємо папку, якщо її немає
             if (!Directory.Exists(folder))
             {
                 Directory.CreateDirectory(folder);
@@ -46,6 +47,7 @@ namespace ProgressApp
             services.AddSingleton<MainViewModel>();
             services.AddTransient<TodayViewModel>();
             services.AddTransient<SettingsViewModel>();
+            services.AddSingleton<IMessageService, MessageService>();
             _serviceProvider = services.BuildServiceProvider();
         }
         protected override void OnStartup(StartupEventArgs e)
@@ -58,13 +60,15 @@ namespace ProgressApp
                 var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
 
                 ThemeManager.ApplyTheme(settings.GetTheme());
+
+                var savedLanguage = db.Settings.FirstOrDefault(s => s.Key == "Language")?.Value ?? "en-US";
+                TranslationSource.Instance.ChangeLanguage(savedLanguage);
             }
 
             var mainVM = _serviceProvider.GetRequiredService<MainViewModel>();
             var mainWindow = new MainWindow { DataContext = mainVM };
             mainWindow.Show();
         }
-
     }
 
 }

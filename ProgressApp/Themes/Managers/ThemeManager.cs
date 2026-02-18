@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace ProgressApp.Themes;
+namespace ProgressApp.Themes.Managers;
 public static class ThemeManager
 {
     public static void ApplyTheme(AppTheme theme)

@@ -7,4 +7,6 @@
     <SolidColorBrush x:Key="DisabledBackground" Color="#E0E0E0"/>
     <SolidColorBrush x:Key="DisabledForeground" Color="#A0A0A0"/>
     <SolidColorBrush x:Key="HoverBackground" Color="#E5E5E5"/>
+    <SolidColorBrush x:Key="SecondaryControlBackground" Color="#F5F5F5"/>
+    <SolidColorBrush x:Key="GridLinesColor" Color="#DDDDDD"/>
 </ResourceDictionary>

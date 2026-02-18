@@ -1,4 +1,4 @@
-﻿namespace ProgressApp.Model.Journal
+﻿namespace ProgressApp.Models.Journal
 {
     public class JournalEntry
     {

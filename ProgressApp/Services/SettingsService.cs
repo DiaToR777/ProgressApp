@@ -1,5 +1,8 @@
-﻿using ProgressApp.Data;
-using ProgressApp.Model.Settings;
+﻿using Microsoft.EntityFrameworkCore;
+using ProgressApp.Data;
+using ProgressApp.Localization;
+using ProgressApp.Localization.Models;
+using ProgressApp.Models.Settings;
 
 namespace ProgressApp.Services
 {
@@ -31,8 +34,19 @@ namespace ProgressApp.Services
 
             return Enum.TryParse(themeValue, out AppTheme result) ? result : AppTheme.Light;
         }
-            
-        public void SaveSettings(string username, string goal, AppTheme theme)
+
+        public LanguageModel GetLanguage()
+        {
+            // AsNoTracking 
+            string? languageCode = _context.Settings
+                .AsNoTracking()
+                .FirstOrDefault(s => s.Key == SettingsKeys.Language)?
+                .Value;
+
+            return LanguageConfig.GetByCode(languageCode);
+        }
+
+        public void SaveSettings(string username, string goal, AppTheme theme, LanguageModel language)
         {
             if (string.IsNullOrWhiteSpace(username))
                 throw new ArgumentException("Ім'я не може бути порожнім!");
@@ -48,6 +62,9 @@ namespace ProgressApp.Services
 
             var t = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Theme);
             if (t != null) t.Value = theme.ToString();
+
+            var l = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Language);
+            if (l != null) l.Value = language.CultureCode;
 
             _context.SaveChanges();
         }

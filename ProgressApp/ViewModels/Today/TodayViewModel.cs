@@ -1,4 +1,6 @@
-﻿using ProgressApp.Services;
+﻿using ProgressApp.Localization.Helpers;
+using ProgressApp.Services;
+using ProgressApp.Services.Message;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -9,24 +11,60 @@ namespace ProgressApp.ViewModels.Today
     public class TodayViewModel : INotifyPropertyChanged
     {
         private readonly JournalService _service;
+        private readonly IMessageService _messageService;
+
+
         private string _description;
         private DayResult _selectedResult;
+        public DateOnly CurrentDate { get; } = DateOnly.FromDateTime(DateTime.Now);
+        public IEnumerable<LocalizedEnum<DayResult>> AllResult { get; }
 
-        public string CurrentDate { get; } = DateTime.Today.ToString("dd MMMM yyyy", new System.Globalization.CultureInfo("ru-RU"));
-
+            
         public string Description
         {
             get => _description;
             set { _description = value; OnPropertyChanged(); }
         }
-
         public DayResult SelectedResult
         {
             get => _selectedResult;
-            set { _selectedResult = value; OnPropertyChanged(); }
-        }
-        public Array AllResults => Enum.GetValues(typeof(DayResult));
+            set
+            {
+                if (_selectedResult == value) return;
+                _selectedResult = value;
+                OnPropertyChanged();
+            }
+        }    
         public ICommand SaveCommand { get; }
+
+        public TodayViewModel(JournalService service, IMessageService messageService)
+        {
+            _service = service;
+            _messageService = messageService;
+
+
+            AllResult = Enum.GetValues(typeof(DayResult))
+                            .Cast<DayResult>()
+                            .Select(r => new LocalizedEnum<DayResult>(r))
+                            .ToList();
+
+            SaveCommand = new RelayCommand(
+                    execute: _ =>
+                    {
+                        try
+                        {
+                            SaveEntry();
+                        }
+                        catch (Exception ex)
+                        {
+                            _messageService.ShowError(ex.Message);
+                        }
+                    },
+                    canExecute: _ => !string.IsNullOrWhiteSpace(Description)
+                );
+            LoadToday();
+        }
+
         private void LoadToday()
         {
             var entry = _service.GetToday();
@@ -43,35 +81,14 @@ namespace ProgressApp.ViewModels.Today
             }
         }
 
-        public TodayViewModel(JournalService service)
-        {
-            _service = service;
-
-            SaveCommand = new RelayCommand(
-                    execute: _ =>
-                    {
-                        try
-                        {
-                            SaveEntry();
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message);
-                        }
-                    },
-                    canExecute: _ => !string.IsNullOrWhiteSpace(Description)
-                );
-            LoadToday();
-        }
         private void SaveEntry()
         {
             _service.SaveToday(Description, SelectedResult);
-            MessageBox.Show("Запись сохранена!");
+            _messageService.ShowInfo("Msg_RecordSaved");
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string name = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
-
     }
 }

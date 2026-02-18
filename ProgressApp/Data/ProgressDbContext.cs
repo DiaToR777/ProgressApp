@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProgressApp.Model.Journal;
-using ProgressApp.Model.Settings;
+using ProgressApp.Models.Journal;
+using ProgressApp.Models.Settings;
 
 namespace ProgressApp.Data
 {
@@ -28,19 +28,29 @@ namespace ProgressApp.Data
 
             base.OnModelCreating(modelBuilder);
         }        
-        public void Initialize()
-        {
-            Database.Migrate();
-
-            if (!Settings.Any())
+            public void Initialize()
             {
-                Settings.AddRange(
-                    new AppSettings { Key = "Username", Value = "" },
-                    new AppSettings { Key = "Goal", Value = "" },
-                    new AppSettings { Key = "Theme", Value = "Light" }
-                );
-                SaveChanges();
+                Database.Migrate();
+
+                    var defaultSettings = new List<AppSettings>
+                    {
+                        new AppSettings { Key = "Username", Value = "" },
+                        new AppSettings { Key = "Goal", Value = "" },
+                        new AppSettings { Key = "Theme", Value = "Light" },
+                        new AppSettings { Key = "Language", Value = "en-US" }
+                    };
+
+                bool changed = false;
+                foreach (var setting in defaultSettings)
+                {
+                    if (!Settings.Any(s => s.Key == setting.Key))
+                    {
+                        Settings.Add(setting);
+                        changed = true;
+                    }
+                }
+                if (changed)
+                    SaveChanges();
             }
-        }
     }
 }
