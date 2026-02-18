@@ -96,13 +96,12 @@
             <Style TargetType="DataGrid">
                 <Setter Property="Background" Value="{DynamicResource ControlBackground}"/>
                 <Setter Property="RowBackground" Value="{DynamicResource ControlBackground}"/>
-                <Setter Property="AlternatingRowBackground" Value="#252525"/>
+                <Setter Property="AlternatingRowBackground" Value="{DynamicResource SecondaryControlBackground}"/>
                 <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColor}"/>
-                <Setter Property="HorizontalGridLinesBrush" Value="#333333"/>
-                <Setter Property="VerticalGridLinesBrush" Value="#333333"/>
+                <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource GridLinesColor}"/>
+                <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource GridLinesColor}"/>
             </Style>
-
             <Style TargetType="Button" x:Key="{ComponentResourceKey ResourceId=DataGridSelectAllButtonStyle, TypeInTargetAssembly={x:Type DataGrid}}">
                 <Setter Property="Background" Value="{DynamicResource ControlBackground}" />
                 <Setter Property="BorderBrush" Value="Transparent" />
