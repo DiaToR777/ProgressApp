@@ -57,7 +57,7 @@ namespace ProgressApp.ViewModels.Today
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.Message);
+                            _messageService.ShowError(ex.Message);
                         }
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Description)

@@ -2,6 +2,7 @@
 using ProgressApp.Localization.Manager;
 using ProgressApp.Localization.Models;
 using ProgressApp.Services;
+using ProgressApp.Services.Message;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -13,6 +14,10 @@ namespace ProgressApp.ViewModels.InitialSetup
     public class InitialSetupViewModel : INotifyPropertyChanged
     {
         private readonly SettingsService _settingsService;
+        private readonly IMessageService _messageService;
+
+
+
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
         private string _username = string.Empty;
@@ -78,7 +83,7 @@ namespace ProgressApp.ViewModels.InitialSetup
             }
             catch (ArgumentException ex) 
             {
-                MessageBox.Show(ex.Message, "Увага", MessageBoxButton.OK, MessageBoxImage.Warning);
+                _messageService.ShowError(ex.Message);
                 return;
             }
         }

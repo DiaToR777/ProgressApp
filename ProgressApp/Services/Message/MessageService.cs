@@ -19,6 +19,12 @@ namespace ProgressApp.Services.Message
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
             return result == MessageBoxResult.Yes;
         }
+        public void ShowError(string exMessage)
+        {
+            string title = GetLocalizedText("Title_Error");
+            MessageBox.Show(exMessage, title, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
         private string GetLocalizedText(string key)
         {
             return TranslationSource.Instance[key] ?? key;

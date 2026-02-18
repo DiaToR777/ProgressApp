@@ -162,6 +162,9 @@
   <data name="Title_Description" xml:space="preserve">
     <value>Опис</value>
   </data>
+  <data name="Title_Error" xml:space="preserve">
+    <value>Помилка</value>
+  </data>
   <data name="Title_Information" xml:space="preserve">
     <value>Інформація</value>
   </data>

@@ -162,6 +162,9 @@
   <data name="Title_Description" xml:space="preserve">
     <value>Description</value>
   </data>
+  <data name="Title_Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
   <data name="Title_Information" xml:space="preserve">
     <value>Information</value>
   </data>

@@ -196,6 +196,15 @@ namespace ProgressApp.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Error.
+        /// </summary>
+        public static string Title_Error {
+            get {
+                return ResourceManager.GetString("Title_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Information.
         /// </summary>
         public static string Title_Information {

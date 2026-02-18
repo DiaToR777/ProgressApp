@@ -85,7 +85,7 @@ namespace ProgressApp.ViewModels.Settings
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.Message);
+                            _messageService.ShowError(ex.Message);
                         }
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
