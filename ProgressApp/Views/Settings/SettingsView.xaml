@@ -34,9 +34,7 @@
             <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" 
        ContentStringFormat="{}{0}:" />
 
-            <ComboBox ItemsSource="{Binding AvailableLanguages}" 
-          SelectedItem="{Binding SelectedLanguage}"
-          Width="200">
+            <ComboBox ItemsSource="{Binding AvailableLanguages}" Margin="0,5,0,20" SelectedItem="{Binding SelectedLanguage}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Name}"/>

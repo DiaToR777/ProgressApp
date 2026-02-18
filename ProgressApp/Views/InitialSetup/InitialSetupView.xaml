@@ -23,7 +23,7 @@
 
         <ComboBox ItemsSource="{Binding AvailableLanguages}" 
           SelectedItem="{Binding SelectedLanguage}"
-          Width="200">
+          Margin="0,5,0,20">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}"/>
