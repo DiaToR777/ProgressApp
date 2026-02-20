@@ -25,7 +25,7 @@
 | **History View** | ✅ Done | View past entries in a structured table. / Перегляд минулих записів у вигляді таблиці. |
 | **Charts & Analytics** | 🚧 In Progress | Visualizing progress over time. / Візуалізація прогресу у часі. |
 | **Habit Tracking** | 🚧 In Progress | Streak counter for overcoming habits. / Лічильник "стріків" для боротьби зі звичками. |
-| **MVVM Refactoring** | 🚧 In Progress | Decoupling logic from View. / Розділення логіки та інтерфейсу. |
+| **MVVM Refactoring** | ✅ Done | Decoupling logic from View. / Розділення логіки та інтерфейсу. |
 | **Reminders** | 📅 Planned | Desktop notifications and alerts. / Сповіщення на робочий стіл. |
 
 ---
