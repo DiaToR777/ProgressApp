@@ -3,7 +3,7 @@ using ProgressApp.Models.Journal;
 
 namespace ProgressApp.Services
 {
-    public class JournalService
+    public class JournalService : IJournalService
     {
         private readonly ProgressDbContext _context;
 

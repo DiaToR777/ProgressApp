@@ -17,7 +17,7 @@ namespace ProgressApp.ViewModels
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
 
         private object? _currentView;
         private bool _isNavigationVisible = true;
@@ -54,7 +54,7 @@ namespace ProgressApp.ViewModels
         public ICommand ShowTableCommand { get; }
         public ICommand ShowSettingsCommand { get; }
 
-        public MainViewModel(SettingsService settings, IServiceProvider serviceProvider)
+        public MainViewModel(ISettingsService settings, IServiceProvider serviceProvider)
         {
             _settingsService = settings;
             _serviceProvider = serviceProvider;

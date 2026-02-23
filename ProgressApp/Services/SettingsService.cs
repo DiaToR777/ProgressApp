@@ -6,7 +6,7 @@ using ProgressApp.Models.Settings;
 
 namespace ProgressApp.Services
 {
-    public class SettingsService
+    public class SettingsService : ISettingsService
     {
         private ProgressDbContext _context;
         public SettingsService(ProgressDbContext context)

@@ -39,15 +39,16 @@ namespace ProgressApp
             services.AddDbContext<ProgressDbContext>(options =>
                 options.UseSqlite($"Data Source={dbPath}"));
 
-            services.AddSingleton<SettingsService>();
-            services.AddSingleton<JournalService>();
+            services.AddSingleton<ISettingsService, SettingsService>(); 
+            services.AddSingleton<IJournalService, JournalService>();
+            services.AddSingleton<IMessageService, MessageService>();
 
             services.AddTransient<TableViewModel>();
             services.AddTransient<InitialSetupViewModel>();
-            services.AddSingleton<MainViewModel>();
             services.AddTransient<TodayViewModel>();
             services.AddTransient<SettingsViewModel>();
-            services.AddSingleton<IMessageService, MessageService>();
+            services.AddSingleton<MainViewModel>();
+
             _serviceProvider = services.BuildServiceProvider();
         }
         protected override void OnStartup(StartupEventArgs e)
@@ -57,7 +58,7 @@ namespace ProgressApp
                 var db = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
                 db.Initialize();
 
-                var settings = scope.ServiceProvider.GetRequiredService<SettingsService>();
+                var settings = scope.ServiceProvider.GetRequiredService<ISettingsService>();
 
                 ThemeManager.ApplyTheme(settings.GetTheme());
 

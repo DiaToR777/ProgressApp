@@ -8,7 +8,7 @@
     {
         public class TableViewModel : INotifyPropertyChanged
         {
-            private readonly JournalService _service;
+            private readonly IJournalService _service;
             private JournalEntry? _selectedEntry;
             public ObservableCollection<JournalEntry> Entries { get; }
 
@@ -17,7 +17,7 @@
                 get => _selectedEntry;
                 set { _selectedEntry = value; OnPropertyChanged(); }
             }
-            public TableViewModel(JournalService service)
+            public TableViewModel(IJournalService service)
             {
                 _service = service;
                 var data = _service.GetAllEntries().OrderByDescending(e => e.Date);

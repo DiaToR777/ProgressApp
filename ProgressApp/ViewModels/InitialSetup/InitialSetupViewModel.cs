@@ -12,7 +12,7 @@ namespace ProgressApp.ViewModels.InitialSetup
 {
     public class InitialSetupViewModel : INotifyPropertyChanged
     {
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
 
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
@@ -63,7 +63,7 @@ namespace ProgressApp.ViewModels.InitialSetup
 
         public Action? Completed { get; set; }
 
-        public InitialSetupViewModel(SettingsService settings)
+        public InitialSetupViewModel(ISettingsService settings)
         {
             _settingsService = settings;
             SelectedLanguage = _settingsService.GetLanguage();

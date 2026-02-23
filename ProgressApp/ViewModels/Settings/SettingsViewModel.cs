@@ -16,7 +16,7 @@ namespace ProgressApp.ViewModels.Settings
     {
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
-        private readonly SettingsService _settingsService;
+        private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
 
         private string _username;
@@ -62,7 +62,7 @@ namespace ProgressApp.ViewModels.Settings
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
         public ICommand SaveSettingsCommand { get; }
-        public SettingsViewModel(SettingsService settingsService, IMessageService messageService)
+        public SettingsViewModel(ISettingsService settingsService, IMessageService messageService)
         {
             _settingsService = settingsService;
             _messageService = messageService;

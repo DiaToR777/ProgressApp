@@ -10,7 +10,7 @@ namespace ProgressApp.ViewModels.Today
 {
     public class TodayViewModel : INotifyPropertyChanged
     {
-        private readonly JournalService _service;
+        private readonly IJournalService _service;
         private readonly IMessageService _messageService;
 
 
@@ -37,7 +37,7 @@ namespace ProgressApp.ViewModels.Today
         }    
         public ICommand SaveCommand { get; }
 
-        public TodayViewModel(JournalService service, IMessageService messageService)
+        public TodayViewModel(IJournalService service, IMessageService messageService)
         {
             _service = service;
             _messageService = messageService;
