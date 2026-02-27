@@ -11,7 +11,6 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
     public class InitialSetupViewModel : INotifyPropertyChanged
     {
-
         
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
@@ -65,8 +64,9 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
         public Action? Completed { get; set; }
 
-        public InitialSetupViewModel(ISettingsService settings, ILocalizationService localizationService)
+        public InitialSetupViewModel(ISettingsService settings, ILocalizationService localizationService, IMessageService messageService)
         {
+            _messageService = messageService;
             _localizationService = localizationService;
             _settingsService = settings;
             SelectedLanguage = _settingsService.GetLanguage();
@@ -92,7 +92,6 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             try
             {
                 _settingsService.SaveSettings(Username, Goal, AppTheme.Light, SelectedLanguage);
-                _localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
                 Completed?.Invoke();
             }
             catch (ArgumentException ex)

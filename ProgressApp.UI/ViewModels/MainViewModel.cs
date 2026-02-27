@@ -1,16 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProgressApp.Core.Services;
-using ProgressApp.WpfUI.ViewModels.Today;
-using ProgressApp.WpfUI.ViewModels;
-using ProgressApp.WpfUI.ViewModels.InitialSetup;
-using ProgressApp.WpfUI.ViewModels.Settings;
-using ProgressApp.WpfUI.ViewModels.Table;
-using ProgressApp.WpfUI.Views.InitialSetup;
-using ProgressApp.WpfUI.Views.Settings;
-using ProgressApp.WpfUI.Views.Table;
-using ProgressApp.WpfUI.Views.Today;
 using System.ComponentModel;
+using ProgressApp.WpfUI.ViewModels.Today;
+using ProgressApp.WpfUI.Views.Today;
+using ProgressApp.WpfUI.Views.InitialSetup;
+using ProgressApp.WpfUI.ViewModels.InitialSetup;
+using ProgressApp.WpfUI.Views.Settings;
+using ProgressApp.WpfUI.ViewModels.Settings;
 using System.Runtime.CompilerServices;
+using ProgressApp.Core.Services;
+using ProgressApp.WpfUI.ViewModels.Table;
+using ProgressApp.WpfUI.Views.Table;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels
@@ -35,9 +34,9 @@ namespace ProgressApp.WpfUI.ViewModels
 
         private void ShowTable()
         {
-            var vm = _serviceProvider.GetRequiredService<ViewModels.Table.TableViewModel>();
+            var vm = _serviceProvider.GetRequiredService<TableViewModel>();
 
-            CurrentView = new Views.Table.TableView { DataContext = vm };
+            CurrentView = new TableView { DataContext = vm };
 
             IsNavigationVisible = true;
         }
@@ -77,14 +76,14 @@ namespace ProgressApp.WpfUI.ViewModels
         }
         private void ShowInitialsSetup()
         {
-            var vm = _serviceProvider.GetRequiredService<InitialSetup.InitialSetupViewModel>();
+            var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
             vm.Completed = () =>
             {
                 IsNavigationVisible = true;
                 ShowToday();
             };
 
-            CurrentView = new Views.InitialSetup.InitialSetupView { DataContext = vm };
+            CurrentView = new InitialSetupView { DataContext = vm };
             IsNavigationVisible = false;
 
 
@@ -95,12 +94,12 @@ namespace ProgressApp.WpfUI.ViewModels
         private void ShowToday()
         {
             var vm = _serviceProvider.GetRequiredService<TodayViewModel>();
-            CurrentView = new Views.Today.TodayView { DataContext = vm };
+            CurrentView = new TodayView { DataContext = vm };
         }
 
         private void ShowSettings()
         {
-            var vm = _serviceProvider.GetRequiredService<ViewModels.Settings.SettingsViewModel>();
+            var vm = _serviceProvider.GetRequiredService<SettingsViewModel>();
             CurrentView = new SettingsView { DataContext = vm };
             IsNavigationVisible = true;
         }

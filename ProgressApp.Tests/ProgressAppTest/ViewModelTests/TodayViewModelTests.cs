@@ -21,12 +21,6 @@ namespace ProgressAppTest.ViewModelTests
             _messageMock = new Mock<IMessageService>();
         }
 
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            // This method is called after each test method.
-        }
-
         [TestMethod]
         public void LoadToday_WhenNoEntry_ShouldSetDefaultResult()
         {

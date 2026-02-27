@@ -32,12 +32,6 @@ namespace ProgressAppTest.ViewModelTests
             _serviceMock.Setup(s => s.GetLanguage()).Returns(new LanguageModel { CultureCode = "uk-UA" });
         }
 
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            // This method is called after each test method.
-        }
-
         [TestMethod]
         public void Constructor_ShouldLoadSettingsFromService()
         {
@@ -73,7 +67,5 @@ namespace ProgressAppTest.ViewModelTests
 
             _messageMock.Verify(m => m.ShowInfo("Msg_SettingsSaved"), Times.Once);
         }
-
-
     }
 }
