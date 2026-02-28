@@ -14,7 +14,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         private readonly IMessageService _messageService;
 
 
-        private string _description;
+        private string _description = string.Empty;
         private DayResult _selectedResult;
         public DateOnly CurrentDate { get; } = DateOnly.FromDateTime(DateTime.Now);
         public IEnumerable<LocalizedEnum<DayResult>> AllResult { get; }
@@ -22,8 +22,12 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             
         public string Description
         {
-            get => _description;
-            set { _description = value; OnPropertyChanged(); }
+            get => _description ?? string.Empty; 
+            set
+            {
+                _description = value;
+                OnPropertyChanged();
+            }
         }
         public DayResult SelectedResult
         {

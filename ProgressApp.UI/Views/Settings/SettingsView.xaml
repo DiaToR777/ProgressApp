@@ -7,22 +7,29 @@
              xmlns:vm="clr-namespace:ProgressApp.WpfUI.ViewModels.Settings"
              d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}">
 
-	<Grid Margin="30">
-		<StackPanel MaxWidth="400" HorizontalAlignment="Left">
+    <Grid Margin="30">
+        <StackPanel MaxWidth="400" HorizontalAlignment="Left">
             <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ProfileSettings]}"
                        FontSize="22" FontWeight="Bold" Margin="0,0,0,20"/>
 
             <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" 
        ContentStringFormat="{}{0}:" />
-            <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,15"/>
+            <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,15"
+                     MaxLength="35"/>
 
             <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" 
        ContentStringFormat="{}{0}:" />
             <TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"
                      Height="60"
                      TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto"
                      AcceptsReturn="True"
-                     Margin="0,5,0,15"/>
+                     Margin="0,5,0,15"
+                     MaxLength="150"
+                     Width="300"                
+                     HorizontalAlignment="Left"
+                     />
+                     
 
             <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_Theme]}" 
        ContentStringFormat="{}{0}:" />
@@ -49,10 +56,10 @@
                     Command="{Binding SaveSettingsCommand}"
                     Padding="10,5"/>
 
-			<TextBlock Text="App v1.0.0"
+            <TextBlock Text="App v1.0.0"
                        Margin="0,30,0,0"
                        FontSize="10"
                        HorizontalAlignment="Center"/>
-		</StackPanel>
-	</Grid>
+        </StackPanel>
+    </Grid>
 </UserControl>

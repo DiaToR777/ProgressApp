@@ -21,17 +21,17 @@ namespace ProgressApp.Core.Data
             modelBuilder.Entity<AppSettings>(entity =>
             {
                 entity.HasKey(e => e.Key);
-                entity.Property(e => e.Key).HasMaxLength(100);
-                entity.Property(e => e.Value).HasMaxLength(500);
+                entity.Property(e => e.Key).HasMaxLength(35);
+                entity.Property(e => e.Value).HasMaxLength(150);
             });
 
             base.OnModelCreating(modelBuilder);
-        }        
-            public void Initialize()
-            {
-                Database.Migrate();
+        }
+        public void Initialize()
+        {
+            Database.Migrate();
 
-                    var defaultSettings = new List<AppSettings>
+            var defaultSettings = new List<AppSettings>
                     {
                         new AppSettings { Key = "Username", Value = "" },
                         new AppSettings { Key = "Goal", Value = "" },
@@ -39,17 +39,17 @@ namespace ProgressApp.Core.Data
                         new AppSettings { Key = "Language", Value = "en-US" }
                     };
 
-                bool changed = false;
-                foreach (var setting in defaultSettings)
+            bool changed = false;
+            foreach (var setting in defaultSettings)
+            {
+                if (!Settings.Any(s => s.Key == setting.Key))
                 {
-                    if (!Settings.Any(s => s.Key == setting.Key))
-                    {
-                        Settings.Add(setting);
-                        changed = true;
-                    }
+                    Settings.Add(setting);
+                    changed = true;
                 }
-                if (changed)
-                    SaveChanges();
             }
+            if (changed)
+                SaveChanges();
+        }
     }
 }

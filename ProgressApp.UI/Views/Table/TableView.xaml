@@ -61,7 +61,9 @@
                      TextWrapping="Wrap"
                      AcceptsReturn="True"
                      Height="120"
-                     Margin="0,5,0,0"/>
+                     Margin="0,5,0,0"
+                     VerticalScrollBarVisibility="Auto"
+/>
         </StackPanel>
     </Grid>
 </UserControl>
