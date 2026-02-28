@@ -16,8 +16,8 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
 
-        private string _username;
-        private string _goal;
+        private string _username = string.Empty;
+        private string _goal = string.Empty;
         private AppTheme _selectedTheme;
         private LanguageModel _selectedLanguage;
 
@@ -35,12 +35,26 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         public string Username
         {
             get => _username;
-            set { _username = value; OnPropertyChanged(); }
+            set
+            {
+                var _sanitizedValue = value?.Length > 50 ? value.Substring(0, 50) : value;
+                if (_username == _sanitizedValue) return;
+
+                _username = _sanitizedValue;
+                OnPropertyChanged();
+            }
         }
         public string Goal
         {
             get => _goal;
-            set { _goal = value; OnPropertyChanged(); }
+            set
+            {
+                var _sanitizedValue = value?.Length > 50 ? value.Substring(0, 50) : value;
+                if (_goal == _sanitizedValue) return;
+
+                _goal = _sanitizedValue;
+                OnPropertyChanged();
+            }
         }
 
         public AppTheme SelectedTheme

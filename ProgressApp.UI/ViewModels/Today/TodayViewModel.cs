@@ -22,10 +22,14 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             
         public string Description
         {
-            get => _description ?? string.Empty; 
+            get => _description; 
             set
             {
-                _description = value;
+                var sanitizedValue = value?.Length >1500 ? value.Substring(0, 1500) : value;
+
+                if (_description == sanitizedValue) return;
+
+                _description = sanitizedValue;
                 OnPropertyChanged();
             }
         }

@@ -15,13 +15,30 @@ namespace ProgressApp.WpfUI.ViewModels.Table
         public JournalEntry? SelectedEntry
         {
             get => _selectedEntry;
-            set { _selectedEntry = value; OnPropertyChanged(); }
+            set
+            {
+                if (_selectedEntry == value) return;
+
+                _selectedEntry = value;
+                OnPropertyChanged();
+            }
         }
         public TableViewModel(IJournalService service)
         {
             _service = service;
-            var data = _service.GetAllEntries().OrderByDescending(e => e.Date);
-            Entries = new ObservableCollection<JournalEntry>(data);
+            var rawData = _service.GetAllEntries().OrderByDescending(e => e.Date);
+
+            foreach (var entry in rawData)
+            {
+                if (entry.Description?.Length > 150)
+                {
+                    entry.Description = entry.Description.Substring(0, 150);
+                }
+            }
+
+            var orderedData = rawData.OrderByDescending(e => e.Date);
+            Entries = new ObservableCollection<JournalEntry>(orderedData);
+
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -9,14 +9,19 @@
                    FontSize="22"
                    Margin="0,0,0,20"
                    HorizontalAlignment="Center"/>
-        
+
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" 
        ContentStringFormat="{}{0}:" />
-        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" MaxLength="35"/>
 
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" 
        ContentStringFormat="{}{0}:" />
-        <TextBox  Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox  Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}" 
+                  MaxLength="150"
+                  Height="80"                
+                  TextWrapping="Wrap"        
+                  AcceptsReturn="True"       
+                  VerticalScrollBarVisibility="Auto"/>
 
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" 
        ContentStringFormat="{}{0}:" />
