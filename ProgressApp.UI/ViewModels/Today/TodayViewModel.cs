@@ -2,13 +2,11 @@
 using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Services;
 using ProgressApp.WpfUI.Localization.Helpers;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels.Today
 {
-    public class TodayViewModel : INotifyPropertyChanged
+    public class TodayViewModel : ViewModelBase
     {
         private readonly IJournalService _service;
         private readonly IMessageService _messageService;
@@ -19,30 +17,22 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         public DateOnly CurrentDate { get; } = DateOnly.FromDateTime(DateTime.Now);
         public IEnumerable<LocalizedEnum<DayResult>> AllResult { get; }
 
-            
+
         public string Description
         {
-            get => _description; 
+            get => _description;
             set
             {
-                var sanitizedValue = value?.Length >1500 ? value.Substring(0, 1500) : value;
-
-                if (_description == sanitizedValue) return;
-
-                _description = sanitizedValue;
-                OnPropertyChanged();
+                var sanitizedValue = value?.Length > 1500 ? value.Substring(0, 1500) : value;
+                SetProperty(ref _description, sanitizedValue);
             }
         }
         public DayResult SelectedResult
         {
             get => _selectedResult;
-            set
-            {
-                if (_selectedResult == value) return;
-                _selectedResult = value;
-                OnPropertyChanged();
-            }
-        }    
+            set => SetProperty(ref _selectedResult, value);
+
+        }
         public ICommand SaveCommand { get; }
 
         public TodayViewModel(IJournalService service, IMessageService messageService)
@@ -94,9 +84,5 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             _service.SaveToday(Description, SelectedResult);
             _messageService.ShowInfo("Msg_RecordSaved");
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

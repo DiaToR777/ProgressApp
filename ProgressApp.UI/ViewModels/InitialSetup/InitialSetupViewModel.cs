@@ -3,13 +3,11 @@ using ProgressApp.Core.Interfaces.IMessage;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
 using ProgressApp.Core.Services;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
-    public class InitialSetupViewModel : INotifyPropertyChanged
+    public class InitialSetupViewModel : ViewModelBase
     {
         
         private readonly ISettingsService _settingsService;
@@ -27,37 +25,25 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             get => _selectedLanguage;
             set
             {
-                if (_selectedLanguage == value) return;
-
-
-                _selectedLanguage = value;
-                OnPropertyChanged();
-
-                if (_selectedLanguage != null)
+                if (SetProperty(ref _selectedLanguage, value)) 
                 {
-                    _localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
+                    if (_selectedLanguage != null)
+                    {
+                        _localizationService.ChangeLanguage(_selectedLanguage.CultureCode);
+                    }
                 }
             }
         }
 
-
         public string Username
         {
             get => _username;
-            set
-            {
-                _username = value;
-                OnPropertyChanged(nameof(Username));
-            }
+            set => SetProperty(ref _username, value);
         }
         public string Goal
         {
             get => _goal;
-            set
-            {
-                _goal = value;
-                OnPropertyChanged(nameof(Goal));
-            }
+            set => SetProperty(ref _goal, value);
         }
 
         public ICommand FinishCommand { get; }
@@ -100,9 +86,5 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                 return;
             }
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName] string? name = null)
-                => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }

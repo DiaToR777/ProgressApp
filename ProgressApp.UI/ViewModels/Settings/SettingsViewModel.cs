@@ -1,15 +1,13 @@
 ﻿using ProgressApp.Core.Services;
 using ProgressApp.Core.Interfaces.IMessage;
 using ProgressApp.Core.Models.Enums;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using ProgressApp.Core.Models.Localization;
 using ProgressApp.Core.Interfaces;
 
 namespace ProgressApp.WpfUI.ViewModels.Settings
 {
-    public class SettingsViewModel : INotifyPropertyChanged
+    public class SettingsViewModel : ViewModelBase
     {
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
@@ -24,12 +22,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         public LanguageModel SelectedLanguage
         {
             get => _selectedLanguage;
-            set
-            {
-                if (_selectedLanguage == value) return;
-                _selectedLanguage = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _selectedLanguage, value);
         }
 
         public string Username
@@ -38,10 +31,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             set
             {
                 var _sanitizedValue = value?.Length > 50 ? value.Substring(0, 50) : value;
-                if (_username == _sanitizedValue) return;
-
-                _username = _sanitizedValue;
-                OnPropertyChanged();
+                SetProperty(ref _username, _sanitizedValue);
             }
         }
         public string Goal
@@ -50,24 +40,14 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             set
             {
                 var _sanitizedValue = value?.Length > 50 ? value.Substring(0, 50) : value;
-                if (_goal == _sanitizedValue) return;
-
-                _goal = _sanitizedValue;
-                OnPropertyChanged();
+                SetProperty(ref _goal, _sanitizedValue);
             }
         }
 
         public AppTheme SelectedTheme
         {
             get => _selectedTheme;
-            set
-            {
-                if (_selectedTheme == value) return;
-
-                _selectedTheme = value;
-
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _selectedTheme, value);
         }
 
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
@@ -101,15 +81,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
                 );
-            OnPropertyChanged(nameof(Username));
-            OnPropertyChanged(nameof(Goal));
-            OnPropertyChanged(nameof(SelectedTheme));
-            OnPropertyChanged(nameof(AvailableLanguages));
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
 

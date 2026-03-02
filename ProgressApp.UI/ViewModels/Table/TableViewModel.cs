@@ -1,12 +1,10 @@
 ﻿using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Services;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 
 namespace ProgressApp.WpfUI.ViewModels.Table
 {
-    public class TableViewModel : INotifyPropertyChanged
+    public class TableViewModel : ViewModelBase
     {
         private readonly IJournalService _service;
         private JournalEntry? _selectedEntry;
@@ -15,13 +13,7 @@ namespace ProgressApp.WpfUI.ViewModels.Table
         public JournalEntry? SelectedEntry
         {
             get => _selectedEntry;
-            set
-            {
-                if (_selectedEntry == value) return;
-
-                _selectedEntry = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _selectedEntry, value);            
         }
         public TableViewModel(IJournalService service)
         {
@@ -38,12 +30,7 @@ namespace ProgressApp.WpfUI.ViewModels.Table
 
             var orderedData = rawData.OrderByDescending(e => e.Date);
             Entries = new ObservableCollection<JournalEntry>(orderedData);
-
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged([CallerMemberName] string name = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 }
 

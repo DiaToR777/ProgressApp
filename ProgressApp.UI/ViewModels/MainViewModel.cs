@@ -1,12 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
 using ProgressApp.WpfUI.ViewModels.Today;
 using ProgressApp.WpfUI.Views.Today;
 using ProgressApp.WpfUI.Views.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.Views.Settings;
 using ProgressApp.WpfUI.ViewModels.Settings;
-using System.Runtime.CompilerServices;
 using ProgressApp.Core.Services;
 using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.Views.Table;
@@ -14,7 +12,7 @@ using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged
+    public class MainViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ISettingsService _settingsService;
@@ -25,11 +23,12 @@ namespace ProgressApp.WpfUI.ViewModels
         public object? CurrentView
         {
             get => _currentView;
-            set
-            {
-                _currentView = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _currentView, value);
+        }
+        public bool IsNavigationVisible
+        {
+            get => _isNavigationVisible;
+            set => SetProperty(ref _isNavigationVisible, value);
         }
 
         private void ShowTable()
@@ -39,15 +38,6 @@ namespace ProgressApp.WpfUI.ViewModels
             CurrentView = new TableView { DataContext = vm };
 
             IsNavigationVisible = true;
-        }
-        public bool IsNavigationVisible
-        {
-            get => _isNavigationVisible;
-            set
-            {
-                _isNavigationVisible = value;
-                OnPropertyChanged();
-            }
         }
 
         public ICommand ShowTodayCommand { get; }
@@ -85,11 +75,6 @@ namespace ProgressApp.WpfUI.ViewModels
 
             CurrentView = new InitialSetupView { DataContext = vm };
             IsNavigationVisible = false;
-
-
-            OnPropertyChanged(nameof(CurrentView));
-            OnPropertyChanged(nameof(IsNavigationVisible));
-
         }
         private void ShowToday()
         {
@@ -102,12 +87,6 @@ namespace ProgressApp.WpfUI.ViewModels
             var vm = _serviceProvider.GetRequiredService<SettingsViewModel>();
             CurrentView = new SettingsView { DataContext = vm };
             IsNavigationVisible = true;
-        }
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string? name = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
