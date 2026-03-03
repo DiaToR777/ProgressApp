@@ -39,7 +39,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             get => _goal;
             set
             {
-                var _sanitizedValue = value?.Length > 50 ? value.Substring(0, 50) : value;
+                var _sanitizedValue = value?.Length > 150 ? value.Substring(0, 150) : value;
                 SetProperty(ref _goal, _sanitizedValue);
             }
         }

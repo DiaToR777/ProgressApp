@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ProgressApp.Core.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +31,8 @@ namespace ProgressApp.Core.Migrations
                 name: "Settings",
                 columns: table => new
                 {
-                    Key = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Value = table.Column<string>(type: "TEXT", maxLength: 500, nullable: false)
+                    Key = table.Column<string>(type: "TEXT", maxLength: 35, nullable: false),
+                    Value = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {

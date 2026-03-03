@@ -11,8 +11,8 @@ using ProgressApp.Core.Data;
 namespace ProgressApp.Core.Migrations
 {
     [DbContext(typeof(ProgressDbContext))]
-    [Migration("20260226184113_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260303194905_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,12 +52,12 @@ namespace ProgressApp.Core.Migrations
             modelBuilder.Entity("ProgressApp.Core.Models.Settings.AppSettings", b =>
                 {
                     b.Property<string>("Key")
-                        .HasMaxLength(100)
+                        .HasMaxLength(35)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(500)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Key");

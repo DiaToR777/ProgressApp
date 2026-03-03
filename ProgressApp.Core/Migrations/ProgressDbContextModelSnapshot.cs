@@ -49,12 +49,12 @@ namespace ProgressApp.Core.Migrations
             modelBuilder.Entity("ProgressApp.Core.Models.Settings.AppSettings", b =>
                 {
                     b.Property<string>("Key")
-                        .HasMaxLength(100)
+                        .HasMaxLength(35)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(500)
+                        .HasMaxLength(150)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Key");
