@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProgressApp.Core.Models.Settings;
-using ProgressApp.Core.Models.Localization;
-using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Data;
+using ProgressApp.Core.Models.Enums;
+using ProgressApp.Core.Models.Localization;
+using ProgressApp.Core.Models.Settings;
+using Serilog;
 
 namespace ProgressApp.Core.Services
 {
@@ -16,59 +17,79 @@ namespace ProgressApp.Core.Services
 
         public bool IsFirstRun()
         {
-            var usernameSetting = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Username);
-            return usernameSetting == null || string.IsNullOrWhiteSpace(usernameSetting.Value);
+            var isFirst = !_context.Settings.Any(s => s.Key == SettingsKeys.Username);
+            Log.Debug("First run check: {IsFirstRun}", isFirst);
+            return isFirst;
         }
 
-        public string GetUserName()
-    => _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Username)?.Value ?? "";
-        public string GetGoal()
-    => _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Goal)?.Value ?? "";
+        public string GetUserName() => GetValue(SettingsKeys.Username) ?? "";
+        public string GetGoal() => GetValue(SettingsKeys.Goal) ?? "";
+
+        private string? GetValue(string key)
+        {
+            try
+            {
+                return _context.Settings.AsNoTracking().FirstOrDefault(s => s.Key == key)?.Value;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to load setting for key: {Key}", key);
+                return null;
+            }
+        }
 
         public AppTheme GetTheme()
         {
-            var themeValue = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Theme)?.Value;
+            var themeValue = GetValue(SettingsKeys.Theme);
+            if (Enum.TryParse(themeValue, out AppTheme result)) return result;
 
-            if (string.IsNullOrEmpty(themeValue))
-                return AppTheme.Light;
-
-            return Enum.TryParse(themeValue, out AppTheme result) ? result : AppTheme.Light;
+            Log.Warning("Theme not found or corrupted in DB. Falling back to Light.");
+            return AppTheme.Light;
         }
 
         public LanguageModel GetLanguage()
         {
-            // AsNoTracking 
-            string? languageCode = _context.Settings
-                .AsNoTracking()
-                .FirstOrDefault(s => s.Key == SettingsKeys.Language)?
-                .Value;
-
-            return LanguageConfig.GetByCode(languageCode);
+            string? code = GetValue(SettingsKeys.Language);
+            return LanguageConfig.GetByCode(code);
         }
 
         public void SaveSettings(string username, string goal, AppTheme theme, LanguageModel language)
         {
-            if (string.IsNullOrWhiteSpace(username))
-                throw new ArgumentException("Ім'я не може бути порожнім!");
+            try
+            {
+                Log.Information("Saving application settings for user: {Username}", username);
 
-            if (string.IsNullOrWhiteSpace(goal))
-                throw new ArgumentException("Ціль має бути заповнена!");
+                if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException("Username cannot be empty");
+                if (string.IsNullOrWhiteSpace(goal)) throw new ArgumentException("Goal cannot be empty");
 
-            var u = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Username);
-            if (u != null) u.Value = username;
+                UpdateOrAdd(SettingsKeys.Username, username);
+                UpdateOrAdd(SettingsKeys.Goal, goal);
+                UpdateOrAdd(SettingsKeys.Theme, theme.ToString());
+                UpdateOrAdd(SettingsKeys.Language, language.CultureCode);
 
-            var g = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Goal);
-            if (g != null) g.Value = goal;
-
-            var t = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Theme);
-            if (t != null) t.Value = theme.ToString();
-
-            var l = _context.Settings.FirstOrDefault(s => s.Key == SettingsKeys.Language);
-            if (l != null) l.Value = language.CultureCode;
-
-            _context.SaveChanges();
+                _context.SaveChanges();
+                Log.Information("All settings saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Fatal error while saving settings!");
+                throw;
+            }
         }
 
+        private void UpdateOrAdd(string key, string value)
+        {
+            var setting = _context.Settings.FirstOrDefault(s => s.Key == key);
+            if (setting != null)
+            {
+                setting.Value = value;
+            }
+            else
+            {
+                Log.Debug("Creating new setting entry: {Key} = {Value}", key, value);
+                _context.Settings.Add(new AppSettings { Key = key, Value = value });
+            }
+        }
     }
 
 }

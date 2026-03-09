@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Serilog;
 
 namespace ProgressApp.Core.Data
 {
@@ -17,6 +20,8 @@ namespace ProgressApp.Core.Data
             string dbPath = Path.Combine(folder, "progress.db");    
 
             optionsBuilder.UseSqlite($"Data Source={dbPath}");
+            optionsBuilder.LogTo(Log.Information, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
+        
             return new ProgressDbContext(optionsBuilder.Options);
         }
     }
