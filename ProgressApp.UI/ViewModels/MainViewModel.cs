@@ -31,14 +31,6 @@ namespace ProgressApp.WpfUI.ViewModels
             set => SetProperty(ref _isNavigationVisible, value);
         }
 
-        private void ShowTable()
-        {
-            var vm = _serviceProvider.GetRequiredService<TableViewModel>();
-
-            CurrentView = new TableView { DataContext = vm };
-
-            IsNavigationVisible = true;
-        }
 
         public ICommand ShowTodayCommand { get; }
         public ICommand ShowTableCommand { get; }
@@ -64,28 +56,34 @@ namespace ProgressApp.WpfUI.ViewModels
             ShowSettingsCommand = new RelayCommand(_ => ShowSettings());
 
         }
+
         private void ShowInitialsSetup()
         {
             var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
+
             vm.Completed = () =>
             {
                 IsNavigationVisible = true;
                 ShowToday();
             };
 
-            CurrentView = new InitialSetupView { DataContext = vm };
+            CurrentView = vm;
             IsNavigationVisible = false;
         }
+        private void ShowTable()
+        {
+            CurrentView = _serviceProvider.GetRequiredService<TableViewModel>();
+            IsNavigationVisible = true;
+        }
+
         private void ShowToday()
         {
-            var vm = _serviceProvider.GetRequiredService<TodayViewModel>();
-            CurrentView = new TodayView { DataContext = vm };
+            CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
         }
 
         private void ShowSettings()
         {
-            var vm = _serviceProvider.GetRequiredService<SettingsViewModel>();
-            CurrentView = new SettingsView { DataContext = vm };
+            CurrentView = _serviceProvider.GetRequiredService<SettingsViewModel>();
             IsNavigationVisible = true;
         }
     }

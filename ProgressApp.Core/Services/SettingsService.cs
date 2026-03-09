@@ -17,8 +17,16 @@ namespace ProgressApp.Core.Services
 
         public bool IsFirstRun()
         {
-            var isFirst = !_context.Settings.Any(s => s.Key == SettingsKeys.Username);
-            Log.Debug("First run check: {IsFirstRun}", isFirst);
+            var usernameSetting = _context.Settings
+                    .FirstOrDefault(s => s.Key == SettingsKeys.Username);
+
+            // Якщо запису немає (раптом автоматика збійнула) 
+            // АБО якщо він є, але значення порожнє — значить юзер ще не проходив Setup.
+            bool isFirst = usernameSetting == null || string.IsNullOrWhiteSpace(usernameSetting.Value);
+
+            Log.Debug("FirstRun check: Username value is '{Value}'. IsFirstRun: {Result}",
+                usernameSetting?.Value ?? "NULL", isFirst);
+
             return isFirst;
         }
 

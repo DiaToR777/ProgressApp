@@ -60,11 +60,10 @@ namespace ProgressApp.WpfUI
             services.AddDbContext<ProgressDbContext>(options =>
             {
                 options.UseSqlite($"Data Source={dbPath}");
-
-                options.LogTo(
-                    Log.Information,
-                    new[] { DbLoggerCategory.Database.Command.Name },
-                    LogLevel.Information);
+                //options.LogTo(
+                //    Log.Information,
+                //    new[] { DbLoggerCategory.Database.Command.Name },
+                //    LogLevel.Information);
             });
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
             services.AddSingleton<IThemeService, ThemeWrapper>(); 
