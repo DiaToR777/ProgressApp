@@ -104,7 +104,7 @@ namespace ProgressApp.WpfUI
                 var mainWindow = new MainWindow { DataContext = mainVM };
                 mainWindow.Show();
 
-                Log.Information("Main window shown successfully.");
+                Log.Information("App window shown successfully.");
             }
             catch (Exception ex)
             {

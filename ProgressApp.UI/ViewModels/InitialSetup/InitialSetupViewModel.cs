@@ -3,13 +3,14 @@ using ProgressApp.Core.Interfaces.IMessage;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
 using ProgressApp.Core.Services;
+using Serilog;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
     public class InitialSetupViewModel : ViewModelBase
     {
-        
+
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
         private readonly ILocalizationService _localizationService;
@@ -25,10 +26,11 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             get => _selectedLanguage;
             set
             {
-                if (SetProperty(ref _selectedLanguage, value)) 
+                if (SetProperty(ref _selectedLanguage, value))
                 {
                     if (_selectedLanguage != null)
                     {
+                        Log.Debug("InitialSetup: User selected language: {Culture}", _selectedLanguage.CultureCode);
                         _localizationService.ChangeLanguage(_selectedLanguage.CultureCode);
                     }
                 }
@@ -66,7 +68,8 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                     }
                     catch (Exception ex)
                     {
-                        _messageService.ShowError(ex.Message);
+                        Log.Error(ex, "InitialSetup: Critical error during setup finish");
+                        _messageService.ShowError("Msg_FinishSetupError");
                     }
                 },
                 canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
@@ -75,16 +78,12 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
         private void Finish()
         {
-            try
-            {
-                _settingsService.SaveSettings(Username, Goal, AppTheme.Light, SelectedLanguage);
-                Completed?.Invoke();
-            }
-            catch (ArgumentException ex)
-            {
-                _messageService.ShowError(ex.Message);
-                return;
-            }
+            Log.Information("InitialSetup: Attempting to save setup. Username: {Username}, Goal: {Goal}, Lang: {Lang}",
+        Username, Goal, SelectedLanguage?.CultureCode);
+
+            _settingsService.SaveSettings(Username, Goal, AppTheme.Light, SelectedLanguage);
+            Completed?.Invoke();
+            Log.Information("InitialSetup: Setup saved successfully. Invoking completion.");
         }
     }
 }

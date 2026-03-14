@@ -97,11 +97,38 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Data loading error. Check log file..
+        /// </summary>
+        public static string Msg_ErrorLoadingData {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Critical error during setup finish. Check logs..
+        /// </summary>
+        public static string Msg_FinishSetupError {
+            get {
+                return ResourceManager.GetString("Msg_FinishSetupError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Record saved!.
         /// </summary>
         public static string Msg_RecordSaved {
             get {
                 return ResourceManager.GetString("Msg_RecordSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to save entry. Check logs..
+        /// </summary>
+        public static string Msg_SaveEntryError {
+            get {
+                return ResourceManager.GetString("Msg_SaveEntryError", resourceCulture);
             }
         }
         

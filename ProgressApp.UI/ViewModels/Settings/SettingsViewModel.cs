@@ -1,9 +1,10 @@
-﻿using ProgressApp.Core.Services;
+﻿using ProgressApp.Core.Interfaces;
 using ProgressApp.Core.Interfaces.IMessage;
 using ProgressApp.Core.Models.Enums;
-using System.Windows.Input;
 using ProgressApp.Core.Models.Localization;
-using ProgressApp.Core.Interfaces;
+using ProgressApp.Core.Services;
+using Serilog;
+using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels.Settings
 {
@@ -58,29 +59,42 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             _settingsService = settingsService;
             _messageService = messageService;
 
-            Username = _settingsService.GetUserName();
-            Goal = _settingsService.GetGoal();
-            SelectedTheme = _settingsService.GetTheme();
-            SelectedLanguage = _settingsService.GetLanguage();
+            try
+            {
+                Username = _settingsService.GetUserName();
+                Goal = _settingsService.GetGoal();
+                SelectedTheme = _settingsService.GetTheme();
+                SelectedLanguage = _settingsService.GetLanguage();
+                Log.Debug("SettingsVM: Current settings loaded for user {Username}", Username);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "SettingsVM: Failed to load initial settings");
+            }
 
             SaveSettingsCommand = new RelayCommand(
-                    execute: _ =>
+                execute: _ =>
+                {
+                    try
                     {
-                        try
-                        {
-                            _settingsService.SaveSettings(Username, Goal, SelectedTheme, SelectedLanguage);
-                            localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
-                            themeService.SetTheme(SelectedTheme);
+                        Log.Information("SettingsVM: Saving settings. New Culture: {Culture}, Theme: {Theme}",
+                            SelectedLanguage.CultureCode, SelectedTheme);
 
-                            _messageService.ShowInfo("Msg_SettingsSaved");
-                        }
-                        catch (Exception ex)
-                        {
-                            _messageService.ShowError(ex.Message);
-                        }
-                    },
-                    canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
-                );
+                        _settingsService.SaveSettings(Username, Goal, SelectedTheme, SelectedLanguage);
+                        localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
+                        themeService.SetTheme(SelectedTheme);
+
+                        _messageService.ShowInfo("Msg_SettingsSaved");
+                        Log.Information("SettingsVM: Settings updated successfully.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "SettingsVM: Error saving settings");
+                        _messageService.ShowError("Msg_ErrorSavingSettings");
+                    }
+                },
+                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
+            );
         }
     }
 }

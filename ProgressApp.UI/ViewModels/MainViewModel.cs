@@ -1,13 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProgressApp.WpfUI.ViewModels.Today;
-using ProgressApp.WpfUI.Views.Today;
-using ProgressApp.WpfUI.Views.InitialSetup;
-using ProgressApp.WpfUI.ViewModels.InitialSetup;
-using ProgressApp.WpfUI.Views.Settings;
-using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.Core.Services;
+using ProgressApp.WpfUI.ViewModels.InitialSetup;
+using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Table;
-using ProgressApp.WpfUI.Views.Table;
+using ProgressApp.WpfUI.ViewModels.Today;
+using Serilog;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels
@@ -23,7 +20,13 @@ namespace ProgressApp.WpfUI.ViewModels
         public object? CurrentView
         {
             get => _currentView;
-            set => SetProperty(ref _currentView, value);
+            set
+            {
+                if (SetProperty(ref _currentView, value))
+                {
+                    Log.Information("Navigation: switched to {ViewModelName}", value?.GetType().Name ?? "null");
+                }
+            }
         }
         public bool IsNavigationVisible
         {

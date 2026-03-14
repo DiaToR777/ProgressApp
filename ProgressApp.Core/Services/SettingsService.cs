@@ -20,8 +20,6 @@ namespace ProgressApp.Core.Services
             var usernameSetting = _context.Settings
                     .FirstOrDefault(s => s.Key == SettingsKeys.Username);
 
-            // Якщо запису немає (раптом автоматика збійнула) 
-            // АБО якщо він є, але значення порожнє — значить юзер ще не проходив Setup.
             bool isFirst = usernameSetting == null || string.IsNullOrWhiteSpace(usernameSetting.Value);
 
             Log.Debug("FirstRun check: Username value is '{Value}'. IsFirstRun: {Result}",
@@ -48,11 +46,19 @@ namespace ProgressApp.Core.Services
 
         public AppTheme GetTheme()
         {
-            var themeValue = GetValue(SettingsKeys.Theme);
-            if (Enum.TryParse(themeValue, out AppTheme result)) return result;
+            try
+            {
+                var themeValue = GetValue(SettingsKeys.Theme);
+                if (Enum.TryParse(themeValue, out AppTheme result)) return result;
 
-            Log.Warning("Theme not found or corrupted in DB. Falling back to Light.");
-            return AppTheme.Light;
+                Log.Warning("Theme not found or corrupted in DB. Falling back to Light.");
+                return AppTheme.Light;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to read Theme from database!");
+                throw;
+            }
         }
 
         public LanguageModel GetLanguage()

@@ -2,6 +2,7 @@
 using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Services;
 using ProgressApp.WpfUI.Localization.Helpers;
+using Serilog;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels.Today
@@ -52,10 +53,12 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                         try
                         {
                             SaveEntry();
+                            _messageService.ShowInfo("Msg_RecordSaved");
+                            Log.Debug("TodayViewModel: UI Success notification shown to user");
                         }
                         catch (Exception ex)
                         {
-                            _messageService.ShowError(ex.Message);
+                            _messageService.ShowError("Msg_SaveEntryError");
                         }
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Description)
@@ -65,24 +68,42 @@ namespace ProgressApp.WpfUI.ViewModels.Today
 
         private void LoadToday()
         {
-            var entry = _service.GetToday();
-
-
-            if (entry != null)
+            Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
+            try
             {
-                Description = entry.Description;
-                SelectedResult = entry.Result;
+                var entry = _service.GetToday();
+
+                if (entry != null)
+                {
+                    Description = entry.Description;
+                    SelectedResult = entry.Result;
+                }
+                else
+                {
+                    SelectedResult = DayResult.Relapse;
+                }
+
             }
-            else
+            catch (Exception ex)
             {
-                SelectedResult = DayResult.Relapse;
+                Log.Error(ex, "TodayViewModel: Error loading today's entry");
+                _messageService.ShowError("Msg_ErrorLoadingData"); 
             }
         }
 
         private void SaveEntry()
         {
-            _service.SaveToday(Description, SelectedResult);
-            _messageService.ShowInfo("Msg_RecordSaved");
+            Log.Information("TodayViewModel: Attempting to save entry. Result: {Result}", SelectedResult);
+            try
+            {
+                _service.SaveToday(Description, SelectedResult);
+                Log.Information("TodayViewModel: Successfully saved to database.");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "TodayViewModel: Failed to save entry");
+                throw;
+            }
         }
     }
 }

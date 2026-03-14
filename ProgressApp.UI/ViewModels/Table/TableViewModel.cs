@@ -1,5 +1,8 @@
-﻿using ProgressApp.Core.Models.Journal;
+﻿using ProgressApp.Core.Interfaces.IMessage;
+using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Services;
+using ProgressApp.WpfUI.Services.Message;
+using Serilog;
 using System.Collections.ObjectModel;
 
 namespace ProgressApp.WpfUI.ViewModels.Table
@@ -13,23 +16,30 @@ namespace ProgressApp.WpfUI.ViewModels.Table
         public JournalEntry? SelectedEntry
         {
             get => _selectedEntry;
-            set => SetProperty(ref _selectedEntry, value);            
+            set => SetProperty(ref _selectedEntry, value);
         }
-        public TableViewModel(IJournalService service)
+        public TableViewModel(IJournalService service, IMessageService messageService)
         {
             _service = service;
-            var rawData = _service.GetAllEntries().OrderByDescending(e => e.Date);
+            Log.Debug("TableViewModel: Fetching all journal entries...");
 
-            foreach (var entry in rawData)
+            try
             {
-                if (entry.Description?.Length > 150)
-                {
-                    entry.Description = entry.Description.Substring(0, 150);
-                }
-            }
 
-            var orderedData = rawData.OrderByDescending(e => e.Date);
-            Entries = new ObservableCollection<JournalEntry>(orderedData);
+                var data = _service.GetAllEntries()
+                                           .OrderByDescending(e => e.Date)
+                                           .ToList();
+
+                Log.Information("TableViewModel: Successfully loaded {Count} entries", data.Count);
+
+                Entries = new ObservableCollection<JournalEntry>(data);
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "TableViewModel: Failed to load journal entries");
+                messageService.ShowError("Msg_ErrorLoadingData");
+            }
         }
     }
 }

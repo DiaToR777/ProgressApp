@@ -7,7 +7,7 @@ namespace ProgressApp.Core.Models.Journal
         public int Id { get; set; }
         public DateTime Date { get; set; }
 
-        [MaxLength(2000)]
+        [MaxLength(1500)]
         public string Description { get; set; } = string.Empty;
         public DayResult Result { get; set; }
         public DateTime CreatedAt { get; set; }
