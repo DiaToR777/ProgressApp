@@ -1,4 +1,5 @@
-﻿using ProgressApp.Core.Interfaces;
+﻿using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces;
 using ProgressApp.Core.Interfaces.IMessage;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
@@ -67,9 +68,10 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 SelectedLanguage = _settingsService.GetLanguage();
                 Log.Debug("SettingsVM: Current settings loaded for user {Username}", Username);
             }
-            catch (Exception ex)
+            catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Failed to load initial settings");
+                messageService.ShowError(ex);
             }
 
             SaveSettingsCommand = new RelayCommand(
@@ -87,10 +89,10 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                         _messageService.ShowInfo("Msg_SettingsSaved");
                         Log.Information("SettingsVM: Settings updated successfully.");
                     }
-                    catch (Exception ex)
+                    catch (AppException ex)
                     {
                         Log.Error(ex, "SettingsVM: Error saving settings");
-                        _messageService.ShowError("Msg_ErrorSavingSettings");
+                        _messageService.ShowError(ex);
                     }
                 },
                 canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)

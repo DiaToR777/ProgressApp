@@ -1,4 +1,5 @@
-﻿using ProgressApp.Core.Interfaces.IMessage;
+﻿using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces.IMessage;
 using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Services;
 using ProgressApp.WpfUI.Services.Message;
@@ -35,10 +36,10 @@ namespace ProgressApp.WpfUI.ViewModels.Table
                 Entries = new ObservableCollection<JournalEntry>(data);
 
             }
-            catch (Exception ex)
+            catch (AppException ex)
             {
                 Log.Error(ex, "TableViewModel: Failed to load journal entries");
-                messageService.ShowError("Msg_ErrorLoadingData");
+                messageService.ShowError(ex);
             }
         }
     }

@@ -5,6 +5,7 @@ using ProgressApp.Core.Models.Localization;
 using ProgressApp.Core.Services;
 using Serilog;
 using System.Windows.Input;
+using ProgressApp.Core.Exceptions;
 
 namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
@@ -66,10 +67,10 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                     {
                         Finish();
                     }
-                    catch (Exception ex)
+                    catch (AppException ex)
                     {
                         Log.Error(ex, "InitialSetup: Critical error during setup finish");
-                        _messageService.ShowError("Msg_FinishSetupError");
+                        _messageService.ShowError(ex);
                     }
                 },
                 canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)

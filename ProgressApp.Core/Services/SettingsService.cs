@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProgressApp.Core.Data;
+using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
 using ProgressApp.Core.Models.Settings;
@@ -40,7 +41,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to load setting for key: {Key}", key);
-                return null;
+                throw new AppException("Msg_ErrorLoadingSetting", key);
             }
         }
 
@@ -57,7 +58,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to read Theme from database!");
-                throw;
+                throw new AppException("Msg_ThemeReadError");
             }
         }
 
@@ -73,8 +74,8 @@ namespace ProgressApp.Core.Services
             {
                 Log.Information("Saving application settings for user: {Username}", username);
 
-                if (string.IsNullOrWhiteSpace(username)) throw new ArgumentException("Username cannot be empty");
-                if (string.IsNullOrWhiteSpace(goal)) throw new ArgumentException("Goal cannot be empty");
+                if (string.IsNullOrWhiteSpace(username)) throw new AppException("Msg_UsernameEmpty");
+                if (string.IsNullOrWhiteSpace(goal)) throw new AppException("Msg_GoalEmpty");
 
                 UpdateOrAdd(SettingsKeys.Username, username);
                 UpdateOrAdd(SettingsKeys.Goal, goal);
@@ -84,15 +85,16 @@ namespace ProgressApp.Core.Services
                 _context.SaveChanges();
                 Log.Information("All settings saved successfully.");
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not AppException)
             {
                 Log.Error(ex, "Fatal error while saving settings!");
-                throw;
+                throw new AppException("Msg_SaveSettingsError");
             }
         }
 
         private void UpdateOrAdd(string key, string value)
-        {
+        { 
+
             var setting = _context.Settings.FirstOrDefault(s => s.Key == key);
             if (setting != null)
             {

@@ -97,6 +97,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Description cannot be empty!.
+        /// </summary>
+        public static string Msg_DescriptionEmpty {
+            get {
+                return ResourceManager.GetString("Msg_DescriptionEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Data loading error. Check log file..
         /// </summary>
         public static string Msg_ErrorLoadingData {
@@ -106,11 +115,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Unable to load settings: “{0}”. Please try again or check the database..
+        /// </summary>
+        public static string Msg_ErrorLoadingSetting {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Critical error during setup finish. Check logs..
         /// </summary>
         public static string Msg_FinishSetupError {
             get {
                 return ResourceManager.GetString("Msg_FinishSetupError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Goal cannot be empty!.
+        /// </summary>
+        public static string Msg_GoalEmpty {
+            get {
+                return ResourceManager.GetString("Msg_GoalEmpty", resourceCulture);
             }
         }
         
@@ -133,11 +160,38 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Fatal error while saving settings! Check logs..
+        /// </summary>
+        public static string Msg_SaveSettingsError {
+            get {
+                return ResourceManager.GetString("Msg_SaveSettingsError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Settings saved.
         /// </summary>
         public static string Msg_SettingsSaved {
             get {
                 return ResourceManager.GetString("Msg_SettingsSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to read Theme from database. Check logs..
+        /// </summary>
+        public static string Msg_ThemeReadError {
+            get {
+                return ResourceManager.GetString("Msg_ThemeReadError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Username cannot be empty!.
+        /// </summary>
+        public static string Msg_UsernameEmpty {
+            get {
+                return ResourceManager.GetString("Msg_UsernameEmpty", resourceCulture);
             }
         }
         

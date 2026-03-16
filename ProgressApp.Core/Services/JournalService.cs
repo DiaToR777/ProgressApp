@@ -1,6 +1,7 @@
 ﻿using ProgressApp.Core.Data;
 using ProgressApp.Core.Models.Journal;
 using Serilog;
+using ProgressApp.Core.Exceptions;
 
 namespace ProgressApp.Core.Services
 {
@@ -23,7 +24,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Error while checking for today's entry in database.");
-                return null;
+                throw new AppException("Msg_ErrorLoadingData");
             }
         }
 
@@ -31,11 +32,10 @@ namespace ProgressApp.Core.Services
         {
             try
             {
-
                 if (string.IsNullOrWhiteSpace(description))
                 {
                     Log.Warning("Attempted to save today's entry with empty description.");
-                    throw new ArgumentException("Опис дня не може бути порожнім!");
+                    throw new AppException("Msg_DescriptionEmpty");
                 }
 
                 var entry = GetToday();
@@ -63,11 +63,11 @@ namespace ProgressApp.Core.Services
 
                 Log.Information("Entry {Action} successfully. ID: {Id}", isNew ? "created" : "updated", entry.Id);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not AppException)
             {
 
                 Log.Error(ex, "Error occurred while saving today's entry (Description: {Description})", description);
-                throw;
+                throw new AppException("Msg_SaveEntryError");
             }
         }
 
@@ -85,7 +85,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to fetch all journal entries.");
-                return new List<JournalEntry>(); 
+                throw new AppException("Msg_ErrorLoadingData");
             }
         }
 

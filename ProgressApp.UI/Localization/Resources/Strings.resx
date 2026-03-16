@@ -129,11 +129,20 @@
   <data name="DataGrid_Result" xml:space="preserve">
     <value>Result</value>
   </data>
+  <data name="Msg_DescriptionEmpty" xml:space="preserve">
+    <value>Description cannot be empty!</value>
+  </data>
   <data name="Msg_ErrorLoadingData" xml:space="preserve">
     <value>Data loading error. Check log file.</value>
   </data>
+  <data name="Msg_ErrorLoadingSetting" xml:space="preserve">
+    <value>Unable to load settings: “{0}”. Please try again or check the database.</value>
+  </data>
   <data name="Msg_FinishSetupError" xml:space="preserve">
     <value>Critical error during setup finish. Check logs.</value>
+  </data>
+  <data name="Msg_GoalEmpty" xml:space="preserve">
+    <value>Goal cannot be empty!</value>
   </data>
   <data name="Msg_RecordSaved" xml:space="preserve">
     <value>Record saved!</value>
@@ -141,8 +150,17 @@
   <data name="Msg_SaveEntryError" xml:space="preserve">
     <value>Failed to save entry. Check logs.</value>
   </data>
+  <data name="Msg_SaveSettingsError" xml:space="preserve">
+    <value>Fatal error while saving settings! Check logs.</value>
+  </data>
   <data name="Msg_SettingsSaved" xml:space="preserve">
     <value>Settings saved</value>
+  </data>
+  <data name="Msg_ThemeReadError" xml:space="preserve">
+    <value>Failed to read Theme from database. Check logs.</value>
+  </data>
+  <data name="Msg_UsernameEmpty" xml:space="preserve">
+    <value>Username cannot be empty!</value>
   </data>
   <data name="NavBtn_Settings" xml:space="preserve">
     <value>Settings</value>

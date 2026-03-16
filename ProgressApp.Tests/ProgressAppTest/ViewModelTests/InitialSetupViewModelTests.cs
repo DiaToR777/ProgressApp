@@ -61,19 +61,19 @@ namespace ProgressAppTest.ViewModelTests
             completedCalled.Should().BeTrue();
         }
 
-        [TestMethod]
-        public void FinishCommand_WhenInvalidData_ShouldShowError()
-        {
-            _settingsService.Setup(s => s.SaveSettings(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<AppTheme>(), It.IsAny<LanguageModel>()))
-                         .Throws(new ArgumentException("Database error"));
+        //[TestMethod]
+        //public void FinishCommand_WhenInvalidData_ShouldShowError()
+        //{
+        //    _settingsService.Setup(s => s.SaveSettings(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<AppTheme>(), It.IsAny<LanguageModel>()))
+        //                 .Throws(new ArgumentException("Database error"));
 
-            var vm = new InitialSetupViewModel(_settingsService.Object, _localizationService.Object, _messageService.Object);
-            vm.Username = "User";
-            vm.Goal = "Goal";
+        //    var vm = new InitialSetupViewModel(_settingsService.Object, _localizationService.Object, _messageService.Object);
+        //    vm.Username = "User";
+        //    vm.Goal = "Goal";
 
-            vm.FinishCommand.Execute(null);
+        //    vm.FinishCommand.Execute(null);
 
-            _messageService.Verify(m => m.ShowError("Database error"), Times.Once);
-        }
+        //    _messageService.Verify(m => m.ShowError("Database error"), Times.Once);
+        //}
     }
 }

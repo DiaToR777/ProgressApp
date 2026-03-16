@@ -4,6 +4,7 @@ using ProgressApp.Core.Services;
 using ProgressApp.WpfUI.Localization.Helpers;
 using Serilog;
 using System.Windows.Input;
+using ProgressApp.Core.Exceptions;
 
 namespace ProgressApp.WpfUI.ViewModels.Today
 {
@@ -56,9 +57,9 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                             _messageService.ShowInfo("Msg_RecordSaved");
                             Log.Debug("TodayViewModel: UI Success notification shown to user");
                         }
-                        catch (Exception ex)
+                        catch (AppException ex)
                         {
-                            _messageService.ShowError("Msg_SaveEntryError");
+                            _messageService.ShowError(ex);
                         }
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Description)
@@ -84,10 +85,10 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 }
 
             }
-            catch (Exception ex)
+            catch (AppException ex)
             {
                 Log.Error(ex, "TodayViewModel: Error loading today's entry");
-                _messageService.ShowError("Msg_ErrorLoadingData"); 
+                _messageService.ShowError(ex); 
             }
         }
 

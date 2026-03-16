@@ -1,4 +1,5 @@
-﻿using ProgressApp.Core.Interfaces.IMessage;
+﻿using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces.IMessage;
 using ProgressApp.WpfUI.Localization.Managers;
 using System.Windows;
 
@@ -20,13 +21,25 @@ namespace ProgressApp.WpfUI.Services.Message
             var result = MessageBox.Show(message, title, MessageBoxButton.YesNo, MessageBoxImage.Question);
             return result == MessageBoxResult.Yes;
         }
-        public void ShowError(string exMessage)
+        public void ShowError(AppException ex)
         {
+            // 1. Отримуємо сирий шаблон з ресурсів (напр. "Помилка завантаження: {0}")
+            string pattern = GetLocalizedText(ex.ResourceKey);
+
+            // 2. Форматуємо, якщо є аргументи
+            string message = (ex.Args != null && ex.Args.Length > 0)
+                ? string.Format(pattern, ex.Args)
+                : pattern;
+
+            // 3. Додаємо тех-інфу (для юзера це часто зайве, але для дебагу — топ)
+            if (ex.InnerException != null)
+                message += $"\n\nDetails: {ex.InnerException.Message}";
+
             string title = GetLocalizedText("Title_Error");
-            MessageBox.Show(exMessage, title, MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private string GetLocalizedText(string key)
+        private string GetLocalizedText(string key) 
         {
             return TranslationSource.Instance[key] ?? key;
         }
