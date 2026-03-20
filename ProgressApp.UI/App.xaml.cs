@@ -2,8 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ProgressApp.Core.Data;
-using ProgressApp.Core.Interfaces;
-using ProgressApp.Core.Interfaces.IMessage;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Services;
 using ProgressApp.WpfUI.Localization.Managers;
 using ProgressApp.WpfUI.Services.Message;

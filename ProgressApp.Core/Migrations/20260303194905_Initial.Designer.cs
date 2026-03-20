@@ -34,7 +34,7 @@ namespace ProgressApp.Core.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(1000)
+                        .HasMaxLength(1500)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Result")

@@ -1,9 +1,7 @@
 ﻿using ProgressApp.Core.Exceptions;
-using ProgressApp.Core.Interfaces;
-using ProgressApp.Core.Interfaces.IMessage;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
-using ProgressApp.Core.Services;
 using Serilog;
 using System.Windows.Input;
 

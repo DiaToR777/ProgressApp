@@ -15,7 +15,7 @@ namespace ProgressApp.Core.Data
             modelBuilder.Entity<JournalEntry>(entity =>
             {
                 entity.HasIndex(e => e.Date).IsUnique().HasDatabaseName("IX_Entries_Date");
-                entity.Property(e => e.Description).HasMaxLength(1000);
+                entity.Property(e => e.Description).HasMaxLength(1500);
             });
 
             modelBuilder.Entity<AppSettings>(entity =>

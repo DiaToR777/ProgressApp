@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProgressApp.Core.Services;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Table;

@@ -1,6 +1,6 @@
 ﻿using ProgressApp.Core.Models.Journal;
 
-namespace ProgressApp.Core.Services
+namespace ProgressApp.Core.Interfaces.IService
 {
     public interface IJournalService
     {

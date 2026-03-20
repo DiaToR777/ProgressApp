@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
 using ProgressApp.Core.Models.Settings;

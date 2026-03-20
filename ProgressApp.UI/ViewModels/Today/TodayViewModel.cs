@@ -1,10 +1,9 @@
-﻿using ProgressApp.Core.Interfaces.IMessage;
-using ProgressApp.Core.Models.Journal;
-using ProgressApp.Core.Services;
+﻿using ProgressApp.Core.Models.Journal;
 using ProgressApp.WpfUI.Localization.Helpers;
 using Serilog;
 using System.Windows.Input;
 using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces.IService;
 
 namespace ProgressApp.WpfUI.ViewModels.Today
 {

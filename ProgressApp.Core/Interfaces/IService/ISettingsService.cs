@@ -1,7 +1,7 @@
 ﻿using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
 
-namespace ProgressApp.Core.Services
+namespace ProgressApp.Core.Interfaces.IService
 {
     public interface ISettingsService
     {

@@ -1,4 +1,4 @@
-﻿namespace ProgressApp.Core.Interfaces
+﻿namespace ProgressApp.Core.Interfaces.IService
 {
     public interface ILocalizationService
     {

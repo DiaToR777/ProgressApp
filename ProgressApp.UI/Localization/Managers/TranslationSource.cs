@@ -1,4 +1,4 @@
-﻿using ProgressApp.Core.Interfaces;
+﻿using ProgressApp.Core.Interfaces.IService;
 using System.ComponentModel;
 using System.Globalization;
 using System.Resources;

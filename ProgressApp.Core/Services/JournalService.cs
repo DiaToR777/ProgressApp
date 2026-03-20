@@ -2,6 +2,7 @@
 using ProgressApp.Core.Models.Journal;
 using Serilog;
 using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces.IService;
 
 namespace ProgressApp.Core.Services
 {

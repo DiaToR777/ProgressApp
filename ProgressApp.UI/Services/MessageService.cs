@@ -1,5 +1,5 @@
 ﻿using ProgressApp.Core.Exceptions;
-using ProgressApp.Core.Interfaces.IMessage;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.WpfUI.Localization.Managers;
 using System.Windows;
 

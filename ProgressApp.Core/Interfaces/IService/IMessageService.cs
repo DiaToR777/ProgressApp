@@ -1,6 +1,6 @@
 ﻿using ProgressApp.Core.Exceptions;
 
-namespace ProgressApp.Core.Interfaces.IMessage
+namespace ProgressApp.Core.Interfaces.IService
 {
     public interface IMessageService
     {
