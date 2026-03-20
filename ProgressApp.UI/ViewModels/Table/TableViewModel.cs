@@ -1,7 +1,6 @@
 ﻿using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
-using ProgressApp.WpfUI.Services.Message;
 using Serilog;
 using System.Collections.ObjectModel;
 

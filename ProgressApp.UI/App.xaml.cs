@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Services;
@@ -116,7 +115,7 @@ namespace ProgressApp.WpfUI
         protected override void OnExit(ExitEventArgs e)
         {
             Log.Information("Application is exiting.");
-            Log.CloseAndFlush(); // Гарантує, що всі логи запишуться у файл
+            Log.CloseAndFlush(); 
             base.OnExit(e);
         }
     }

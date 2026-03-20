@@ -4,6 +4,7 @@ using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
+using ProgressApp.Core.Exceptions;
 
 namespace ProgressAppTest.ViewModelTests
 {
@@ -59,19 +60,23 @@ namespace ProgressAppTest.ViewModelTests
             completedCalled.Should().BeTrue();
         }
 
-        //[TestMethod]
-        //public void FinishCommand_WhenInvalidData_ShouldShowError()
-        //{
-        //    _settingsService.Setup(s => s.SaveSettings(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<AppTheme>(), It.IsAny<LanguageModel>()))
-        //                 .Throws(new ArgumentException("Database error"));
+        [TestMethod]
+        public void FinishCommand_WhenInvalidData_ShouldShowError()
+        {
 
-        //    var vm = new InitialSetupViewModel(_settingsService.Object, _localizationService.Object, _messageService.Object);
-        //    vm.Username = "User";
-        //    vm.Goal = "Goal";
+            var expectedException = new AppException("Database error", "Error_Title");
 
-        //    vm.FinishCommand.Execute(null);
 
-        //    _messageService.Verify(m => m.ShowError("Database error"), Times.Once);
-        //}
+            _settingsService.Setup(s => s.SaveSettings(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<AppTheme>(), It.IsAny<LanguageModel>()))
+                         .Throws(expectedException);
+
+            var vm = new InitialSetupViewModel(_settingsService.Object, _localizationService.Object, _messageService.Object);
+            vm.Username = "User";
+            vm.Goal = "Goal";
+
+            vm.FinishCommand.Execute(null);
+
+            _messageService.Verify(m => m.ShowError(expectedException), Times.Once);
+        }
     }
 }

@@ -10,11 +10,13 @@ namespace ProgressAppTest.ViewModelTests
     public sealed class TableViewModelTests
     {
         private Mock<IJournalService> _serviceMock;
+        private Mock<IMessageService> _messageServiceMock;
 
         [TestInitialize]
         public void TestInit()
         {
             _serviceMock = new Mock<IJournalService>();
+            _messageServiceMock = new Mock<IMessageService>();
         }
 
         [TestMethod]
@@ -28,7 +30,7 @@ namespace ProgressAppTest.ViewModelTests
 
             _serviceMock.Setup(s => s.GetAllEntries()).Returns(testEntries);
 
-            var vm = new TableViewModel(_serviceMock.Object);
+            var vm = new TableViewModel(_serviceMock.Object, _messageServiceMock.Object);
 
             vm.Entries.Should().HaveCount(2);
             vm.Entries.Should().ContainSingle(e => e.Description == "Entry 1");

@@ -23,15 +23,12 @@ namespace ProgressApp.WpfUI.Services.Message
         }
         public void ShowError(AppException ex)
         {
-            // 1. Отримуємо сирий шаблон з ресурсів (напр. "Помилка завантаження: {0}")
             string pattern = GetLocalizedText(ex.ResourceKey);
 
-            // 2. Форматуємо, якщо є аргументи
             string message = (ex.Args != null && ex.Args.Length > 0)
                 ? string.Format(pattern, ex.Args)
                 : pattern;
 
-            // 3. Додаємо тех-інфу (для юзера це часто зайве, але для дебагу — топ)
             if (ex.InnerException != null)
                 message += $"\n\nDetails: {ex.InnerException.Message}";
 
