@@ -5,12 +5,12 @@ namespace ProgressApp.Core.Interfaces.IService
 {
     public interface ISettingsService
     {
-        bool IsFirstRun();
-        string GetGoal();
-        string GetUserName();
-        AppTheme GetTheme();
-        LanguageModel GetLanguage();
-        void SaveSettings(string username, string goal, AppTheme theme, LanguageModel language);
+        Task<bool> IsFirstRunAsync();
+        Task<string> GetGoalAsync();
+        Task<string> GetUserNameAsync();
+        Task<AppTheme> GetThemeAsync();
+        Task<LanguageModel> GetLanguageAsync();
+        Task SaveSettingsAsync(string username, string goal, AppTheme theme, LanguageModel language);
 
     }
 }

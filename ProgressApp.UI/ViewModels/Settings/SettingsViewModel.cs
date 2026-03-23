@@ -11,6 +11,8 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
     {
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
+        public bool IsBusy { get; set; } = false;
+
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
 
@@ -58,12 +60,10 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             _settingsService = settingsService;
             _messageService = messageService;
 
+            Initialize();
+
             try
             {
-                Username = _settingsService.GetUserName();
-                Goal = _settingsService.GetGoal();
-                SelectedTheme = _settingsService.GetTheme();
-                SelectedLanguage = _settingsService.GetLanguage();
                 Log.Debug("SettingsVM: Current settings loaded for user {Username}", Username);
             }
             catch (AppException ex)
@@ -73,14 +73,14 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             }
 
             SaveSettingsCommand = new RelayCommand(
-                execute: _ =>
+                executeAsync:async _ =>
                 {
                     try
                     {
                         Log.Information("SettingsVM: Saving settings. New Culture: {Culture}, Theme: {Theme}",
                             SelectedLanguage.CultureCode, SelectedTheme);
 
-                        _settingsService.SaveSettings(Username, Goal, SelectedTheme, SelectedLanguage);
+                        await _settingsService.SaveSettingsAsync(Username, Goal, SelectedTheme, SelectedLanguage);
                         localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
                         themeService.SetTheme(SelectedTheme);
 
@@ -95,6 +95,15 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 },
                 canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
             );
+        }
+
+        private async void Initialize()
+        {
+             Username = await _settingsService.GetUserNameAsync();
+             Goal = await _settingsService.GetGoalAsync();
+            SelectedTheme = await _settingsService.GetThemeAsync();
+            SelectedLanguage = await _settingsService.GetLanguageAsync();
+
         }
     }
 }

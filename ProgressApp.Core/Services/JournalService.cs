@@ -3,6 +3,7 @@ using ProgressApp.Core.Models.Journal;
 using Serilog;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProgressApp.Core.Services
 {
@@ -15,12 +16,14 @@ namespace ProgressApp.Core.Services
             _context = context;
         }
 
-        public JournalEntry? GetToday()
+        public async Task<JournalEntry?> GetTodayAsync()
         {
             try
             {
                 var today = DateTime.Today;
-                return _context.Entries.FirstOrDefault(e => e.Date.Date == today);
+                return await _context.Entries
+                    .FirstOrDefaultAsync(e => e.Date.Date == today)
+                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -29,7 +32,7 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        public void SaveToday(string description, DayResult result)
+        public async Task SaveTodayAsync(string description, DayResult result)
         {
             try
             {
@@ -39,7 +42,7 @@ namespace ProgressApp.Core.Services
                     throw new AppException("Msg_DescriptionEmpty");
                 }
 
-                var entry = GetToday();
+                var entry = await GetTodayAsync();
                 bool isNew = entry == null;
 
                 if (isNew)
@@ -49,7 +52,7 @@ namespace ProgressApp.Core.Services
                         Date = DateTime.Today,
                         CreatedAt = DateTime.Now
                     };
-                    _context.Entries.Add(entry);
+                    await _context.Entries.AddAsync(entry).ConfigureAwait(false);
                 }
 
                 entry.Description = description;
@@ -60,7 +63,7 @@ namespace ProgressApp.Core.Services
                 else
                     Log.Information("Updating entry: {Description} | Result: {Result}", description, result);
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 Log.Information("Entry {Action} successfully. ID: {Id}", isNew ? "created" : "updated", entry.Id);
             }
@@ -72,13 +75,15 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        public List<JournalEntry> GetAllEntries()
+        public async Task<List<JournalEntry>> GetAllEntriesAsync()
         {
             try
             {
-                var entries = _context.Entries
-                               .OrderByDescending(e => e.Date)
-                               .ToList();
+                var entries = await _context.Entries
+                            .AsNoTracking() // Обов'язково! Ми ж просто відображаємо список
+                            .OrderByDescending(e => e.Date)
+                            .ToListAsync()
+                            .ConfigureAwait(false);
 
                 Log.Debug("Fetched {Count} entries from database.", entries.Count);
                 return entries;

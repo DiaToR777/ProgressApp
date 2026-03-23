@@ -16,11 +16,13 @@ namespace ProgressApp.Core.Services
         {
             _context = context;
         }
-
-        public bool IsFirstRun()
+            
+        public async Task<bool> IsFirstRunAsync()
         {
-            var usernameSetting = _context.Settings
-                    .FirstOrDefault(s => s.Key == SettingsKeys.Username);
+            var usernameSetting = await _context.Settings
+                .AsNoTracking()
+                    .FirstOrDefaultAsync(s => s.Key == SettingsKeys.Username)
+                    .ConfigureAwait(false);
 
             bool isFirst = usernameSetting == null || string.IsNullOrWhiteSpace(usernameSetting.Value);
 
@@ -30,14 +32,18 @@ namespace ProgressApp.Core.Services
             return isFirst;
         }
 
-        public string GetUserName() => GetValue(SettingsKeys.Username) ?? "";
-        public string GetGoal() => GetValue(SettingsKeys.Goal) ?? "";
+        public async Task<string> GetUserNameAsync() => await GetValueAsync(SettingsKeys.Username) ?? "";
+        public async Task<string> GetGoalAsync() => await GetValueAsync(SettingsKeys.Goal) ?? "";
 
-        private string? GetValue(string key)
+        private async Task<string?> GetValueAsync(string key)
         {
             try
             {
-                return _context.Settings.AsNoTracking().FirstOrDefault(s => s.Key == key)?.Value;
+                var setting = await _context.Settings
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(s => s.Key == key)
+                            .ConfigureAwait(false);
+                return setting?.Value;
             }
             catch (Exception ex)
             {
@@ -46,11 +52,11 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        public AppTheme GetTheme()
+        public async Task<AppTheme> GetThemeAsync()
         {
             try
             {
-                var themeValue = GetValue(SettingsKeys.Theme);
+                var themeValue = await GetValueAsync(SettingsKeys.Theme);
                 if (Enum.TryParse(themeValue, out AppTheme result)) return result;
 
                 Log.Warning("Theme not found or corrupted in DB. Falling back to Light.");
@@ -63,13 +69,13 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        public LanguageModel GetLanguage()
+        public async Task<LanguageModel> GetLanguageAsync()
         {
-            string? code = GetValue(SettingsKeys.Language);
+            string? code = await GetValueAsync(SettingsKeys.Language);
             return LanguageConfig.GetByCode(code);
         }
 
-        public void SaveSettings(string username, string goal, AppTheme theme, LanguageModel language)
+        public async Task SaveSettingsAsync(string username, string goal, AppTheme theme, LanguageModel language)
         {
             try
             {
@@ -78,12 +84,12 @@ namespace ProgressApp.Core.Services
                 if (string.IsNullOrWhiteSpace(username)) throw new AppException("Msg_UsernameEmpty");
                 if (string.IsNullOrWhiteSpace(goal)) throw new AppException("Msg_GoalEmpty");
 
-                UpdateOrAdd(SettingsKeys.Username, username);
-                UpdateOrAdd(SettingsKeys.Goal, goal);
-                UpdateOrAdd(SettingsKeys.Theme, theme.ToString());
-                UpdateOrAdd(SettingsKeys.Language, language.CultureCode);
+                await UpdateOrAddAsync(SettingsKeys.Username, username);
+                await UpdateOrAddAsync(SettingsKeys.Goal, goal);
+                await UpdateOrAddAsync(SettingsKeys.Theme, theme.ToString());
+                await UpdateOrAddAsync(SettingsKeys.Language, language.CultureCode);
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
                 Log.Information("All settings saved successfully.");
             }
             catch (Exception ex) when (ex is not AppException)
@@ -93,10 +99,13 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        private void UpdateOrAdd(string key, string value)
-        { 
+        private async Task UpdateOrAddAsync(string key, string value)
+        {
 
-            var setting = _context.Settings.FirstOrDefault(s => s.Key == key);
+            var setting = await _context.Settings
+                .FirstOrDefaultAsync(s => s.Key == key)
+                .ConfigureAwait(false);
+
             if (setting != null)
             {
                 setting.Value = value;

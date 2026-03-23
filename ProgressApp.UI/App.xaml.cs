@@ -76,7 +76,7 @@ namespace ProgressApp.WpfUI
             services.AddTransient<SettingsViewModel>();
             services.AddSingleton<MainViewModel>(); _serviceProvider = services.BuildServiceProvider();
         }
-        protected override void OnStartup(StartupEventArgs e)
+        protected async override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
@@ -92,9 +92,9 @@ namespace ProgressApp.WpfUI
                     var themeService = scope.ServiceProvider.GetRequiredService<IThemeService>();
                     var locService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
 
-                    themeService.SetTheme(settings.GetTheme());
+                    themeService.SetTheme(await settings.GetThemeAsync());
 
-                    var savedLang = settings.GetLanguage();
+                    var savedLang = await settings.GetLanguageAsync();
                     locService.ChangeLanguage(savedLang.CultureCode);
                 }
 

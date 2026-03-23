@@ -48,11 +48,11 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                             .ToList();
 
             SaveCommand = new RelayCommand(
-                    execute: _ =>
+                    executeAsync: async _ =>
                     {
                         try
                         {
-                            SaveEntry();
+                            await SaveEntry();
                             _messageService.ShowInfo("Msg_RecordSaved");
                             Log.Debug("TodayViewModel: UI Success notification shown to user");
                         }
@@ -66,12 +66,12 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             LoadToday();
         }
 
-        private void LoadToday()
+        private async void LoadToday()
         {
             Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
             try
             {
-                var entry = _service.GetToday();
+                var entry = await _service.GetTodayAsync();
 
                 if (entry != null)
                 {
@@ -80,7 +80,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 }
                 else
                 {
-                    SelectedResult = DayResult.Relapse;
+                    SelectedResult = DayResult.PartialSuccess;
                 }
 
             }
@@ -91,12 +91,12 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             }
         }
 
-        private void SaveEntry()
+        private async Task SaveEntry()
         {
             Log.Information("TodayViewModel: Attempting to save entry. Result: {Result}", SelectedResult);
             try
             {
-                _service.SaveToday(Description, SelectedResult);
+                await _service.SaveTodayAsync(Description, SelectedResult);
                 Log.Information("TodayViewModel: Successfully saved to database.");
             }
             catch (Exception ex)

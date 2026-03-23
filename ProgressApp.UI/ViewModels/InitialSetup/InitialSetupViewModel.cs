@@ -9,6 +9,14 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
     public class InitialSetupViewModel : ViewModelBase
     {
+        //TODO IsBusy
+
+        //private bool _isBusy;
+        //public bool IsBusy
+        //{
+        //    get => _isBusy;
+        //    set => SetProperty(ref _isBusy, value);
+        //}
 
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
@@ -56,14 +64,14 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             _messageService = messageService;
             _localizationService = localizationService;
             _settingsService = settings;
-            SelectedLanguage = _settingsService.GetLanguage();
+            InitializeAsync();
 
             FinishCommand = new RelayCommand(
-                execute: _ =>
+                executeAsync: async _ =>
                 {
                     try
                     {
-                        Finish();
+                        await FinishAsync();
                     }
                     catch (AppException ex)
                     {
@@ -75,14 +83,28 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
               );
         }
 
-        private void Finish()
+        private async void InitializeAsync()
         {
-            Log.Information("InitialSetup: Attempting to save setup. Username: {Username}, Goal: {Goal}, Lang: {Lang}",
-        Username, Goal, SelectedLanguage?.CultureCode);
+            SelectedLanguage = await _settingsService.GetLanguageAsync();
+        }
 
-            _settingsService.SaveSettings(Username, Goal, AppTheme.Light, SelectedLanguage);
-            Completed?.Invoke();
-            Log.Information("InitialSetup: Setup saved successfully. Invoking completion.");
+        private async Task FinishAsync()
+        {
+            try
+            {
+                Log.Information("InitialSetup: Attempting to save setup. Username: {Username}, Goal: {Goal}, Lang: {Lang}",
+            Username, Goal, SelectedLanguage?.CultureCode);
+
+                await _settingsService.SaveSettingsAsync(Username, Goal, AppTheme.Light, SelectedLanguage);
+                Completed?.Invoke();
+                Log.Information("InitialSetup: Setup saved successfully. Invoking completion.");
+
+            }
+            catch (AppException)
+            {
+
+                throw;
+            }
         }
     }
 }

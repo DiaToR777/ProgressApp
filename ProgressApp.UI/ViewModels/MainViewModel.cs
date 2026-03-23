@@ -44,20 +44,33 @@ namespace ProgressApp.WpfUI.ViewModels
             _settingsService = settings;
             _serviceProvider = serviceProvider;
 
-            if (_settingsService.IsFirstRun())
+            InitializeNavigationAsync();
+
+            ShowTodayCommand = new RelayCommand(async _ => ShowToday());
+            ShowTableCommand = new RelayCommand(async _ => ShowTable());
+            ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
+
+        }
+        private async void InitializeNavigationAsync()
+        {
+            try
             {
-                ShowInitialsSetup();
+                bool isFirstRun = await _settingsService.IsFirstRunAsync();
+                IsNavigationVisible = false;
+
+                if (isFirstRun)
+                {
+                    ShowInitialsSetup();
+                }
+                else
+                {
+                    ShowToday();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ShowToday();
+                Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
             }
-
-
-            ShowTodayCommand = new RelayCommand(_ => ShowToday());
-            ShowTableCommand = new RelayCommand(_ => ShowTable());
-            ShowSettingsCommand = new RelayCommand(_ => ShowSettings());
-
         }
 
         private void ShowInitialsSetup()
@@ -82,6 +95,7 @@ namespace ProgressApp.WpfUI.ViewModels
         private void ShowToday()
         {
             CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
+            IsNavigationVisible = true;
         }
 
         private void ShowSettings()
