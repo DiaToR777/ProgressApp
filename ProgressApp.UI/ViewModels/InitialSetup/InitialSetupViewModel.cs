@@ -97,13 +97,12 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
                 await _settingsService.SaveSettingsAsync(Username, Goal, AppTheme.Light, SelectedLanguage);
                 Completed?.Invoke();
-                Log.Information("InitialSetup: Setup saved successfully. Invoking completion.");
-
+                Log.Information("InitialSetupVM: Setup saved successfully. Invoking completion.");
             }
-            catch (AppException)
+            catch (AppException ex)
             {
-
-                throw;
+                Log.Error(ex, "InitialSetupVM: Error while saving setup");
+                _messageService.ShowError(ex);
             }
         }
     }

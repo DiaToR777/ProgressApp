@@ -99,11 +99,28 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
 
         private async void Initialize()
         {
-             Username = await _settingsService.GetUserNameAsync();
-             Goal = await _settingsService.GetGoalAsync();
-            SelectedTheme = await _settingsService.GetThemeAsync();
-            SelectedLanguage = await _settingsService.GetLanguageAsync();
+            try
+            {
+                var nameTask = _settingsService.GetUserNameAsync();
+                var goalTask = _settingsService.GetGoalAsync();
+                var themeTask = _settingsService.GetThemeAsync();
+                var langTask = _settingsService.GetLanguageAsync();
 
+                await Task.WhenAll(nameTask, goalTask, themeTask, langTask);
+
+                Username = await nameTask;
+                Goal = await goalTask;
+                SelectedTheme = await themeTask;
+                SelectedLanguage = await langTask;
+
+                Log.Debug("SettingsVM: All settings loaded in parallel");
+            }
+            catch (AppException ex)
+            {
+
+                Log.Error(ex, "SettingsVM: Error while getting settings");
+                _messageService.ShowError(ex);
+            }
         }
     }
 }
