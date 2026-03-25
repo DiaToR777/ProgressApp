@@ -55,14 +55,17 @@ namespace ProgressApp.WpfUI
 
             var dbPath = Path.Combine(appFolder, "progress.db");
 
+            var connectionString = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder
+            {
+                DataSource = dbPath,
+                Password = "12345"
+            }.ToString();
+
             services.AddDbContext<ProgressDbContext>(options =>
             {
-                options.UseSqlite($"Data Source={dbPath}");
-                //options.LogTo(
-                //    Log.Information,
-                //    new[] { DbLoggerCategory.Database.Command.Name },
-                //    LogLevel.Information);
+                options.UseSqlite(connectionString);
             });
+            
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
             services.AddSingleton<IThemeService, ThemeWrapper>(); 
 

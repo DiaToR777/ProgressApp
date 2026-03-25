@@ -17,9 +17,16 @@ namespace ProgressApp.Core.Data
 
             if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
 
-            string dbPath = Path.Combine(folder, "progress.db");    
+            string dbPath = Path.Combine(folder, "progress.db");
 
-            optionsBuilder.UseSqlite($"Data Source={dbPath}");
+            var connectionString = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder
+            {
+                DataSource = dbPath,
+                Password = "12345" // ВАЖНО: тот же, что в приложении
+            }.ToString();
+
+            optionsBuilder.UseSqlite(connectionString);
+
             optionsBuilder.LogTo(Log.Information, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
         
             return new ProgressDbContext(optionsBuilder.Options);
