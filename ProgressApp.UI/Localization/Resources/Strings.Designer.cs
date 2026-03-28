@@ -97,6 +97,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Incorrect password. Please try again.
+        /// </summary>
+        public static string Error_IncorrectPassword {
+            get {
+                return ResourceManager.GetString("Error_IncorrectPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Description cannot be empty!.
         /// </summary>
         public static string Msg_DescriptionEmpty {
@@ -106,7 +115,16 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Data loading error. Check log file..
+        ///   Ищет локализованную строку, похожую на Database access error. Check logs.
+        /// </summary>
+        public static string Msg_ErrorDbAccessFailed {
+            get {
+                return ResourceManager.GetString("Msg_ErrorDbAccessFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Data loading error. Check log file.
         /// </summary>
         public static string Msg_ErrorLoadingData {
             get {
@@ -115,7 +133,7 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Unable to load settings: “{0}”. Please try again or check the database..
+        ///   Ищет локализованную строку, похожую на Unable to load settings: “{0}”. Please try again or check the database.
         /// </summary>
         public static string Msg_ErrorLoadingSetting {
             get {
@@ -124,7 +142,25 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Critical error during setup finish. Check logs..
+        ///   Ищет локализованную строку, похожую на Critical login error. Check logs for details.
+        /// </summary>
+        public static string Msg_ErrorLoginFailed {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoginFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error while database creation. Check logs.
+        /// </summary>
+        public static string Msg_ErrorSetupFailed {
+            get {
+                return ResourceManager.GetString("Msg_ErrorSetupFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Critical error during setup finish. Check logs.
         /// </summary>
         public static string Msg_FinishSetupError {
             get {
@@ -151,7 +187,7 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Failed to save entry. Check logs..
+        ///   Ищет локализованную строку, похожую на Failed to save entry. Check logs.
         /// </summary>
         public static string Msg_SaveEntryError {
             get {
@@ -160,7 +196,7 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Fatal error while saving settings! Check logs..
+        ///   Ищет локализованную строку, похожую на Fatal error while saving settings! Check logs.
         /// </summary>
         public static string Msg_SaveSettingsError {
             get {
@@ -178,7 +214,7 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Failed to read Theme from database. Check logs..
+        ///   Ищет локализованную строку, похожую на Failed to read Theme from database. Check logs.
         /// </summary>
         public static string Msg_ThemeReadError {
             get {
@@ -291,6 +327,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_Information {
             get {
                 return ResourceManager.GetString("Title_Information", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Password.
+        /// </summary>
+        public static string Title_password {
+            get {
+                return ResourceManager.GetString("Title_password", resourceCulture);
             }
         }
         

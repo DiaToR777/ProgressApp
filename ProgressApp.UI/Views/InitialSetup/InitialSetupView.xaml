@@ -1,9 +1,9 @@
 ﻿<UserControl x:Class="ProgressApp.WpfUI.Views.InitialSetup.InitialSetupView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"             
+             xmlns:helpers="clr-namespace:ProgressApp.WpfUI.Helpers">
 
     <StackPanel Margin="40" Width="300">
-
 
         <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Welcome]}" 
                    FontSize="22"
@@ -22,6 +22,14 @@
                   TextWrapping="Wrap"        
                   AcceptsReturn="True"       
                   VerticalScrollBarVisibility="Auto"/>
+
+        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}"
+               ContentStringFormat="{}{0}:"/>
+        <PasswordBox x:Name="PassBox"
+                     helpers:PasswordHelper.Attach="True"
+                     helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     MaxLength="8"/>
+
 
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" 
        ContentStringFormat="{}{0}:" />

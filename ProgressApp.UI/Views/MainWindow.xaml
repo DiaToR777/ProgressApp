@@ -7,8 +7,10 @@
         xmlns:vmSettings="clr-namespace:ProgressApp.WpfUI.ViewModels.Settings"
         xmlns:vmTable="clr-namespace:ProgressApp.WpfUI.ViewModels.Table"
         xmlns:vmInitial="clr-namespace:ProgressApp.WpfUI.ViewModels.InitialSetup"
+        xmlns:vmLogin="clr-namespace:ProgressApp.WpfUI.ViewModels.Login"
         
         
+        xmlns:viewLogin="clr-namespace:ProgressApp.WpfUI.Views.Login"
         xmlns:viewToday="clr-namespace:ProgressApp.WpfUI.Views.Today"
         xmlns:viewSettings="clr-namespace:ProgressApp.WpfUI.Views.Settings"
         xmlns:viewTable="clr-namespace:ProgressApp.WpfUI.Views.Table"
@@ -37,6 +39,11 @@
         <DataTemplate DataType="{x:Type vmInitial:InitialSetupViewModel}">
             <viewInitial:InitialSetupView />
         </DataTemplate>
+
+        <DataTemplate DataType="{x:Type vmLogin:LoginViewModel}">
+            <viewLogin:LoginView />
+        </DataTemplate>
+        
     </Window.Resources>
 
     <Grid>

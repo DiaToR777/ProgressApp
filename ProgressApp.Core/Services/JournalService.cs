@@ -80,7 +80,7 @@ namespace ProgressApp.Core.Services
             try
             {
                 var entries = await _context.Entries
-                            .AsNoTracking() // Обов'язково! Ми ж просто відображаємо список
+                            .AsNoTracking() 
                             .OrderByDescending(e => e.Date)
                             .ToListAsync()
                             .ConfigureAwait(false);

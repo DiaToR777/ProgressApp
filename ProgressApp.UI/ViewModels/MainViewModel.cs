@@ -1,10 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
+using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
 using Serilog;
+using System.Windows;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels
@@ -12,7 +15,7 @@ namespace ProgressApp.WpfUI.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ISettingsService _settingsService;
+        private readonly IAuthService _authService;
 
         private object? _currentView;
         private bool _isNavigationVisible = true;
@@ -34,14 +37,13 @@ namespace ProgressApp.WpfUI.ViewModels
             set => SetProperty(ref _isNavigationVisible, value);
         }
 
-
         public ICommand ShowTodayCommand { get; }
         public ICommand ShowTableCommand { get; }
         public ICommand ShowSettingsCommand { get; }
 
-        public MainViewModel(ISettingsService settings, IServiceProvider serviceProvider)
+        public MainViewModel(IAuthService authSevice, IServiceProvider serviceProvider)
         {
-            _settingsService = settings;
+            _authService = authSevice;
             _serviceProvider = serviceProvider;
 
             InitializeNavigationAsync();
@@ -51,20 +53,21 @@ namespace ProgressApp.WpfUI.ViewModels
             ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
 
         }
-        private async void InitializeNavigationAsync()
+
+        private void InitializeNavigationAsync()
         {
             try
             {
-                bool isFirstRun = await _settingsService.IsFirstRunAsync();
                 IsNavigationVisible = false;
+                bool dbExists = _authService.IsDatabaseCreated();
 
-                if (isFirstRun)
+                if (!dbExists)
                 {
                     ShowInitialsSetup();
                 }
                 else
                 {
-                    ShowToday();
+                    ShowLogin();
                 }
             }
             catch (Exception ex)
@@ -73,11 +76,56 @@ namespace ProgressApp.WpfUI.ViewModels
             }
         }
 
+        private async void ShowLogin()
+        {
+            var vm = _serviceProvider.GetRequiredService<LoginViewModel>();
+            vm.Completed = async () =>
+            {
+                await OnLoginSuccess();
+                IsNavigationVisible = true;
+                ShowToday();
+
+            };
+
+            CurrentView = vm;
+            IsNavigationVisible = false;
+        }
+
+        private async Task OnLoginSuccess()
+        {
+            try
+            {
+                using (var scope = _serviceProvider.CreateScope())
+                {
+                    var settingsService = scope.ServiceProvider.GetRequiredService<ISettingsService>();
+                    var themeService = scope.ServiceProvider.GetRequiredService<IThemeService>();
+                    var locService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
+
+                    var savedTheme = await settingsService.GetThemeAsync();
+                    themeService.SetTheme(savedTheme);
+
+                    var savedLang = await settingsService.GetLanguageAsync();
+                    locService.ChangeLanguage(savedLang.CultureCode);
+
+                }
+
+                CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
+
+                var msgService = _serviceProvider.GetRequiredService<IMessageService>();
+                if (ex is AppException appEx) msgService.ShowError(appEx);
+                else MessageBox.Show(ex.Message, "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void ShowInitialsSetup()
         {
             var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
 
-            vm.Completed = () =>
+            vm.Completed = async() =>
             {
                 IsNavigationVisible = true;
                 ShowToday();
@@ -86,6 +134,7 @@ namespace ProgressApp.WpfUI.ViewModels
             CurrentView = vm;
             IsNavigationVisible = false;
         }
+
         private void ShowTable()
         {
             CurrentView = _serviceProvider.GetRequiredService<TableViewModel>();

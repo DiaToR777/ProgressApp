@@ -18,15 +18,25 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
         //    set => SetProperty(ref _isBusy, value);
         //}
 
+
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
         private readonly ILocalizationService _localizationService;
+        private readonly IAuthService _authService;
 
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
         private string _username = string.Empty;
         private string _goal = string.Empty;
         private LanguageModel _selectedLanguage;
+
+        private string _password = string.Empty;
+        public string Password
+        {
+            get => _password;
+            set => SetProperty(ref _password, value);
+        }
+
 
         public LanguageModel SelectedLanguage
         {
@@ -59,12 +69,14 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
         public Action? Completed { get; set; }
 
-        public InitialSetupViewModel(ISettingsService settings, ILocalizationService localizationService, IMessageService messageService)
+        public InitialSetupViewModel(ISettingsService settings, ILocalizationService localizationService, IMessageService messageService, IAuthService authService)
         {
             _messageService = messageService;
             _localizationService = localizationService;
             _settingsService = settings;
-            InitializeAsync();
+            _authService = authService;
+
+            SelectedLanguage = LanguageConfig.AvailableLanguages.First();
 
             FinishCommand = new RelayCommand(
                 executeAsync: async _ =>
@@ -79,29 +91,31 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                         _messageService.ShowError(ex);
                     }
                 },
-                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
+                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal) && !string.IsNullOrWhiteSpace(Password)
               );
         }
 
-        private async void InitializeAsync()
-        {
-            SelectedLanguage = await _settingsService.GetLanguageAsync();
-        }
 
         private async Task FinishAsync()
         {
             try
             {
-                Log.Information("InitialSetup: Attempting to save setup. Username: {Username}, Goal: {Goal}, Lang: {Lang}",
-            Username, Goal, SelectedLanguage?.CultureCode);
+                bool isRegistered = await _authService.RegisterAsync(Password);
+                if (isRegistered)
+                {
+                    Log.Information("InitialSetup: Registration success during setup finish");
 
-                await _settingsService.SaveSettingsAsync(Username, Goal, AppTheme.Light, SelectedLanguage);
-                Completed?.Invoke();
-                Log.Information("InitialSetupVM: Setup saved successfully. Invoking completion.");
+                    await _settingsService.SaveSettingsAsync(Username, Goal, AppTheme.Light, SelectedLanguage);
+
+                    Log.Information("InitialSetupVM: Setup saved successfully. Invoking completion.");
+                    
+                    Completed?.Invoke();
+                    return;
+                }
             }
             catch (AppException ex)
             {
-                Log.Error(ex, "InitialSetupVM: Error while saving setup");
+                Log.Error(ex, "InitialSetup: Error during setup finish");
                 _messageService.ShowError(ex);
             }
         }

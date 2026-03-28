@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Models.Settings;
 
@@ -6,7 +7,12 @@ namespace ProgressApp.Core.Data
 {
     public class ProgressDbContext : DbContext
     {
-        public ProgressDbContext(DbContextOptions<ProgressDbContext> options) : base(options) { }
+        private readonly IDbState _dbState;
+        public ProgressDbContext(DbContextOptions<ProgressDbContext> options, IDbState dbState)
+        : base(options)
+        {
+            _dbState = dbState;
+        }
         public DbSet<JournalEntry> Entries { get; set; } = null!;
         public DbSet<AppSettings> Settings { get; set; } = null!;
 
@@ -50,6 +56,14 @@ namespace ProgressApp.Core.Data
             }
             if (changed)
                 SaveChanges();
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = _dbState.GetConnectionString();
+                optionsBuilder.UseSqlite(connectionString);
+            }
         }
     }
 }

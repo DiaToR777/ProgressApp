@@ -129,17 +129,29 @@
   <data name="DataGrid_Result" xml:space="preserve">
     <value>Результат</value>
   </data>
+  <data name="Error_IncorrectPassword" xml:space="preserve">
+    <value>Неправильний пароль. Спробуйте ще раз</value>
+  </data>
   <data name="Msg_DescriptionEmpty" xml:space="preserve">
     <value>Опис не може бути порожнім!</value>
   </data>
+  <data name="Msg_ErrorDbAccessFailed" xml:space="preserve">
+    <value>Помилка доступу до бази даних. Перевірте логи</value>
+  </data>
   <data name="Msg_ErrorLoadingData" xml:space="preserve">
-    <value>Помилка завантаження даних. Перегляньте файл логів.</value>
+    <value>Помилка завантаження даних. Перегляньте файл логів</value>
   </data>
   <data name="Msg_ErrorLoadingSetting" xml:space="preserve">
-    <value>Не вдалося завантажити налаштування: "{0}". Спробуйте ще раз або перевірте базу даних.</value>
+    <value>Не вдалося завантажити налаштування: "{0}". Спробуйте ще раз або перевірте базу даних</value>
+  </data>
+  <data name="Msg_ErrorLoginFailed" xml:space="preserve">
+    <value>Критична помилка під час входу. Перевірте деталі в логах</value>
+  </data>
+  <data name="Msg_ErrorSetupFailed" xml:space="preserve">
+    <value>Помилка під час створення бази даних. Перегляньте логи</value>
   </data>
   <data name="Msg_FinishSetupError" xml:space="preserve">
-    <value>Сталася критична помилка під час завершення налаштування. Перевірте файл логів для деталей.</value>
+    <value>Сталася критична помилка під час завершення налаштування. Перевірте файл логів для деталей</value>
   </data>
   <data name="Msg_GoalEmpty" xml:space="preserve">
     <value>Ціль не може бути порожньою!</value>
@@ -148,16 +160,16 @@
     <value>Запис збережений!</value>
   </data>
   <data name="Msg_SaveEntryError" xml:space="preserve">
-    <value>Не вдалося зберегти запис. Перевірте логи.</value>
+    <value>Не вдалося зберегти запис. Перевірте логи</value>
   </data>
   <data name="Msg_SaveSettingsError" xml:space="preserve">
-    <value>Сталася критична помилка при збереженні налаштувань. Перегляньте логи.</value>
+    <value>Сталася критична помилка при збереженні налаштувань. Перегляньте логи</value>
   </data>
   <data name="Msg_SettingsSaved" xml:space="preserve">
     <value>Налаштування збережено</value>
   </data>
   <data name="Msg_ThemeReadError" xml:space="preserve">
-    <value>Не вдалося завантажити тему з бази даних. Перевірте логи.</value>
+    <value>Не вдалося завантажити тему з бази даних. Перевірте логи</value>
   </data>
   <data name="Msg_UsernameEmpty" xml:space="preserve">
     <value>Ім'я користувача не може бути порожнім!</value>
@@ -194,6 +206,9 @@
   </data>
   <data name="Title_Information" xml:space="preserve">
     <value>Інформація</value>
+  </data>
+  <data name="Title_password" xml:space="preserve">
+    <value>Пароль</value>
   </data>
   <data name="Title_ProfileSettings" xml:space="preserve">
     <value>Налаштування профілю</value>

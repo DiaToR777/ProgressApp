@@ -17,21 +17,6 @@ namespace ProgressApp.Core.Services
             _context = context;
         }
             
-        public async Task<bool> IsFirstRunAsync()
-        {
-            var usernameSetting = await _context.Settings
-                .AsNoTracking()
-                    .FirstOrDefaultAsync(s => s.Key == SettingsKeys.Username)
-                    .ConfigureAwait(false);
-
-            bool isFirst = usernameSetting == null || string.IsNullOrWhiteSpace(usernameSetting.Value);
-
-            Log.Debug("FirstRun check: Username value is '{Value}'. IsFirstRun: {Result}",
-                usernameSetting?.Value ?? "NULL", isFirst);
-
-            return isFirst;
-        }
-
         public async Task<string> GetUserNameAsync() => await GetValueAsync(SettingsKeys.Username) ?? "";
         public async Task<string> GetGoalAsync() => await GetValueAsync(SettingsKeys.Goal) ?? "";
 

@@ -5,7 +5,6 @@ namespace ProgressApp.Core.Interfaces.IService
 {
     public interface ISettingsService
     {
-        Task<bool> IsFirstRunAsync();
         Task<string> GetGoalAsync();
         Task<string> GetUserNameAsync();
         Task<AppTheme> GetThemeAsync();
