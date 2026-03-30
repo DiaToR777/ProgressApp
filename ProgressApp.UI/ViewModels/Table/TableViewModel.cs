@@ -16,6 +16,7 @@ namespace ProgressApp.WpfUI.ViewModels.Table
             get => _selectedEntry;
             set => SetProperty(ref _selectedEntry, value);
         }
+
         public TableViewModel(IJournalService service, IMessageService messageService)
         {
             _service = service;
@@ -33,8 +34,8 @@ namespace ProgressApp.WpfUI.ViewModels.Table
                 messageService.ShowError(ex);
             }
 
-
         }
+
         private async void GetEntries()
         {
             try

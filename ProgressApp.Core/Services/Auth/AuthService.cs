@@ -68,7 +68,7 @@ namespace ProgressApp.Core.Services.Auth
 
 
                     Log.Debug("AuthService: Initializing database schema...");
-                    context.Initialize();
+                    await context.InitializeAsync();
 
                     await context.SaveChangesAsync();
                     Log.Information("AuthService: Database registered and initialized successfully at {Path}", _dbState.DbPath);

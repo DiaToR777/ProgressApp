@@ -11,8 +11,6 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
     {
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
-        public bool IsBusy { get; set; } = false;
-
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
 
@@ -36,6 +34,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 SetProperty(ref _username, _sanitizedValue);
             }
         }
+
         public string Goal
         {
             get => _goal;
@@ -61,16 +60,6 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             _messageService = messageService;
 
             Initialize();
-
-            try
-            {
-                Log.Debug("SettingsVM: Current settings loaded for user {Username}", Username);
-            }
-            catch (AppException ex)
-            {
-                Log.Error(ex, "SettingsVM: Failed to load initial settings");
-                messageService.ShowError(ex);
-            }
 
             SaveSettingsCommand = new RelayCommand(
                 executeAsync:async _ =>
@@ -117,7 +106,6 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             }
             catch (AppException ex)
             {
-
                 Log.Error(ex, "SettingsVM: Error while getting settings");
                 _messageService.ShowError(ex);
             }

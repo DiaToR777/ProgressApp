@@ -5,13 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:ProgressApp.WpfUI.ViewModels.Today"
              xmlns:helpers="clr-namespace:ProgressApp.WpfUI.Localization.Helpers"
+             xmlns:conv="clr-namespace:ProgressApp.WpfUI.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:TodayViewModel}"
              >
-
+    <UserControl.Resources>
+        <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter"/>
+    </UserControl.Resources>
     <StackPanel Margin="20"
                 helpers:LanguageHelper.UpdateLanguage="{Binding Source={StaticResource Langs}, Path=CurrentCulture}">
-
+                    
         <Grid Margin="0,0,0,10">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Today]}"
@@ -30,7 +33,36 @@
         <Run Text="/1500"/>
             </TextBlock>
         </Grid>
-        
+
+        <Border Background="#1A111111" CornerRadius="8" Padding="10,5" HorizontalAlignment="Left" Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🔥" FontSize="18" VerticalAlignment="Center" Margin="0,0,5,0">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Gray"/>
+                            <Setter Property="Opacity" Value="0.5"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStreak, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
+                                    <Setter Property="Foreground" Value="OrangeRed"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                
+                <TextBlock Text="{Binding CurrentStreak}" 
+                       FontSize="18" 
+                       FontWeight="Bold" 
+                       VerticalAlignment="Center"/>
+
+                <TextBlock Text=" day(s) streak" 
+                   FontSize="12" 
+                   Foreground="Gray" 
+                   VerticalAlignment="Bottom" 
+                   Margin="5,0,0,2"/>
+            </StackPanel>
+        </Border>
         
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DayDescription]}"/>
         <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"

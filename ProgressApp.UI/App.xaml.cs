@@ -84,6 +84,7 @@ namespace ProgressApp.WpfUI
 
         protected override void OnExit(ExitEventArgs e)
         {
+            _serviceProvider.Dispose();
             Log.Information("Application is exiting.");
             Log.CloseAndFlush();
             base.OnExit(e);

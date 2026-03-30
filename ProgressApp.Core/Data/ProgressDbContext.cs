@@ -33,9 +33,9 @@ namespace ProgressApp.Core.Data
 
             base.OnModelCreating(modelBuilder);
         }
-        public void Initialize()
+        public async Task InitializeAsync()
         {
-            Database.Migrate();
+            await Database.MigrateAsync();
 
             var defaultSettings = new List<AppSettings>
                     {
@@ -48,14 +48,14 @@ namespace ProgressApp.Core.Data
             bool changed = false;
             foreach (var setting in defaultSettings)
             {
-                if (!Settings.Any(s => s.Key == setting.Key))
+                if (!await Settings.AnyAsync(s => s.Key == setting.Key))
                 {
-                    Settings.Add(setting);
+                    Settings.AddAsync(setting);
                     changed = true;
                 }
             }
             if (changed)
-                SaveChanges();
+                await SaveChangesAsync();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

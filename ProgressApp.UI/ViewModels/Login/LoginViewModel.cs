@@ -26,35 +26,41 @@ namespace ProgressApp.WpfUI.ViewModels.Login
             LoginCommand = new RelayCommand(
                executeAsync: async _ =>
                {
+                   if (IsBusy) return;
                    try
                    {
-                       await LoginAsync();
-                       Log.Debug("LoginViewModel: UI Success notification shown to user");
 
+                       IsBusy = true;
+                       bool success = await Task.Run(async () =>
+                       {
+                           return await _authService.LoginAsync(Password);
+                       });
+                       if (success)
+                       {
+                           Log.Information("LoginViewModel: Login successful, navigating...");
+                           Completed?.Invoke();
+                       }
+                       else
+                       {
+                           Log.Warning("LoginViewModel: Invalid password entered");
+                           Password = string.Empty;
+                           _messageService.ShowErrorIncorrectPassword();
+                       }
+
+                       Log.Debug("LoginViewModel: UI Success notification shown to user");
                    }
                    catch (AppException ex)
                    {
                        Log.Error(ex, "LoginViewModel: Critical error loging");
                        _messageService.ShowError(ex);
                    }
+                   finally
+                   {
+                       IsBusy = false;
+                   }
                },
-               canExecute: _ => !string.IsNullOrWhiteSpace(Password)
+               canExecute: _ => !string.IsNullOrWhiteSpace(Password) && !IsBusy
                );
-        }
-
-        private async Task LoginAsync()
-        {
-            var isLogined = await _authService.LoginAsync(Password);
-            if (isLogined)
-            {
-                Completed?.Invoke();
-            }
-            else
-            {
-                _password = string.Empty;
-                _messageService.ShowErrorIncorrectPassword();
-                Log.Debug("LoginViewModel: UI Success notification shown to user");
-            }
         }
     }
 }

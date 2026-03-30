@@ -9,20 +9,20 @@
         xmlns:vmInitial="clr-namespace:ProgressApp.WpfUI.ViewModels.InitialSetup"
         xmlns:vmLogin="clr-namespace:ProgressApp.WpfUI.ViewModels.Login"
         
-        
         xmlns:viewLogin="clr-namespace:ProgressApp.WpfUI.Views.Login"
         xmlns:viewToday="clr-namespace:ProgressApp.WpfUI.Views.Today"
         xmlns:viewSettings="clr-namespace:ProgressApp.WpfUI.Views.Settings"
         xmlns:viewTable="clr-namespace:ProgressApp.WpfUI.Views.Table"
         xmlns:viewInitial="clr-namespace:ProgressApp.WpfUI.Views.InitialSetup"
 
-        
         Title="{Binding Source={StaticResource Langs}, Path=[AppTitle]}"
         Height="600" Width="900"
         Background="{DynamicResource WindowBackground}">
 
     <Window.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <conv:InverseBoolConverter x:Key="InverseBoolConverter"/> 
+
 
         <DataTemplate DataType="{x:Type vmToday:TodayViewModel}">
             <viewToday:TodayView />
@@ -65,8 +65,34 @@
                     Margin="10" Command="{Binding ShowSettingsCommand}" />
         </StackPanel>
 
-        <ContentControl Grid.Column="1"
-                        Content="{Binding CurrentView}" 
-                        Margin="10"/>
+        <Grid Grid.Column="1">
+            <ContentControl Content="{Binding CurrentView}" 
+                            Margin="10"
+                            IsEnabled="{Binding CurrentView.IsBusy, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}"/>
+
+            <Grid Visibility="{Binding CurrentView.IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
+                  Background="{DynamicResource WindowBackground}"
+                  Opacity="0.8">
+                
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True" 
+                                 Width="200" 
+                                 Height="6" 
+                                 Foreground="{DynamicResource AccentColor}"/> 
+                    
+                    <TextBlock Text="Processing..." 
+                               Margin="0,15,0,0" 
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               HorizontalAlignment="Center"/>
+                    
+                    <TextBlock Text="Please check logs if this takes too long" 
+                               Margin="0,5,0,0" 
+                               FontSize="11"
+                               Opacity="0.6"
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

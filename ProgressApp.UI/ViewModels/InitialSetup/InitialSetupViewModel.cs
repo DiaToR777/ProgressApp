@@ -9,16 +9,6 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
     public class InitialSetupViewModel : ViewModelBase
     {
-        //TODO IsBusy
-
-        //private bool _isBusy;
-        //public bool IsBusy
-        //{
-        //    get => _isBusy;
-        //    set => SetProperty(ref _isBusy, value);
-        //}
-
-
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
         private readonly ILocalizationService _localizationService;
@@ -36,7 +26,6 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             get => _password;
             set => SetProperty(ref _password, value);
         }
-
 
         public LanguageModel SelectedLanguage
         {
@@ -81,43 +70,43 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             FinishCommand = new RelayCommand(
                 executeAsync: async _ =>
                 {
+                    if (IsBusy) return;
                     try
                     {
-                        await FinishAsync();
+                        IsBusy = true;
+                        await Task.Run(async () =>
+                        { 
+                            await FinishAsync();
+                        });
                     }
                     catch (AppException ex)
                     {
                         Log.Error(ex, "InitialSetup: Critical error during setup finish");
                         _messageService.ShowError(ex);
                     }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
                 },
-                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal) && !string.IsNullOrWhiteSpace(Password)
+                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal) && !string.IsNullOrWhiteSpace(Password) && !IsBusy
               );
         }
 
-
         private async Task FinishAsync()
         {
-            try
+            bool isRegistered = await _authService.RegisterAsync(Password);
+            if (isRegistered)
             {
-                bool isRegistered = await _authService.RegisterAsync(Password);
-                if (isRegistered)
-                {
-                    Log.Information("InitialSetup: Registration success during setup finish");
+                Log.Information("InitialSetup: Registration success during setup finish");
 
-                    await _settingsService.SaveSettingsAsync(Username, Goal, AppTheme.Light, SelectedLanguage);
+                await _settingsService.SaveSettingsAsync(Username, Goal, AppTheme.Light, SelectedLanguage);
 
-                    Log.Information("InitialSetupVM: Setup saved successfully. Invoking completion.");
-                    
-                    Completed?.Invoke();
-                    return;
-                }
+                Log.Information("InitialSetupVM: Setup saved successfully. Invoking completion.");
+
+                Completed?.Invoke();
+                return;
             }
-            catch (AppException ex)
-            {
-                Log.Error(ex, "InitialSetup: Error during setup finish");
-                _messageService.ShowError(ex);
-            }
-        }
+         }
     }
 }

@@ -76,7 +76,7 @@ namespace ProgressApp.WpfUI.ViewModels
             }
         }
 
-        private async void ShowLogin()
+        private void ShowLogin()
         {
             var vm = _serviceProvider.GetRequiredService<LoginViewModel>();
             vm.Completed = async () =>
@@ -106,10 +106,7 @@ namespace ProgressApp.WpfUI.ViewModels
 
                     var savedLang = await settingsService.GetLanguageAsync();
                     locService.ChangeLanguage(savedLang.CultureCode);
-
                 }
-
-                CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
             }
             catch (Exception ex)
             {
@@ -125,7 +122,7 @@ namespace ProgressApp.WpfUI.ViewModels
         {
             var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
 
-            vm.Completed = async() =>
+            vm.Completed = async () =>
             {
                 IsNavigationVisible = true;
                 ShowToday();

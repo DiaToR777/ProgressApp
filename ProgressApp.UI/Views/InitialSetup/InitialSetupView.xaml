@@ -12,7 +12,7 @@
 
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" 
        ContentStringFormat="{}{0}:" />
-        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" MaxLength="35"/>
+        <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" MaxLength="35" TabIndex="1"/>
 
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" 
        ContentStringFormat="{}{0}:" />
@@ -21,15 +21,16 @@
                   Height="80"                
                   TextWrapping="Wrap"        
                   AcceptsReturn="True"       
-                  VerticalScrollBarVisibility="Auto"/>
+                  VerticalScrollBarVisibility="Auto"
+                  TabIndex="2"/>
 
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}"
                ContentStringFormat="{}{0}:"/>
         <PasswordBox x:Name="PassBox"
                      helpers:PasswordHelper.Attach="True"
                      helpers:PasswordHelper.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     MaxLength="8"/>
-
+                     MaxLength="8"
+                     TabIndex="3"/>
 
         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" 
        ContentStringFormat="{}{0}:" />
@@ -46,6 +47,7 @@
 
         <Button Content="{Binding Source={StaticResource Langs}, Path=[Title_Start]}" 
                 Margin="0,30,0,0"
-                Command="{Binding FinishCommand}"/>
+                Command="{Binding FinishCommand}"
+                IsDefault="True"/>
     </StackPanel>
 </UserControl>

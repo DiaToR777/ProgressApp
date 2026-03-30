@@ -1,29 +1,37 @@
-﻿using ProgressApp.Core.Data;
-using ProgressApp.Core.Models.Journal;
-using Serilog;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ProgressApp.Core.Data;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
-using Microsoft.EntityFrameworkCore;
+using ProgressApp.Core.Models.Journal;
+using Serilog;
 
 namespace ProgressApp.Core.Services
 {
     public class JournalService : IJournalService
     {
-        private readonly ProgressDbContext _context;
+        private readonly IServiceScopeFactory _scopeFactory;
 
-        public JournalService(ProgressDbContext context)
+        public JournalService(IServiceScopeFactory scopeFactory)
         {
-            _context = context;
+            _scopeFactory = scopeFactory;
+        }
+        private async Task<JournalEntry?> GetTodayInternalAsync(ProgressDbContext context)
+        {
+            var today = DateTime.Today;
+            return await context.Entries
+                .FirstOrDefaultAsync(e => e.Date.Date == today)
+                .ConfigureAwait(false);
         }
 
         public async Task<JournalEntry?> GetTodayAsync()
         {
             try
             {
-                var today = DateTime.Today;
-                return await _context.Entries
-                    .FirstOrDefaultAsync(e => e.Date.Date == today)
-                    .ConfigureAwait(false);
+                using var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
+                return await GetTodayInternalAsync(context);
             }
             catch (Exception ex)
             {
@@ -36,13 +44,16 @@ namespace ProgressApp.Core.Services
         {
             try
             {
+                using var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
                 if (string.IsNullOrWhiteSpace(description))
                 {
                     Log.Warning("Attempted to save today's entry with empty description.");
                     throw new AppException("Msg_DescriptionEmpty");
                 }
 
-                var entry = await GetTodayAsync();
+                var entry = await GetTodayInternalAsync(context);
                 bool isNew = entry == null;
 
                 if (isNew)
@@ -52,25 +63,25 @@ namespace ProgressApp.Core.Services
                         Date = DateTime.Today,
                         CreatedAt = DateTime.Now
                     };
-                    await _context.Entries.AddAsync(entry).ConfigureAwait(false);
+                    await context.Entries.AddAsync(entry).ConfigureAwait(false);
                 }
 
                 entry.Description = description;
                 entry.Result = result;
 
                 if (isNew)
-                    Log.Information("Creating new entry: {Description} | Result: {Result}", description, result);
+                    Log.Information("Creating new entry: Result: {Result}", result);
                 else
-                    Log.Information("Updating entry: {Description} | Result: {Result}", description, result);
+                    Log.Information("Updating entry: Result:{Result}", result);
 
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
 
                 Log.Information("Entry {Action} successfully. ID: {Id}", isNew ? "created" : "updated", entry.Id);
             }
             catch (Exception ex) when (ex is not AppException)
             {
 
-                Log.Error(ex, "Error occurred while saving today's entry (Description: {Description})", description);
+                Log.Error(ex, "Error occurred while saving today's entry");
                 throw new AppException("Msg_SaveEntryError");
             }
         }
@@ -79,8 +90,11 @@ namespace ProgressApp.Core.Services
         {
             try
             {
-                var entries = await _context.Entries
-                            .AsNoTracking() 
+                using var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
+                var entries = await context.Entries
+                            .AsNoTracking()
                             .OrderByDescending(e => e.Date)
                             .ToListAsync()
                             .ConfigureAwait(false);
@@ -95,20 +109,50 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        //public int GetStreak(List<JournalEntry> entries)
-        //{
-        //    int streak = 0;
+        public async Task<int> GetCurrentStreakAsync()
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-        //    foreach (var entry in entries)
-        //    {
-        //        if (entry.Result == DayResult.Success)
-        //            streak++;
-        //        else
-        //            streak = 0; 
-        //    }
+            var dates = await context.Entries
+                            .Where(e => e.Result == DayResult.Success || e.Result == DayResult.PartialSuccess)
+                            .Select(e => e.Date)
+                            .OrderByDescending(d => d)
+                            .ToListAsync();
 
-        //    return streak;
-        //}
+
+            return CalculateStreak(dates);
+        }
+
+        private int CalculateStreak(List<DateTime> dates)
+        {
+            if (!dates.Any()) return 0;
+
+            var today = DateTime.Today;
+            var lastEntryDate = dates[0].Date;
+
+            if (lastEntryDate < today.AddDays(-1))
+                return 0;
+
+            int streak = 1;
+            var currentCompare = lastEntryDate;
+
+            for (int i = 1; i < dates.Count; i++)
+            {
+                var nextDate = dates[i].Date;
+                if (nextDate == currentCompare) continue;
+                if (nextDate == currentCompare.AddDays(-1))
+                {
+                    streak++;
+                    currentCompare = nextDate;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return streak;
+        }
     }
 }
-
