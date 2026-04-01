@@ -9,6 +9,8 @@
         public static string LogFolder => Path.Combine(BaseFolder, "logs");
         public static string DbPath => Path.Combine(BaseFolder, "progress.db");
 
+        public static string ConfigPath => Path.Combine(BaseFolder, "appsettings.json");
+
         public static void EnsureDirectoriesExist()
         {
             if (!Directory.Exists(BaseFolder)) Directory.CreateDirectory(BaseFolder);
