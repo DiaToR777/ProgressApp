@@ -13,6 +13,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
 
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
+        private readonly IAppConfigService _appConfigService;
 
         private string _username = string.Empty;
         private string _goal = string.Empty;
@@ -54,22 +55,30 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
         public ICommand SaveSettingsCommand { get; }
-        public SettingsViewModel(ISettingsService settingsService, IMessageService messageService, ILocalizationService localizationService, IThemeService themeService)
+        public SettingsViewModel(ISettingsService settingsService, IAppConfigService appConfigService, IMessageService messageService, ILocalizationService localizationService, IThemeService themeService)
         {
+            _appConfigService = appConfigService;
             _settingsService = settingsService;
             _messageService = messageService;
 
             Initialize();
 
             SaveSettingsCommand = new RelayCommand(
-                executeAsync:async _ =>
+                executeAsync: async _ =>
                 {
                     try
                     {
                         Log.Information("SettingsVM: Saving settings. New Culture: {Culture}, Theme: {Theme}",
                             SelectedLanguage.CultureCode, SelectedTheme);
 
-                        await _settingsService.SaveSettingsAsync(Username, Goal, SelectedTheme, SelectedLanguage);
+                        var config = _appConfigService.Load();
+
+                        config.Theme = SelectedTheme.ToString();
+                        config.Language = SelectedLanguage.CultureCode;
+                        config.Username = Username;
+                        _appConfigService.Save(config);
+
+                        await _settingsService.SaveGoalAsync(Goal);
                         localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
                         themeService.SetTheme(SelectedTheme);
 
@@ -90,17 +99,13 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         {
             try
             {
-                var nameTask = _settingsService.GetUserNameAsync();
                 var goalTask = _settingsService.GetGoalAsync();
-                var themeTask = _settingsService.GetThemeAsync();
-                var langTask = _settingsService.GetLanguageAsync();
+                var config = _appConfigService.Load();
 
-                await Task.WhenAll(nameTask, goalTask, themeTask, langTask);
-
-                Username = await nameTask;
+                Username = config.Username;
                 Goal = await goalTask;
-                SelectedTheme = await themeTask;
-                SelectedLanguage = await langTask;
+                SelectedTheme = Enum.Parse<AppTheme>(config.Theme);
+                SelectedLanguage = LanguageConfig.GetByCode(config.Language);
 
                 Log.Debug("SettingsVM: All settings loaded in parallel");
             }

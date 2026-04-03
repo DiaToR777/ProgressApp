@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
@@ -7,7 +6,6 @@ using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
 using Serilog;
-using System.Windows;
 using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels
@@ -51,7 +49,6 @@ namespace ProgressApp.WpfUI.ViewModels
             ShowTodayCommand = new RelayCommand(async _ => ShowToday());
             ShowTableCommand = new RelayCommand(async _ => ShowTable());
             ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
-
         }
 
         private void InitializeNavigationAsync()
@@ -81,41 +78,12 @@ namespace ProgressApp.WpfUI.ViewModels
             var vm = _serviceProvider.GetRequiredService<LoginViewModel>();
             vm.Completed = async () =>
             {
-                await OnLoginSuccess();
                 IsNavigationVisible = true;
                 ShowToday();
-
             };
 
             CurrentView = vm;
             IsNavigationVisible = false;
-        }
-
-        private async Task OnLoginSuccess()
-        {
-            try
-            {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    var settingsService = scope.ServiceProvider.GetRequiredService<ISettingsService>();
-                    var themeService = scope.ServiceProvider.GetRequiredService<IThemeService>();
-                    var locService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-
-                    var savedTheme = await settingsService.GetThemeAsync();
-                    themeService.SetTheme(savedTheme);
-
-                    var savedLang = await settingsService.GetLanguageAsync();
-                    locService.ChangeLanguage(savedLang.CultureCode);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
-
-                var msgService = _serviceProvider.GetRequiredService<IMessageService>();
-                if (ex is AppException appEx) msgService.ShowError(appEx);
-                else MessageBox.Show(ex.Message, "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
         }
 
         private void ShowInitialsSetup()

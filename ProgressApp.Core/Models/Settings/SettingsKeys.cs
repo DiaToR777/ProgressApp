@@ -1,5 +1,4 @@
-﻿
-namespace ProgressApp.Core.Models.Settings;
+﻿namespace ProgressApp.Core.Models.Settings;
 
 public static class SettingsKeys
 {

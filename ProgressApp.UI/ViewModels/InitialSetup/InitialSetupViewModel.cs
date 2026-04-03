@@ -4,6 +4,7 @@ using Serilog;
 using System.Windows.Input;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Config;
 
 namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
@@ -13,6 +14,8 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
         private readonly IMessageService _messageService;
         private readonly ILocalizationService _localizationService;
         private readonly IAuthService _authService;
+        private readonly IAppConfigService _appConfigService;
+
 
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
@@ -58,12 +61,13 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
         public Action? Completed { get; set; }
 
-        public InitialSetupViewModel(ISettingsService settings, ILocalizationService localizationService, IMessageService messageService, IAuthService authService)
+        public InitialSetupViewModel(ISettingsService settings, IAppConfigService appConfigService, ILocalizationService localizationService, IMessageService messageService, IAuthService authService)
         {
             _messageService = messageService;
             _localizationService = localizationService;
             _settingsService = settings;
             _authService = authService;
+            _appConfigService = appConfigService;
 
             SelectedLanguage = LanguageConfig.AvailableLanguages.First();
 
@@ -100,7 +104,15 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             {
                 Log.Information("InitialSetup: Registration success during setup finish");
 
-                await _settingsService.SaveSettingsAsync(Username, Goal, AppTheme.Light, SelectedLanguage);
+                await _settingsService.SaveGoalAsync(Goal);
+
+                AppConfig config = new AppConfig
+                {
+                    Language = SelectedLanguage.CultureCode,
+                    Username = Username,
+                    Theme = AppTheme.Light.ToString()
+                };
+                _appConfigService.Save(config);
 
                 Log.Information("InitialSetupVM: Setup saved successfully. Invoking completion.");
 

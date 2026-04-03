@@ -37,25 +37,11 @@ namespace ProgressApp.Core.Data
         {
             await Database.MigrateAsync();
 
-            var defaultSettings = new List<AppSettings>
-                    {
-                        new AppSettings { Key = "Username", Value = "" },
-                        new AppSettings { Key = "Goal", Value = "" },
-                        new AppSettings { Key = "Theme", Value = "Light" },
-                        new AppSettings { Key = "Language", Value = "en-US" }
-                    };
-
-            bool changed = false;
-            foreach (var setting in defaultSettings)
+            if (!await Settings.AnyAsync(s => s.Key == SettingsKeys.Goal))
             {
-                if (!await Settings.AnyAsync(s => s.Key == setting.Key))
-                {
-                    Settings.AddAsync(setting);
-                    changed = true;
-                }
-            }
-            if (changed)
+                Settings.Add(new AppSettings { Key = SettingsKeys.Goal, Value = "" });
                 await SaveChangesAsync();
+            }
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
