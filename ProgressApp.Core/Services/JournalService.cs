@@ -154,5 +154,6 @@ namespace ProgressApp.Core.Services
 
             return streak;
         }
+                
     }
 }

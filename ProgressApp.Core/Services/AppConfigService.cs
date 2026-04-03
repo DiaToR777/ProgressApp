@@ -15,11 +15,16 @@ namespace ProgressApp.Core.Services
             try
             {
                 if (!File.Exists(_path))
-                    return new AppConfig();
+                {
+                    var defaults = new AppConfig();
+                    Save(defaults);
+                    Log.Debug("AppConfig: Config file not found, created with defaults");
+                    return defaults;
+                }                
 
                 var json = File.ReadAllText(_path);
                 var config = JsonSerializer.Deserialize<AppConfig>(json) ?? new AppConfig();
-                Log.Debug("AppConfig: Saved successfully");
+                Log.Debug("AppConfig: Loaded successfully");
                 return config;
             }
             catch (Exception ex)
