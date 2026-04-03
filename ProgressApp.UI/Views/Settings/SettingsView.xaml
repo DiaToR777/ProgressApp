@@ -1,65 +1,84 @@
 <UserControl x:Class="ProgressApp.WpfUI.Views.Settings.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             mc:Ignorable="d"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:ProgressApp.WpfUI.ViewModels.Settings"
-             d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}">
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
+             TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
 
-    <Grid Margin="30">
-        <StackPanel MaxWidth="400" HorizontalAlignment="Left">
-            <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ProfileSettings]}"
-                       FontSize="22" FontWeight="Bold" Margin="0,0,0,20"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="30">
 
-            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" 
-       ContentStringFormat="{}{0}:" />
-            <TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,15"
-                     MaxLength="35"/>
+            <StackPanel MaxWidth="500" HorizontalAlignment="Left">
 
-            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" 
-       ContentStringFormat="{}{0}:" />
-            <TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"
-                     Height="60"
-                     TextWrapping="Wrap"
-                     VerticalScrollBarVisibility="Auto"
-                     AcceptsReturn="True"
-                     Margin="0,5,0,15"
-                     MaxLength="150"
-                     Width="300"                
-                     HorizontalAlignment="Left"
-                     />
-                     
+                <!--TODO ProgileSettings-->
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ProfileSettings]}"
+                          FontSize="24" 
+                          FontWeight="Bold" 
+                          Margin="0,0,0,20"/>
 
-            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_Theme]}" 
-       ContentStringFormat="{}{0}:" />
+                <ui:Card Margin="0,0,0,20" Padding="20">
+                    <StackPanel>
+                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" 
+                              Margin="0,0,0,5" />
+                        <ui:TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
+                                Icon="{ui:SymbolIcon Symbol=Person24}"
+                                PlaceholderText="Enter your name"
+                                Margin="0,0,0,15"
+                                MaxLength="35"/>
 
-            <ComboBox SelectedItem="{Binding SelectedTheme}"
-                      ItemsSource="{Binding AllThemes}"
-                      Margin="0,5,0,20"/>
+                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" 
+                              Margin="0,0,0,5" />
+                        <ui:TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"
+                                Height="80"
+                                TextWrapping="Wrap"
+                                AcceptsReturn="True"
+                                PlaceholderText="What is your main goal?"
+                                VerticalContentAlignment="Top"
+                                Margin="0,0,0,10"
+                                MaxLength="150" />
+                    </StackPanel>
+                </ui:Card>
 
-            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" 
-       ContentStringFormat="{}{0}:" />
+                <!--TODO Title_Appearance-->
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Appearance]}" 
+                          FontSize="18" 
+                          FontWeight="SemiBold" 
+                          Margin="0,10,0,15"/>
 
-            <ComboBox ItemsSource="{Binding AvailableLanguages}" Margin="0,5,0,20" SelectedItem="{Binding SelectedLanguage}">
-                <ComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}"/>
-                    </DataTemplate>
-                </ComboBox.ItemTemplate>
-            </ComboBox>
+                <ui:Card Margin="0,0,0,20" Padding="20">
+                    <StackPanel>
+                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_Theme]}" Margin="0,0,0,5" />
+                        <ComboBox SelectedItem="{Binding SelectedTheme}"
+                                 ItemsSource="{Binding AllThemes}"
+                                 HorizontalAlignment="Stretch"
+                                 Margin="0,0,0,15"/>
 
-            <Separator Margin="0,10"/>
-            <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_DataManagement]}" FontSize="16" FontWeight="SemiBold" Margin="0,10,0,10"/>
+                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" Margin="0,0,0,5" />
+                        <ComboBox ItemsSource="{Binding AvailableLanguages}" 
+                                 SelectedItem="{Binding SelectedLanguage}"
+                                 HorizontalAlignment="Stretch">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+                </ui:Card>
 
-            <Button Content="{Binding Source={StaticResource Langs}, Path=[Title_SaveChanges]}"
-                    Command="{Binding SaveSettingsCommand}"
-                    Padding="10,5"/>
+                <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DataManagement]}"/>
 
-            <TextBlock Text="App v1.0.0"
-                       Margin="0,30,0,0"
-                       FontSize="10"
-                       HorizontalAlignment="Center"/>
-        </StackPanel>
-    </Grid>
+                <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Title_SaveChanges]}"
+                               Command="{Binding SaveSettingsCommand}"
+                               Appearance="Primary"
+                               Icon="{ui:SymbolIcon Symbol=Save24}"
+                               HorizontalAlignment="Left"
+                               Padding="20,8"/>
+            </StackPanel>
+        </Grid>
+        </ScrollViewer>
 </UserControl>

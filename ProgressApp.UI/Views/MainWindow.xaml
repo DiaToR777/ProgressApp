@@ -1,98 +1,96 @@
-﻿<Window x:Class="ProgressApp.WpfUI.Views.MainWindow"
-        xmlns:conv="clr-namespace:ProgressApp.WpfUI.Converters"
+﻿<ui:FluentWindow x:Class="ProgressApp.WpfUI.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:ProgressApp.WpfUI"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:conv="clr-namespace:ProgressApp.WpfUI.Converters"
         xmlns:vmToday="clr-namespace:ProgressApp.WpfUI.ViewModels.Today"
         xmlns:vmSettings="clr-namespace:ProgressApp.WpfUI.ViewModels.Settings"
         xmlns:vmTable="clr-namespace:ProgressApp.WpfUI.ViewModels.Table"
         xmlns:vmInitial="clr-namespace:ProgressApp.WpfUI.ViewModels.InitialSetup"
         xmlns:vmLogin="clr-namespace:ProgressApp.WpfUI.ViewModels.Login"
-        
         xmlns:viewLogin="clr-namespace:ProgressApp.WpfUI.Views.Login"
         xmlns:viewToday="clr-namespace:ProgressApp.WpfUI.Views.Today"
         xmlns:viewSettings="clr-namespace:ProgressApp.WpfUI.Views.Settings"
         xmlns:viewTable="clr-namespace:ProgressApp.WpfUI.Views.Table"
         xmlns:viewInitial="clr-namespace:ProgressApp.WpfUI.Views.InitialSetup"
-
         Title="{Binding Source={StaticResource Langs}, Path=[AppTitle]}"
-        Height="600" Width="900"
-        Background="{DynamicResource WindowBackground}">
+        Height="600" Width="1000"
+        ExtendsContentIntoTitleBar="True"
+        WindowCornerPreference="Round"
+        WindowStartupLocation="CenterScreen">
 
-    <Window.Resources>
+    
+    <ui:FluentWindow.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
-        <conv:InverseBoolConverter x:Key="InverseBoolConverter"/> 
-
+        <conv:InverseBoolConverter x:Key="InverseBoolConverter"/>
 
         <DataTemplate DataType="{x:Type vmToday:TodayViewModel}">
             <viewToday:TodayView />
         </DataTemplate>
-
         <DataTemplate DataType="{x:Type vmSettings:SettingsViewModel}">
             <viewSettings:SettingsView />
         </DataTemplate>
-
         <DataTemplate DataType="{x:Type vmTable:TableViewModel}">
             <viewTable:TableView />
         </DataTemplate>
-
         <DataTemplate DataType="{x:Type vmInitial:InitialSetupViewModel}">
             <viewInitial:InitialSetupView />
         </DataTemplate>
-
         <DataTemplate DataType="{x:Type vmLogin:LoginViewModel}">
             <viewLogin:LoginView />
         </DataTemplate>
-        
-    </Window.Resources>
+    </ui:FluentWindow.Resources>
 
-    <Grid>
+    <Grid Background="{DynamicResource ApplicationPageBackgroundBrush}">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Grid.Column="0" Background="{DynamicResource ControlBackground}"
-                    Visibility="{Binding IsNavigationVisible, Converter={StaticResource BoolToVisibilityConverter}}">
+        <ui:TitleBar Grid.Column="0" Grid.ColumnSpan="2" />
+        
+        <Border Grid.Column="0" 
+                Background="{DynamicResource SystemControlBackgroundAltHighBrush}" 
+                BorderBrush="{DynamicResource CardStrokeColorDefaultBrush}"
+                BorderThickness="0,0,1,0"
+                Visibility="{Binding IsNavigationVisible, Converter={StaticResource BoolToVisibilityConverter}}">
 
-            <Button Content="{Binding Source={StaticResource Langs}, Path=[Title_Today]}"
-                    Margin="10" Command="{Binding ShowTodayCommand}" />
+            <StackPanel Width="180" Margin="10,40,10,10">
+                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[Title_Today]}"
+                                     Icon="{ui:SymbolIcon Symbol=Home24}"
+                                     Command="{Binding ShowTodayCommand}" 
+                                     Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
 
-            <Button Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Table]}"
-                    Margin="10" Command="{Binding ShowTableCommand}" />
+                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Table]}"
+                                     Icon="{ui:SymbolIcon Symbol=Table24}"
+                                     Command="{Binding ShowTableCommand}" 
+                                     Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
 
-            <Button Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Settings]}"
-                    Margin="10" Command="{Binding ShowSettingsCommand}" />
-        </StackPanel>
+                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Settings]}"
+                                     Icon="{ui:SymbolIcon Symbol=Settings24}"
+                                     Command="{Binding ShowSettingsCommand}" 
+                                     Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
+            </StackPanel>
+        </Border>
 
         <Grid Grid.Column="1">
             <ContentControl Content="{Binding CurrentView}" 
-                            Margin="10"
+                            Margin="20"
                             IsEnabled="{Binding CurrentView.IsBusy, Converter={StaticResource InverseBoolConverter}, FallbackValue=True}"/>
 
             <Grid Visibility="{Binding CurrentView.IsBusy, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
-                  Background="{DynamicResource WindowBackground}"
-                  Opacity="0.8">
-                
+                  Background="{DynamicResource ApplicationPageBackgroundBrush}"
+                  Opacity="0.7">
+
                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                    <ProgressBar IsIndeterminate="True" 
-                                 Width="200" 
-                                 Height="6" 
-                                 Foreground="{DynamicResource AccentColor}"/> 
-                    
-                    <TextBlock Text="Processing..." 
-                               Margin="0,15,0,0" 
-                               FontSize="16"
-                               FontWeight="SemiBold"
-                               HorizontalAlignment="Center"/>
-                    
-                    <TextBlock Text="Please check logs if this takes too long" 
-                               Margin="0,5,0,0" 
-                               FontSize="11"
-                               Opacity="0.6"
-                               HorizontalAlignment="Center"/>
+                    <ui:ProgressRing IsIndeterminate="True" Width="60" Height="60" />
+
+                    <ui:TextBlock Text="Processing..." 
+                                 FontWeight="Medium"
+                                 Margin="0,15,0,0"
+                                 HorizontalAlignment="Center"/>
                 </StackPanel>
             </Grid>
         </Grid>
     </Grid>
-</Window>
+</ui:FluentWindow>
