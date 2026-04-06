@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Enums;
-using ProgressApp.Core.Models.Localization;
 using ProgressApp.Core.Models.Settings;
 using Serilog;
 
@@ -11,33 +10,28 @@ namespace ProgressApp.Core.Services
 {
     public class SettingsService : ISettingsService
     {
-        private ProgressDbContext _context;
-        public SettingsService(ProgressDbContext context)
+        private readonly IServiceScopeFactory _scopeFactory;
+        public SettingsService(IServiceScopeFactory scopeFactory)
         {
-            _context = context;
+            _scopeFactory = scopeFactory;
         }
 
-        public bool IsFirstRun()
+        public async Task<string> GetGoalAsync()
         {
-            var usernameSetting = _context.Settings
-                    .FirstOrDefault(s => s.Key == SettingsKeys.Username);
-
-            bool isFirst = usernameSetting == null || string.IsNullOrWhiteSpace(usernameSetting.Value);
-
-            Log.Debug("FirstRun check: Username value is '{Value}'. IsFirstRun: {Result}",
-                usernameSetting?.Value ?? "NULL", isFirst);
-
-            return isFirst;
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+            return await GetValueAsync(context, SettingsKeys.Goal) ?? "";
         }
 
-        public string GetUserName() => GetValue(SettingsKeys.Username) ?? "";
-        public string GetGoal() => GetValue(SettingsKeys.Goal) ?? "";
-
-        private string? GetValue(string key)
+        private async Task<string?> GetValueAsync(ProgressDbContext context, string key)
         {
             try
             {
-                return _context.Settings.AsNoTracking().FirstOrDefault(s => s.Key == key)?.Value;
+                var setting = await context.Settings
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync(s => s.Key == key)
+                            .ConfigureAwait(false);
+                return setting?.Value;
             }
             catch (Exception ex)
             {
@@ -46,45 +40,18 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        public AppTheme GetTheme()
+        public async Task SaveGoalAsync(string goal)
         {
             try
             {
-                var themeValue = GetValue(SettingsKeys.Theme);
-                if (Enum.TryParse(themeValue, out AppTheme result)) return result;
+                using var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-                Log.Warning("Theme not found or corrupted in DB. Falling back to Light.");
-                return AppTheme.Light;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Failed to read Theme from database!");
-                throw new AppException("Msg_ThemeReadError");
-            }
-        }
-
-        public LanguageModel GetLanguage()
-        {
-            string? code = GetValue(SettingsKeys.Language);
-            return LanguageConfig.GetByCode(code);
-        }
-
-        public void SaveSettings(string username, string goal, AppTheme theme, LanguageModel language)
-        {
-            try
-            {
-                Log.Information("Saving application settings for user: {Username}", username);
-
-                if (string.IsNullOrWhiteSpace(username)) throw new AppException("Msg_UsernameEmpty");
                 if (string.IsNullOrWhiteSpace(goal)) throw new AppException("Msg_GoalEmpty");
-
-                UpdateOrAdd(SettingsKeys.Username, username);
-                UpdateOrAdd(SettingsKeys.Goal, goal);
-                UpdateOrAdd(SettingsKeys.Theme, theme.ToString());
-                UpdateOrAdd(SettingsKeys.Language, language.CultureCode);
-
-                _context.SaveChanges();
+                await UpdateOrAddAsync(context, SettingsKeys.Goal, goal);
+                await context.SaveChangesAsync().ConfigureAwait(false);
                 Log.Information("All settings saved successfully.");
+
             }
             catch (Exception ex) when (ex is not AppException)
             {
@@ -93,10 +60,12 @@ namespace ProgressApp.Core.Services
             }
         }
 
-        private void UpdateOrAdd(string key, string value)
-        { 
+        private async Task UpdateOrAddAsync(ProgressDbContext context, string key, string value)
+        {
+            var setting = await context.Settings
+                .FirstOrDefaultAsync(s => s.Key == key)
+                .ConfigureAwait(false);
 
-            var setting = _context.Settings.FirstOrDefault(s => s.Key == key);
             if (setting != null)
             {
                 setting.Value = value;
@@ -104,9 +73,9 @@ namespace ProgressApp.Core.Services
             else
             {
                 Log.Debug("Creating new setting entry: {Key} = {Value}", key, value);
-                _context.Settings.Add(new AppSettings { Key = key, Value = value });
+                context.Settings.Add(new AppSettings { Key = key, Value = value });
             }
         }
-    }
 
+    }
 }

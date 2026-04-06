@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
+using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
@@ -12,7 +13,7 @@ namespace ProgressApp.WpfUI.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly ISettingsService _settingsService;
+        private readonly IAuthService _authService;
 
         private object? _currentView;
         private bool _isNavigationVisible = true;
@@ -34,37 +35,48 @@ namespace ProgressApp.WpfUI.ViewModels
             set => SetProperty(ref _isNavigationVisible, value);
         }
 
-
         public ICommand ShowTodayCommand { get; }
         public ICommand ShowTableCommand { get; }
         public ICommand ShowSettingsCommand { get; }
 
-        public MainViewModel(ISettingsService settings, IServiceProvider serviceProvider)
+        public MainViewModel(IAuthService authSevice, IServiceProvider serviceProvider)
         {
-            _settingsService = settings;
+            _authService = authSevice;
             _serviceProvider = serviceProvider;
 
-            if (_settingsService.IsFirstRun())
-            {
-                ShowInitialsSetup();
-            }
-            else
-            {
-                ShowToday();
-            }
+            InitializeNavigationAsync();
 
-
-            ShowTodayCommand = new RelayCommand(_ => ShowToday());
-            ShowTableCommand = new RelayCommand(_ => ShowTable());
-            ShowSettingsCommand = new RelayCommand(_ => ShowSettings());
-
+            ShowTodayCommand = new RelayCommand(async _ => ShowToday());
+            ShowTableCommand = new RelayCommand(async _ => ShowTable());
+            ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
         }
 
-        private void ShowInitialsSetup()
+        private void InitializeNavigationAsync()
         {
-            var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
+            try
+            {
+                IsNavigationVisible = false;
+                bool dbExists = _authService.IsDatabaseCreated();
 
-            vm.Completed = () =>
+                if (!dbExists)
+                {
+                    ShowInitialsSetup();
+                }
+                else
+                {
+                    ShowLogin();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
+            }
+        }
+
+        private void ShowLogin()
+        {
+            var vm = _serviceProvider.GetRequiredService<LoginViewModel>();
+            vm.Completed = async () =>
             {
                 IsNavigationVisible = true;
                 ShowToday();
@@ -73,6 +85,21 @@ namespace ProgressApp.WpfUI.ViewModels
             CurrentView = vm;
             IsNavigationVisible = false;
         }
+
+        private void ShowInitialsSetup()
+        {
+            var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
+
+            vm.Completed = async () =>
+            {
+                IsNavigationVisible = true;
+                ShowToday();
+            };
+
+            CurrentView = vm;
+            IsNavigationVisible = false;
+        }
+
         private void ShowTable()
         {
             CurrentView = _serviceProvider.GetRequiredService<TableViewModel>();
@@ -82,6 +109,7 @@ namespace ProgressApp.WpfUI.ViewModels
         private void ShowToday()
         {
             CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
+            IsNavigationVisible = true;
         }
 
         private void ShowSettings()

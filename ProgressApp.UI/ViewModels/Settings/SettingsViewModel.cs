@@ -13,6 +13,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
 
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
+        private readonly IAppConfigService _appConfigService;
 
         private string _username = string.Empty;
         private string _goal = string.Empty;
@@ -34,6 +35,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 SetProperty(ref _username, _sanitizedValue);
             }
         }
+
         public string Goal
         {
             get => _goal;
@@ -53,34 +55,30 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
         public ICommand SaveSettingsCommand { get; }
-        public SettingsViewModel(ISettingsService settingsService, IMessageService messageService, ILocalizationService localizationService, IThemeService themeService)
+        public SettingsViewModel(ISettingsService settingsService, IAppConfigService appConfigService, IMessageService messageService, ILocalizationService localizationService, IThemeService themeService)
         {
+            _appConfigService = appConfigService;
             _settingsService = settingsService;
             _messageService = messageService;
 
-            try
-            {
-                Username = _settingsService.GetUserName();
-                Goal = _settingsService.GetGoal();
-                SelectedTheme = _settingsService.GetTheme();
-                SelectedLanguage = _settingsService.GetLanguage();
-                Log.Debug("SettingsVM: Current settings loaded for user {Username}", Username);
-            }
-            catch (AppException ex)
-            {
-                Log.Error(ex, "SettingsVM: Failed to load initial settings");
-                messageService.ShowError(ex);
-            }
+            Initialize();
 
             SaveSettingsCommand = new RelayCommand(
-                execute: _ =>
+                executeAsync: async _ =>
                 {
                     try
                     {
                         Log.Information("SettingsVM: Saving settings. New Culture: {Culture}, Theme: {Theme}",
                             SelectedLanguage.CultureCode, SelectedTheme);
 
-                        _settingsService.SaveSettings(Username, Goal, SelectedTheme, SelectedLanguage);
+                        var config = _appConfigService.Load();
+
+                        config.Theme = SelectedTheme.ToString();
+                        config.Language = SelectedLanguage.CultureCode;
+                        config.Username = Username;
+                        _appConfigService.Save(config);
+
+                        await _settingsService.SaveGoalAsync(Goal);
                         localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
                         themeService.SetTheme(SelectedTheme);
 
@@ -95,6 +93,27 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 },
                 canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
             );
+        }
+
+        private async void Initialize()
+        {
+            try
+            {
+                var goalTask = _settingsService.GetGoalAsync();
+                var config = _appConfigService.Load();
+
+                Username = config.Username;
+                Goal = await goalTask;
+                SelectedTheme = Enum.Parse<AppTheme>(config.Theme);
+                SelectedLanguage = LanguageConfig.GetByCode(config.Language);
+
+                Log.Debug("SettingsVM: All settings loaded in parallel");
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "SettingsVM: Error while getting settings");
+                _messageService.ShowError(ex);
+            }
         }
     }
 }

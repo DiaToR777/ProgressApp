@@ -35,7 +35,12 @@ namespace ProgressApp.WpfUI.Services.Message
             string title = GetLocalizedText("Title_Error");
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
-
+        public void ShowErrorIncorrectPassword()
+        {
+            string message = GetLocalizedText("Error_IncorrectPassword");
+            string title = GetLocalizedText("Title_Error");
+            MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
         private string GetLocalizedText(string key) 
         {
             return TranslationSource.Instance[key] ?? key;
