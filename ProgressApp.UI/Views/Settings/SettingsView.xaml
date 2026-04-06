@@ -14,7 +14,6 @@
 
             <StackPanel MaxWidth="500" HorizontalAlignment="Left">
 
-                <!--TODO ProgileSettings-->
                 <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ProfileSettings]}"
                           FontSize="24" 
                           FontWeight="Bold" 
@@ -26,8 +25,7 @@
                               Margin="0,0,0,5" />
                         <ui:TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
                                 Icon="{ui:SymbolIcon Symbol=Person24}"
-                                PlaceholderText="Enter your name"
-                                Margin="0,0,0,15"
+                                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterName]}" Margin="0,0,0,15"
                                 MaxLength="35"/>
 
                         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" 
@@ -36,14 +34,13 @@
                                 Height="80"
                                 TextWrapping="Wrap"
                                 AcceptsReturn="True"
-                                PlaceholderText="What is your main goal?"
+                                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatIsGoal]}"
                                 VerticalContentAlignment="Top"
                                 Margin="0,0,0,10"
                                 MaxLength="150" />
                     </StackPanel>
                 </ui:Card>
 
-                <!--TODO Title_Appearance-->
                 <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Appearance]}" 
                           FontSize="18" 
                           FontWeight="SemiBold" 
@@ -80,5 +77,5 @@
                                Padding="20,8"/>
             </StackPanel>
         </Grid>
-        </ScrollViewer>
+    </ScrollViewer>
 </UserControl>

@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+    <Grid VerticalAlignment="Center" HorizontalAlignment="Center" >
         <ui:Card Width="350" Padding="30">
             <StackPanel>
 
@@ -24,15 +24,15 @@
                               HorizontalAlignment="Center"
                               Margin="0,0,0,25"/>
 
-                <Label Content="Password:" Margin="0,0,0,5"/>
+                <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}"  Margin="0,0,0,5"/>
 
                 <ui:PasswordBox x:Name="PassBox"
                 Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                PlaceholderText="Enter password"
+                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterPass]}"
                 Icon="{ui:SymbolIcon Symbol=Password24}"
                 ClearButtonEnabled="True"
                 MaxLength="8"/>
-                
+
                 <ui:Button Content="Login" 
                            Command="{Binding LoginCommand}" 
                            Appearance="Primary"
@@ -42,7 +42,7 @@
                            HorizontalAlignment="Stretch"
                            Icon="{ui:SymbolIcon Symbol=Checkmark24}"/>
 
-                <ui:TextBlock Text="Maximum 8 characters" 
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}" 
                               Appearance="Tertiary"
                               FontSize="11"
                               Margin="0,10,0,0"

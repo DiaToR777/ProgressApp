@@ -5,92 +5,99 @@
              xmlns:vm="clr-namespace:ProgressApp.WpfUI.ViewModels.Today"
              xmlns:helpers="clr-namespace:ProgressApp.WpfUI.Localization.Helpers"
              xmlns:conv="clr-namespace:ProgressApp.WpfUI.Converters"
-             TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+             TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}"
+             Focusable="False">
 
     <UserControl.Resources>
         <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter"/>
     </UserControl.Resources>
 
-    <StackPanel Margin="20"
-                helpers:LanguageHelper.UpdateLanguage="{Binding Source={StaticResource Langs}, Path=CurrentCulture}">
+    <Grid KeyboardNavigation.TabNavigation="Cycle">
+        <StackPanel Margin="20"
+                helpers:LanguageHelper.UpdateLanguage="{Binding Source={StaticResource Langs}, Path=CurrentCulture}" 
+                KeyboardNavigation.TabNavigation="Cycle">
 
-        <Grid Margin="0,0,0,15">
-            <StackPanel Orientation="Horizontal">
-                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Today]}"
+            <Grid Margin="0,0,0,15">
+                <StackPanel Orientation="Horizontal">
+                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Today]}"
                               FontWeight="Bold"
                               FontSize="28" />
-                <ui:TextBlock Text="{Binding CurrentDate, StringFormat=dd MMMM yyyy}"
+                    <ui:TextBlock Text="{Binding CurrentDate, StringFormat=dd MMMM yyyy}"
                               Margin="15,10,0,0"
                               Appearance="Secondary"
                               FontSize="14" />
-            </StackPanel>
+                </StackPanel>
 
-            <ui:TextBlock HorizontalAlignment="Right" 
+                <ui:TextBlock HorizontalAlignment="Right" 
                           VerticalAlignment="Bottom"
                           Appearance="Tertiary"
                           FontSize="12">
-                <Run Text="{Binding Description.Length, Mode=OneWay}"/>
-                <Run Text="/1500"/>
-            </ui:TextBlock>
-        </Grid>
+                    <Run Text="{Binding Description.Length, Mode=OneWay}"/>
+                    <Run Text="/1500"/>
+                </ui:TextBlock>
+            </Grid>
 
-        <ui:Card Padding="12,8" HorizontalAlignment="Left" Margin="0,0,0,20">
-            <StackPanel Orientation="Horizontal">
-                <ui:SymbolIcon Symbol="Flash24" Margin="0,0,8,0">
-                    <ui:SymbolIcon.Style>
-                        <Style TargetType="ui:SymbolIcon">
-                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}"/>
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding CurrentStreak, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
-                                    <Setter Property="Foreground" Value="#FF4500"/>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </ui:SymbolIcon.Style>
-                </ui:SymbolIcon>
+            <ui:Card Padding="12,8" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal">
+                    <ui:SymbolIcon Symbol="Flash24" Margin="0,0,8,0">
+                        <ui:SymbolIcon.Style>
+                            <Style TargetType="ui:SymbolIcon">
+                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentStreak, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
+                                        <Setter Property="Foreground" Value="#FF4500"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ui:SymbolIcon.Style>
+                    </ui:SymbolIcon>
 
-                <ui:TextBlock Text="{Binding CurrentStreak}" 
+                    <ui:TextBlock Text="{Binding CurrentStreak}" 
                               FontWeight="Bold" 
                               FontSize="18"
                               VerticalAlignment="Center"/>
 
-                <ui:TextBlock Text=" day(s) streak" 
+                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_daysStreak]}" 
                               Appearance="Secondary"
                               FontSize="13" 
                               VerticalAlignment="Center" 
                               Margin="5,0,0,0"/>
-            </StackPanel>
-        </ui:Card>
+                </StackPanel>
+            </ui:Card>
 
-        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DayDescription]}" Margin="0,0,0,5"/>
-        <ui:TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                    PlaceholderText="What did you achieve today?"
+            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DayDescription]}" Margin="0,0,0,5"/>
+            <ui:TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatYouAchive]}"
                     Height="150"
                     AcceptsReturn="True"
                     TextWrapping="Wrap"
                     VerticalContentAlignment="Top"
                     ClearButtonEnabled="True"
                     MaxLength="1500"
-                    Margin="0,0,0,20"/>
+                    Margin="0,0,0,20"
+                    TabIndex="0"/>
 
-        <Label Content="{Binding Source={StaticResource Langs}, Path=[DataGrid_Result]}" Margin="0,0,0,5" />
-        <ComboBox ItemsSource="{Binding AllResult}" 
+            <Label Content="{Binding Source={StaticResource Langs}, Path=[DataGrid_Result]}" Margin="0,0,0,5" />
+            <ComboBox ItemsSource="{Binding AllResult}" 
                      SelectedValue="{Binding SelectedResult}"
                      SelectedValuePath="Value"
                      HorizontalAlignment="Stretch"
-                     Margin="0,0,0,20">
-            <ComboBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding DisplayName}"/>
-                </DataTemplate>
-            </ComboBox.ItemTemplate>
-        </ComboBox>
+                     Margin="0,0,0,20"
+                     TabIndex="1">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding DisplayName}"/>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
 
-        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_SaveDay]}"
+            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_SaveDay]}"
                    Appearance="Primary"
                    Icon="{ui:SymbolIcon Symbol=Save24}"
                    Padding="30,8"
                    Command="{Binding SaveCommand}"
-                   HorizontalAlignment="Left"/>
-    </StackPanel>
+                   HorizontalAlignment="Left"
+                   TabIndex="2"/>
+        </StackPanel>
+    </Grid>
 </UserControl>

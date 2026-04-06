@@ -180,6 +180,24 @@
   <data name="NavBtn_Table" xml:space="preserve">
     <value>Таблиця</value>
   </data>
+  <data name="Placeholder_EnterName" xml:space="preserve">
+    <value>Введіть ваше ім'я</value>
+  </data>
+  <data name="Placeholder_EnterPass" xml:space="preserve">
+    <value>Введіть пароль</value>
+  </data>
+  <data name="Placeholder_HowCallYou" xml:space="preserve">
+    <value>Як нам вас називати?</value>
+  </data>
+  <data name="Placeholder_Max8Ch" xml:space="preserve">
+    <value>Макс 8 символів</value>
+  </data>
+  <data name="Placeholder_WhatIsGoal" xml:space="preserve">
+    <value>Яка ваша основна ціль?</value>
+  </data>
+  <data name="Placeholder_WhatYouAchive" xml:space="preserve">
+    <value>Що ви сьогодні досягли?</value>
+  </data>
   <data name="Result_Partial" xml:space="preserve">
     <value>Частковий успіх</value>
   </data>
@@ -189,6 +207,9 @@
   <data name="Result_Success" xml:space="preserve">
     <value>Успіх</value>
   </data>
+  <data name="Title_Appearance" xml:space="preserve">
+    <value>Зовнішній вигляд</value>
+  </data>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Управління даними</value>
   </data>
@@ -197,6 +218,9 @@
   </data>
   <data name="Title_DayDescription" xml:space="preserve">
     <value>Опис дня:</value>
+  </data>
+  <data name="Title_daysStreak" xml:space="preserve">
+    <value>днів поспіль</value>
   </data>
   <data name="Title_Description" xml:space="preserve">
     <value>Опис</value>

@@ -79,7 +79,7 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                     {
                         IsBusy = true;
                         await Task.Run(async () =>
-                        { 
+                        {
                             await FinishAsync();
                         });
                     }
@@ -119,6 +119,6 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                 Completed?.Invoke();
                 return;
             }
-         }
+        }
     }
 }

@@ -25,7 +25,7 @@
                         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" Margin="0,0,0,5"/>
                         <ui:TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
                                     Icon="{ui:SymbolIcon Symbol=Person24}"
-                                    PlaceholderText="How should we call you?"
+                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_HowCallYou]}"
                                     MaxLength="35" 
                                     TabIndex="1"
                                     Margin="0,0,0,15"/>
@@ -43,7 +43,7 @@
                         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}" Margin="0,0,0,5"/>
                         <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         Icon="{ui:SymbolIcon Symbol=Password24}"
-                                        PlaceholderText="Max 8 characters"
+                                        PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}"
                                         MaxLength="8"
                                         TabIndex="3"
                                         Margin="0,0,0,15"/>

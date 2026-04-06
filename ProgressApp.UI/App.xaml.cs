@@ -2,6 +2,8 @@
 using ProgressApp.Core.Configuration;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Config;
+using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Services;
 using ProgressApp.Core.Services.Auth;   
 using ProgressApp.WpfUI.Localization.Managers;
@@ -9,11 +11,11 @@ using ProgressApp.WpfUI.Services.Message;
 using ProgressApp.WpfUI.Themes;
 using ProgressApp.WpfUI.ViewModels;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
+using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
 using ProgressApp.WpfUI.Views;
-using ProgressApp.WpfUI.ViewModels.Login;
 using Serilog;
 using System.Windows;
 
@@ -66,6 +68,16 @@ namespace ProgressApp.WpfUI
         {
             SQLitePCL.Batteries_V2.Init();
             base.OnStartup(e);
+
+            var appConfig = _serviceProvider.GetRequiredService<IAppConfigService>();
+
+            var config = appConfig.Load();
+
+            var themeService = _serviceProvider.GetRequiredService<IThemeService>();
+            themeService.SetTheme(Enum.Parse<AppTheme>(config.Theme));
+
+            var locService = _serviceProvider.GetRequiredService<ILocalizationService>();
+            locService.ChangeLanguage(config.Language);
 
             try
             {

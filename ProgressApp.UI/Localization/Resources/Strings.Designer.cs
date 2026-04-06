@@ -250,6 +250,60 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Enter your name.
+        /// </summary>
+        public static string Placeholder_EnterName {
+            get {
+                return ResourceManager.GetString("Placeholder_EnterName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Enter password.
+        /// </summary>
+        public static string Placeholder_EnterPass {
+            get {
+                return ResourceManager.GetString("Placeholder_EnterPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на How should we call you?.
+        /// </summary>
+        public static string Placeholder_HowCallYou {
+            get {
+                return ResourceManager.GetString("Placeholder_HowCallYou", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Max 8 characters.
+        /// </summary>
+        public static string Placeholder_Max8Ch {
+            get {
+                return ResourceManager.GetString("Placeholder_Max8Ch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на What is your main goal?.
+        /// </summary>
+        public static string Placeholder_WhatIsGoal {
+            get {
+                return ResourceManager.GetString("Placeholder_WhatIsGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на What did you achieve today?.
+        /// </summary>
+        public static string Placeholder_WhatYouAchive {
+            get {
+                return ResourceManager.GetString("Placeholder_WhatYouAchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Partial Succes.
         /// </summary>
         public static string Result_Partial {
@@ -277,6 +331,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Appearance.
+        /// </summary>
+        public static string Title_Appearance {
+            get {
+                return ResourceManager.GetString("Title_Appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Data management.
         /// </summary>
         public static string Title_DataManagement {
@@ -300,6 +363,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_DayDescription {
             get {
                 return ResourceManager.GetString("Title_DayDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на day(s) streak.
+        /// </summary>
+        public static string Title_daysStreak {
+            get {
+                return ResourceManager.GetString("Title_daysStreak", resourceCulture);
             }
         }
         

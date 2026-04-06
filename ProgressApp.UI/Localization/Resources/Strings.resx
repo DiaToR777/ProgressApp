@@ -180,6 +180,24 @@
   <data name="NavBtn_Table" xml:space="preserve">
     <value>Table</value>
   </data>
+  <data name="Placeholder_EnterName" xml:space="preserve">
+    <value>Enter your name</value>
+  </data>
+  <data name="Placeholder_EnterPass" xml:space="preserve">
+    <value>Enter password</value>
+  </data>
+  <data name="Placeholder_HowCallYou" xml:space="preserve">
+    <value>How should we call you?</value>
+  </data>
+  <data name="Placeholder_Max8Ch" xml:space="preserve">
+    <value>Max 8 characters</value>
+  </data>
+  <data name="Placeholder_WhatIsGoal" xml:space="preserve">
+    <value>What is your main goal?</value>
+  </data>
+  <data name="Placeholder_WhatYouAchive" xml:space="preserve">
+    <value>What did you achieve today?</value>
+  </data>
   <data name="Result_Partial" xml:space="preserve">
     <value>Partial Succes</value>
   </data>
@@ -189,6 +207,9 @@
   <data name="Result_Success" xml:space="preserve">
     <value>Success</value>
   </data>
+  <data name="Title_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Data management</value>
   </data>
@@ -197,6 +218,9 @@
   </data>
   <data name="Title_DayDescription" xml:space="preserve">
     <value>Day Description:</value>
+  </data>
+  <data name="Title_daysStreak" xml:space="preserve">
+    <value>day(s) streak</value>
   </data>
   <data name="Title_Description" xml:space="preserve">
     <value>Description</value>
