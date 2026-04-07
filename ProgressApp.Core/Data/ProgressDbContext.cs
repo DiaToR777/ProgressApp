@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Models.Settings;
 
@@ -6,7 +7,12 @@ namespace ProgressApp.Core.Data
 {
     public class ProgressDbContext : DbContext
     {
-        public ProgressDbContext(DbContextOptions<ProgressDbContext> options) : base(options) { }
+        private readonly IDbState _dbState;
+        public ProgressDbContext(DbContextOptions<ProgressDbContext> options, IDbState dbState)
+        : base(options)
+        {
+            _dbState = dbState;
+        }
         public DbSet<JournalEntry> Entries { get; set; } = null!;
         public DbSet<AppSettings> Settings { get; set; } = null!;
 
@@ -27,29 +33,23 @@ namespace ProgressApp.Core.Data
 
             base.OnModelCreating(modelBuilder);
         }
-        public void Initialize()
+        public async Task InitializeAsync()
         {
-            Database.Migrate();
+            await Database.MigrateAsync();
 
-            var defaultSettings = new List<AppSettings>
-                    {
-                        new AppSettings { Key = "Username", Value = "" },
-                        new AppSettings { Key = "Goal", Value = "" },
-                        new AppSettings { Key = "Theme", Value = "Light" },
-                        new AppSettings { Key = "Language", Value = "en-US" }
-                    };
-
-            bool changed = false;
-            foreach (var setting in defaultSettings)
+            if (!await Settings.AnyAsync(s => s.Key == SettingsKeys.Goal))
             {
-                if (!Settings.Any(s => s.Key == setting.Key))
-                {
-                    Settings.Add(setting);
-                    changed = true;
-                }
+                Settings.Add(new AppSettings { Key = SettingsKeys.Goal, Value = "" });
+                await SaveChangesAsync();
             }
-            if (changed)
-                SaveChanges();
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = _dbState.GetConnectionString();
+                optionsBuilder.UseSqlite(connectionString);
+            }
         }
     }
 }

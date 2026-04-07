@@ -18,7 +18,12 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         public DateOnly CurrentDate { get; } = DateOnly.FromDateTime(DateTime.Now);
         public IEnumerable<LocalizedEnum<DayResult>> AllResult { get; }
 
-
+        private int _currentStreak;
+        public int CurrentStreak
+        {
+            get => _currentStreak;
+            set => SetProperty(ref _currentStreak, value);
+        }
         public string Description
         {
             get => _description;
@@ -48,61 +53,54 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                             .ToList();
 
             SaveCommand = new RelayCommand(
-                    execute: _ =>
+                    executeAsync: async _ =>
                     {
                         try
                         {
-                            SaveEntry();
+                            await _service.SaveTodayAsync(Description, SelectedResult);
+                            CurrentStreak = await _service.GetCurrentStreakAsync();
+
                             _messageService.ShowInfo("Msg_RecordSaved");
                             Log.Debug("TodayViewModel: UI Success notification shown to user");
                         }
                         catch (AppException ex)
                         {
+                            Log.Error(ex, "TodayViewModel: Failed to save entry");
                             _messageService.ShowError(ex);
                         }
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Description)
                 );
-            LoadToday();
+            _ = InitializeAsync();
         }
 
-        private void LoadToday()
+        private async Task InitializeAsync()
         {
-            Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
             try
             {
-                var entry = _service.GetToday();
-
-                if (entry != null)
-                {
-                    Description = entry.Description;
-                    SelectedResult = entry.Result;
-                }
-                else
-                {
-                    SelectedResult = DayResult.Relapse;
-                }
-
+                await LoadTodayAsync();
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "TodayViewModel: Error loading today's entry");
-                _messageService.ShowError(ex); 
+                _messageService.ShowError(ex);
             }
         }
 
-        private void SaveEntry()
+        private async Task LoadTodayAsync()
         {
-            Log.Information("TodayViewModel: Attempting to save entry. Result: {Result}", SelectedResult);
-            try
+            Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
+            var entry = await _service.GetTodayAsync();
+
+            CurrentStreak = await _service.GetCurrentStreakAsync();
+            if (entry != null)
             {
-                _service.SaveToday(Description, SelectedResult);
-                Log.Information("TodayViewModel: Successfully saved to database.");
+                Description = entry.Description;
+                SelectedResult = entry.Result;
             }
-            catch (Exception ex)
+            else
             {
-                Log.Error(ex, "TodayViewModel: Failed to save entry");
-                throw;
+                SelectedResult = DayResult.PartialSuccess;
             }
         }
     }

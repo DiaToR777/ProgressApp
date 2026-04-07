@@ -1,20 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ProgressApp.Core.Configuration;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Config;
+using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Services;
+using ProgressApp.Core.Services.Auth;   
 using ProgressApp.WpfUI.Localization.Managers;
 using ProgressApp.WpfUI.Services.Message;
 using ProgressApp.WpfUI.Themes;
 using ProgressApp.WpfUI.ViewModels;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
+using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
 using ProgressApp.WpfUI.Views;
 using Serilog;
-using Serilog.Exceptions;
-using System.IO;
 using System.Windows;
 
 namespace ProgressApp.WpfUI
@@ -31,73 +33,54 @@ namespace ProgressApp.WpfUI
         {
             var services = new ServiceCollection();
 
-            var appData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            var appFolder = Path.Combine(appData, "ProgressApp");
-            var logFolder = Path.Combine(appFolder, "logs");
+            AppPaths.EnsureDirectoriesExist();
 
-            if (!Directory.Exists(appFolder)) Directory.CreateDirectory(appFolder);
-            if (!Directory.Exists(logFolder)) Directory.CreateDirectory(logFolder);
-
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .Enrich.FromLogContext()
-                .Enrich.WithExceptionDetails() 
-                .WriteTo.Debug()               
-                .WriteTo.File(
-                    path: Path.Combine(logFolder, "log-.txt"),
-                    rollingInterval: RollingInterval.Day, 
-                    retainedFileCountLimit: 7,            
-                    outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
-                .CreateLogger();
+            LoggerConfigurator.Setup();
 
             Log.Information("==========================================");
             Log.Information("Application ProgressApp is starting...");
 
-            var dbPath = Path.Combine(appFolder, "progress.db");
+            var dbPath = AppPaths.DbPath;
 
-            services.AddDbContext<ProgressDbContext>(options =>
-            {
-                options.UseSqlite($"Data Source={dbPath}");
-                //options.LogTo(
-                //    Log.Information,
-                //    new[] { DbLoggerCategory.Database.Command.Name },
-                //    LogLevel.Information);
-            });
+            services.AddDbContext<ProgressDbContext>();
+
+            services.AddSingleton<IDbState>(new DbState(dbPath));
+
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
-            services.AddSingleton<IThemeService, ThemeWrapper>(); 
+            services.AddSingleton<IThemeService, ThemeWrapper>();
 
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IJournalService, JournalService>();
-            services.AddSingleton<IMessageService, MessageService>();   
+            services.AddSingleton<IMessageService, MessageService>();
+            services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<IAppConfigService, AppConfigService>();
 
+            services.AddTransient<LoginViewModel>();
             services.AddTransient<TableViewModel>();
             services.AddTransient<InitialSetupViewModel>();
             services.AddTransient<TodayViewModel>();
             services.AddTransient<SettingsViewModel>();
-            services.AddSingleton<MainViewModel>(); _serviceProvider = services.BuildServiceProvider();
+            services.AddSingleton<MainViewModel>();
+            
+            _serviceProvider = services.BuildServiceProvider();
         }
-        protected override void OnStartup(StartupEventArgs e)
+        protected async override void OnStartup(StartupEventArgs e)
         {
+            SQLitePCL.Batteries_V2.Init();
             base.OnStartup(e);
+
+            var appConfig = _serviceProvider.GetRequiredService<IAppConfigService>();
+
+            var config = appConfig.Load();
+
+            var themeService = _serviceProvider.GetRequiredService<IThemeService>();
+            themeService.SetTheme(Enum.Parse<AppTheme>(config.Theme));
+
+            var locService = _serviceProvider.GetRequiredService<ILocalizationService>();
+            locService.ChangeLanguage(config.Language);
 
             try
             {
-                using (var scope = _serviceProvider.CreateScope())
-                {
-                    Log.Information("Initializing Database and Settings...");
-                    var db = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-                    db.Initialize();
-
-                    var settings = scope.ServiceProvider.GetRequiredService<ISettingsService>();
-                    var themeService = scope.ServiceProvider.GetRequiredService<IThemeService>();
-                    var locService = scope.ServiceProvider.GetRequiredService<ILocalizationService>();
-
-                    themeService.SetTheme(settings.GetTheme());
-
-                    var savedLang = settings.GetLanguage();
-                    locService.ChangeLanguage(savedLang.CultureCode);
-                }
-
                 var mainVM = _serviceProvider.GetRequiredService<MainViewModel>();
                 var mainWindow = new MainWindow { DataContext = mainVM };
                 mainWindow.Show();
@@ -114,8 +97,9 @@ namespace ProgressApp.WpfUI
 
         protected override void OnExit(ExitEventArgs e)
         {
+            _serviceProvider.Dispose();
             Log.Information("Application is exiting.");
-            Log.CloseAndFlush(); 
+            Log.CloseAndFlush();
             base.OnExit(e);
         }
     }

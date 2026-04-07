@@ -11,5 +11,4 @@ namespace ProgressApp.WpfUI.Themes
             ThemeManager.ApplyTheme(theme);
         }
     }
-
 }

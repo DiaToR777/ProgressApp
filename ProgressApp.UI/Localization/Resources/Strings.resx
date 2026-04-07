@@ -129,17 +129,29 @@
   <data name="DataGrid_Result" xml:space="preserve">
     <value>Result</value>
   </data>
+  <data name="Error_IncorrectPassword" xml:space="preserve">
+    <value>Incorrect password. Please try again</value>
+  </data>
   <data name="Msg_DescriptionEmpty" xml:space="preserve">
     <value>Description cannot be empty!</value>
   </data>
+  <data name="Msg_ErrorDbAccessFailed" xml:space="preserve">
+    <value>Database access error. Check logs</value>
+  </data>
   <data name="Msg_ErrorLoadingData" xml:space="preserve">
-    <value>Data loading error. Check log file.</value>
+    <value>Data loading error. Check log file</value>
   </data>
   <data name="Msg_ErrorLoadingSetting" xml:space="preserve">
-    <value>Unable to load settings: “{0}”. Please try again or check the database.</value>
+    <value>Unable to load settings: “{0}”. Please try again or check the database</value>
+  </data>
+  <data name="Msg_ErrorLoginFailed" xml:space="preserve">
+    <value>Critical login error. Check logs for details</value>
+  </data>
+  <data name="Msg_ErrorSetupFailed" xml:space="preserve">
+    <value>Error while database creation. Check logs</value>
   </data>
   <data name="Msg_FinishSetupError" xml:space="preserve">
-    <value>Critical error during setup finish. Check logs.</value>
+    <value>Critical error during setup finish. Check logs</value>
   </data>
   <data name="Msg_GoalEmpty" xml:space="preserve">
     <value>Goal cannot be empty!</value>
@@ -148,16 +160,16 @@
     <value>Record saved!</value>
   </data>
   <data name="Msg_SaveEntryError" xml:space="preserve">
-    <value>Failed to save entry. Check logs.</value>
+    <value>Failed to save entry. Check logs</value>
   </data>
   <data name="Msg_SaveSettingsError" xml:space="preserve">
-    <value>Fatal error while saving settings! Check logs.</value>
+    <value>Fatal error while saving settings! Check logs</value>
   </data>
   <data name="Msg_SettingsSaved" xml:space="preserve">
     <value>Settings saved</value>
   </data>
   <data name="Msg_ThemeReadError" xml:space="preserve">
-    <value>Failed to read Theme from database. Check logs.</value>
+    <value>Failed to read Theme from database. Check logs</value>
   </data>
   <data name="Msg_UsernameEmpty" xml:space="preserve">
     <value>Username cannot be empty!</value>
@@ -168,6 +180,24 @@
   <data name="NavBtn_Table" xml:space="preserve">
     <value>Table</value>
   </data>
+  <data name="Placeholder_EnterName" xml:space="preserve">
+    <value>Enter your name</value>
+  </data>
+  <data name="Placeholder_EnterPass" xml:space="preserve">
+    <value>Enter password</value>
+  </data>
+  <data name="Placeholder_HowCallYou" xml:space="preserve">
+    <value>How should we call you?</value>
+  </data>
+  <data name="Placeholder_Max8Ch" xml:space="preserve">
+    <value>Max 8 characters</value>
+  </data>
+  <data name="Placeholder_WhatIsGoal" xml:space="preserve">
+    <value>What is your main goal?</value>
+  </data>
+  <data name="Placeholder_WhatYouAchive" xml:space="preserve">
+    <value>What did you achieve today?</value>
+  </data>
   <data name="Result_Partial" xml:space="preserve">
     <value>Partial Succes</value>
   </data>
@@ -176,6 +206,9 @@
   </data>
   <data name="Result_Success" xml:space="preserve">
     <value>Success</value>
+  </data>
+  <data name="Title_Appearance" xml:space="preserve">
+    <value>Appearance</value>
   </data>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Data management</value>
@@ -186,6 +219,9 @@
   <data name="Title_DayDescription" xml:space="preserve">
     <value>Day Description:</value>
   </data>
+  <data name="Title_daysStreak" xml:space="preserve">
+    <value>day(s) streak</value>
+  </data>
   <data name="Title_Description" xml:space="preserve">
     <value>Description</value>
   </data>
@@ -194,6 +230,9 @@
   </data>
   <data name="Title_Information" xml:space="preserve">
     <value>Information</value>
+  </data>
+  <data name="Title_password" xml:space="preserve">
+    <value>Password</value>
   </data>
   <data name="Title_ProfileSettings" xml:space="preserve">
     <value>Profile settings</value>
