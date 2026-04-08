@@ -1,100 +1,95 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
 using ProgressApp.Core.Models.Settings;
+using System.Globalization;
 
 namespace ProgressApp.Core.Services
 {
     public class DataExchangeService : IDataExchangeService
     {
         private readonly IServiceScopeFactory _scopeFactory;
+        private readonly CsvConfiguration _csvConfig;
 
         public DataExchangeService(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
+            _csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                PrepareHeaderForMatch = args => args.Header.ToLower(),
+                DetectDelimiter = true
+            };
         }
+
         public async Task ExportToCsvAsync(string filePath)
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-            var entries = await context.Entries
-                            .AsNoTracking()
-                            .ToListAsync()
-                            .ConfigureAwait(false);
 
+            var entries = await context.Entries.AsNoTracking().ToListAsync();
             var goal = await context.Settings
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal)
-                            .ConfigureAwait(false);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);
 
-            var csvLines = new List<string> { "Id,Date,Description,Result,CreatedAt" };
-            csvLines.AddRange(entries.Select(e =>
-                $"{e.Id},{e.Date:O},\"{e.Description.Replace("\"", "\"\"")}\",{e.Result},{e.CreatedAt:O}"));
+            using var writer = new StreamWriter(filePath);
+            using var csv = new CsvWriter(writer, _csvConfig);
 
-            csvLines.Add(""); // пустая строка разделитель
-            csvLines.Add("Settings");
-            csvLines.Add($"Goal,\"{(goal?.Value ?? "").Replace("\"", "\"\"")}\"");
+            // 1. Пишем основную таблицу
+            await csv.WriteRecordsAsync(entries);
 
-            await File.WriteAllLinesAsync(filePath, csvLines).ConfigureAwait(false);
+            // 2. Добавляем разделитель и настройки вручную
+            await writer.WriteLineAsync();
+            await writer.WriteLineAsync("---Settings---");
+            await writer.WriteLineAsync($"Goal,{goal?.Value ?? ""}");
         }
+
         public async Task ImportFromCsvAsync(string filePath)
         {
-            var lines = await File.ReadAllLinesAsync(filePath).ConfigureAwait(false);
-
             var entries = new List<JournalEntry>();
             string? goalValue = null;
-            bool isSettings = false;
 
-            foreach (var line in lines.Skip(1)) // пропускаем заголовок
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvReader(reader, _csvConfig))
             {
-                if (string.IsNullOrWhiteSpace(line)) continue;
-                if (line == "Settings") { isSettings = true; continue; }
+                // 1. Читаем записи до пустой строки или конца секции
+                await foreach (var record in csv.GetRecordsAsync<JournalEntry>())
+                {
+                    entries.Add(record);
 
-                if (isSettings)
-                {
-                    // парсим Goal
-                    var parts = line.Split(',', 2);
-                    if (parts[0] == "Goal")
-                        goalValue = parts[1].Trim('"');
+                    // Хак, чтобы остановиться перед секцией Settings
+                    if (reader.Peek() == '-') break;
                 }
-                else
+
+                // 2. Дочитываем настройки
+                string? line;
+                while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    // парсим запись
-                    var parts = line.Split(',', 5);
-                    entries.Add(new JournalEntry
+                    if (line.StartsWith("Goal,"))
                     {
-                        Date = DateTime.Parse(parts[1]),
-                        Description = parts[2].Trim('"').Replace("\"\"", "\""),
-                        Result = Enum.Parse<DayResult>(parts[3]),
-                        CreatedAt = DateTime.Parse(parts[4])
-                    });
+                        goalValue = line.Replace("Goal,", "").Trim('"');
+                    }
                 }
             }
 
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            // заменяем все записи
+            // Очистка и сохранение
             context.Entries.RemoveRange(context.Entries);
             await context.Entries.AddRangeAsync(entries);
 
             if (goalValue != null)
-                await UpdateGoalAsync(context, goalValue);
+            {
+                var setting = await context.Settings.FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);
+                if (setting != null) setting.Value = goalValue;
+                else context.Settings.Add(new AppSettings { Key = SettingsKeys.Goal, Value = goalValue });
+            }
 
             await context.SaveChangesAsync();
-        }
-
-        private async Task UpdateGoalAsync(ProgressDbContext context, string goalValue)
-        {
-            var setting = await context.Settings
-                .FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);
-
-            if (setting != null)
-                setting.Value = goalValue;
-            else
-                context.Settings.Add(new AppSettings { Key = SettingsKeys.Goal, Value = goalValue });
         }
     }
     
