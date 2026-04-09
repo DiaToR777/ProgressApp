@@ -11,47 +11,46 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="30">
+            <StackPanel HorizontalAlignment="Left" Width="400">
 
-            <StackPanel MaxWidth="500" HorizontalAlignment="Left">
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[NavBtn_Settings]}"
+                              FontSize="26" FontWeight="Bold" Margin="0,0,0,20"/>
 
-                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ProfileSettings]}"
-                          FontSize="24" 
-                          FontWeight="Bold" 
-                          Margin="0,0,0,20"/>
-
-                <ui:Card Margin="0,0,0,20" Padding="20">
+                <ui:Card Margin="0,0,0,25" Padding="20" HorizontalAlignment="Stretch">
                     <StackPanel>
-                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" 
-                              Margin="0,0,0,5" />
-                        <ui:TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
-                                Icon="{ui:SymbolIcon Symbol=Person24}"
-                                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterName]}" Margin="0,0,0,15"
-                                MaxLength="35"/>
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ProfileSettings]}" 
+                                      FontWeight="SemiBold" Margin="0,0,0,15" />
 
-                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" 
-                              Margin="0,0,0,5" />
-                        <ui:TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"
-                                Height="80"
-                                TextWrapping="Wrap"
-                                AcceptsReturn="True"
-                                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatIsGoal]}"
-                                VerticalContentAlignment="Top"
-                                Margin="0,0,0,10"
-                                MaxLength="150" />
+                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_username]}" Margin="0,0,0,5" />
+                        <ui:TextBox Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" 
+                                    Icon="{ui:SymbolIcon Symbol=Person24}"
+                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterName]}" 
+                                    Height="38" 
+                                    Margin="0,0,0,15" MaxLength="35"/>
+
+                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" Margin="0,0,0,5" />
+
+                        <ScrollViewer Height="100" VerticalScrollBarVisibility="Visible">
+                            <ui:TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"
+                                    TextWrapping="Wrap" 
+                                    AcceptsReturn="True"
+                                    VerticalScrollBarVisibility="Auto"
+                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatIsGoal]}"
+                                    VerticalContentAlignment="Top" 
+                                    MaxLength="150"/>
+                        </ScrollViewer>
                     </StackPanel>
                 </ui:Card>
 
-                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Appearance]}" 
-                          FontSize="18" 
-                          FontWeight="SemiBold" 
-                          Margin="0,10,0,15"/>
-
-                <ui:Card Margin="0,0,0,20" Padding="20">
+                <ui:Card Margin="0,0,0,25" Padding="20" HorizontalAlignment="Stretch">
                     <StackPanel>
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Appearance]}" 
+                                      FontWeight="SemiBold" Margin="0,0,0,15" />
+
                         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_Theme]}" Margin="0,0,0,5" />
                         <ComboBox SelectedItem="{Binding SelectedTheme}"
                                  ItemsSource="{Binding AllThemes}"
-                                 HorizontalAlignment="Stretch"
+                                 HorizontalAlignment="Stretch" 
                                  Margin="0,0,0,15"/>
 
                         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" Margin="0,0,0,5" />
@@ -67,14 +66,56 @@
                     </StackPanel>
                 </ui:Card>
 
-                <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DataManagement]}"/>
-
                 <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Title_SaveChanges]}"
-                               Command="{Binding SaveSettingsCommand}"
-                               Appearance="Primary"
-                               Icon="{ui:SymbolIcon Symbol=Save24}"
-                               HorizontalAlignment="Left"
-                               Padding="20,8"/>
+                           Command="{Binding SaveSettingsCommand}"
+                           Appearance="Primary"
+                           Icon="{ui:SymbolIcon Symbol=Save24}"
+                           FontSize="16"
+                           HorizontalAlignment="Stretch"
+                           Padding="0,12"
+                           Height="45"
+                           Margin="0,0,0,30"/>
+
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_DataManagement]}" 
+                              FontWeight="SemiBold" Margin="0,10,0,10"/>
+
+                <Grid Margin="0,0,0,40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <ui:Button Grid.Column="0" 
+                               Margin="0,0,5,0"
+                               Height="70"
+                               HorizontalAlignment="Stretch"
+                               Command="{Binding ExportEntriesCommand}"
+                               Appearance="Secondary">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="DocumentArrowUp20" FontSize="24" Margin="0,0,12,0"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ExportData]}" FontWeight="Medium"/>
+                                <ui:TextBlock Text="CSV" FontSize="10" Opacity="0.6"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ui:Button>
+
+                    <ui:Button Grid.Column="1" 
+                               Margin="5,0,0,0"
+                               Height="70"
+                               HorizontalAlignment="Stretch"
+                               Command="{Binding ImportEntriesCommand}"
+                               Appearance="Secondary">
+                        <StackPanel Orientation="Horizontal">
+                            <ui:SymbolIcon Symbol="DocumentArrowDown20" FontSize="24" Margin="0,0,12,0"/>
+                            <StackPanel VerticalAlignment="Center">
+                                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ImportData]}" FontWeight="Medium"/>
+                                <ui:TextBlock Text="CSV" FontSize="10" Opacity="0.6"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </ui:Button>
+                </Grid>
+
             </StackPanel>
         </Grid>
     </ScrollViewer>

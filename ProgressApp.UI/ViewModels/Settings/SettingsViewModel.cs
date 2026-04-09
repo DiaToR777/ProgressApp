@@ -14,6 +14,9 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
         private readonly IAppConfigService _appConfigService;
+        private readonly IDataExchangeService _dataExchangeService;
+        private readonly ILocalizationService _localizationService;
+        private readonly IAppThemeService _themeService;
 
         private string _username = string.Empty;
         private string _goal = string.Empty;
@@ -55,46 +58,118 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
         public ICommand SaveSettingsCommand { get; }
-        public SettingsViewModel(ISettingsService settingsService, IAppConfigService appConfigService, IMessageService messageService, ILocalizationService localizationService, IThemeService themeService)
+        public ICommand ExportEntriesCommand { get; }
+        public ICommand ImportEntriesCommand { get; }
+
+        public SettingsViewModel(
+            ISettingsService settingsService,
+            IAppConfigService appConfigService,
+            IMessageService messageService,
+            ILocalizationService localizationService,
+            IAppThemeService themeService,
+            IDataExchangeService dataExchangeService)
         {
+            _dataExchangeService = dataExchangeService;
             _appConfigService = appConfigService;
             _settingsService = settingsService;
             _messageService = messageService;
+            _localizationService = localizationService;
+            _themeService = themeService;
 
             Initialize();
 
             SaveSettingsCommand = new RelayCommand(
-                executeAsync: async _ =>
-                {
-                    try
-                    {
-                        Log.Information("SettingsVM: Saving settings. New Culture: {Culture}, Theme: {Theme}",
-                            SelectedLanguage.CultureCode, SelectedTheme);
+                executeAsync: async _ => { await SaveSettings(); },
+                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal));
 
-                        var config = _appConfigService.Load();
+            ExportEntriesCommand = new RelayCommand(async _ => await ExportEntriesAsync());
 
-                        config.Theme = SelectedTheme.ToString();
-                        config.Language = SelectedLanguage.CultureCode;
-                        config.Username = Username;
-                        _appConfigService.Save(config);
-
-                        await _settingsService.SaveGoalAsync(Goal);
-                        localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
-                        themeService.SetTheme(SelectedTheme);
-
-                        _messageService.ShowInfo("Msg_SettingsSaved");
-                        Log.Information("SettingsVM: Settings updated successfully.");
-                    }
-                    catch (AppException ex)
-                    {
-                        Log.Error(ex, "SettingsVM: Error saving settings");
-                        _messageService.ShowError(ex);
-                    }
-                },
-                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal)
-            );
+            ImportEntriesCommand = new RelayCommand(executeAsync: async _ => await ImportEntriesAsync());
         }
 
+        private async Task ImportEntriesAsync()
+        {
+            Log.Information("SettingsVM: Starting import process... Getting file path from user.");
+
+            var path = _messageService.OpenFileDialog("CSV files (*.csv)|*.csv");
+
+            if (string.IsNullOrEmpty(path))
+            {
+                Log.Information("SettingsVM: Import cancelled by user.");
+                return;
+            }
+
+            var confirmed = _messageService.ShowConfirmation("Msg_ImportConfirmation");
+
+            if (!confirmed) return;
+
+            try
+            {
+                var importedCount = await _dataExchangeService.ImportFromCsvAsync(path);
+                _messageService.ShowInfo("Msg_SuccessImportInfo", importedCount);
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "SettingsVM: Import failed");
+                _messageService.ShowError(ex);
+            }
+        }
+        private async Task ExportEntriesAsync()
+        {
+            try
+            {
+                Log.Information("SettingsVM: Starting export process... Getting file path from user.");
+                var path = _messageService.SaveFileDialog(
+                    $"Progress_Backup_{DateTime.Now:yyyyMMdd}",
+                    "CSV files (*.csv)|*.csv"
+                );
+
+                if (string.IsNullOrEmpty(path))
+                {
+                    Log.Information("SettingsVM: Export cancelled by user.");
+                    return;
+                }
+
+                Log.Information("SettingsVM: Exporting data to {FilePath}", path);
+                await _dataExchangeService.ExportToCsvAsync(path);
+
+                _messageService.ShowInfo("Msg_SuccessExportInfo");
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "SettingsVM: Error exporting entries");
+                _messageService.ShowError(ex);
+            }
+
+        }
+        private async Task SaveSettings()
+        {
+            try
+            {
+                Log.Information("SettingsVM: Saving settings. New Culture: {Culture}, Theme: {Theme}",
+                    SelectedLanguage.CultureCode, SelectedTheme);
+
+                var config = _appConfigService.Load();
+
+                config.Theme = SelectedTheme.ToString();
+                config.Language = SelectedLanguage.CultureCode;
+                config.Username = Username;
+                _appConfigService.Save(config);
+
+                await _settingsService.SaveGoalAsync(Goal);
+                _localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
+                _themeService.SetTheme(SelectedTheme);
+
+                _messageService.ShowInfo("Msg_SettingsSaved");
+                Log.Information("SettingsVM: Settings updated successfully.");
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "SettingsVM: Error saving settings");
+                _messageService.ShowError(ex);
+            }
+
+        }
         private async void Initialize()
         {
             try

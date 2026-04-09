@@ -13,7 +13,7 @@ namespace ProgressAppTest.ViewModelTests
         private Mock<ISettingsService> _serviceMock;
         private Mock<IMessageService> _messageMock;
         private Mock<ILocalizationService> _localizationMock;
-        private Mock<IThemeService> _themeMock;
+        private Mock<IAppThemeService> _themeMock;
 
 
         [TestInitialize]
@@ -22,7 +22,7 @@ namespace ProgressAppTest.ViewModelTests
             _messageMock = new Mock<IMessageService>();
             _serviceMock = new Mock<ISettingsService>();
             _localizationMock = new Mock<ILocalizationService>();
-            _themeMock = new Mock<IThemeService>();
+            _themeMock = new Mock<IAppThemeService>();
 
             _serviceMock.Setup(s => s.GetUserName()).Returns("TestName");
             _serviceMock.Setup(s => s.GetGoal()).Returns("TestDescription");

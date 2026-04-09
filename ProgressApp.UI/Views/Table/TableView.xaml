@@ -67,14 +67,15 @@
             <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_Description]}" 
                       Margin="0,5"/>
 
-            <ui:TextBox Text="{Binding SelectedEntry.Description}"
+            <ScrollViewer Height="200" VerticalScrollBarVisibility="Visible">
+                <ui:TextBox Text="{Binding SelectedEntry.Description}"
                         IsReadOnly="True"
                         TextWrapping="Wrap"
                         AcceptsReturn="True"
-                        Height="200"
                         VerticalAlignment="Top"
                         VerticalContentAlignment="Top"
-                        ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+            </ScrollViewer>
         </StackPanel>
     </Grid>
 </UserControl>
