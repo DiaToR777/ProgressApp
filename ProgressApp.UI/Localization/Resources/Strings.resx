@@ -132,8 +132,23 @@
   <data name="Error_IncorrectPassword" xml:space="preserve">
     <value>Incorrect password. Please try again</value>
   </data>
+  <data name="Msg_DbSaveWhileImportError" xml:space="preserve">
+    <value>Database save error. Check logs</value>
+  </data>
   <data name="Msg_DescriptionEmpty" xml:space="preserve">
     <value>Description cannot be empty!</value>
+  </data>
+  <data name="Msg_DuplicateRecordsImportError" xml:space="preserve">
+    <value>Duplicate records found. Each record must be unique.</value>
+  </data>
+  <data name="Msg_ImportCsvError" xml:space="preserve">
+    <value>Error while import. Check logs</value>
+  </data>
+  <data name="Msg_EmptyDescriptionImportError" xml:space="preserve">
+    <value>Error during import: The description cannot be empty. Line: {0}</value>
+  </data>
+  <data name="Msg_EntriesIsEmptyImportError" xml:space="preserve">
+    <value>No records to import</value>
   </data>
   <data name="Msg_ErrorDbAccessFailed" xml:space="preserve">
     <value>Database access error. Check logs</value>
@@ -150,11 +165,32 @@
   <data name="Msg_ErrorSetupFailed" xml:space="preserve">
     <value>Error while database creation. Check logs</value>
   </data>
+  <data name="Msg_ExportError" xml:space="preserve">
+    <value>The file could not be saved. It may be open in another program, or the program does not have write permissions</value>
+  </data>
+  <data name="Msg_FileIsEmpty" xml:space="preserve">
+    <value>The file is empty</value>
+  </data>
   <data name="Msg_FinishSetupError" xml:space="preserve">
     <value>Critical error during setup finish. Check logs</value>
   </data>
   <data name="Msg_GoalEmpty" xml:space="preserve">
     <value>Goal cannot be empty!</value>
+  </data>
+  <data name="Msg_GoalIsEmptyImportError" xml:space="preserve">
+    <value>Goal in the file is empty.</value>
+  </data>
+  <data name="Msg_ImportConfirmation" xml:space="preserve">
+    <value>All current records will be deleted and replaced with the data from the file. Are you sure?</value>
+  </data>
+  <data name="Msg_NoEntriesToExportError" xml:space="preserve">
+    <value>No records to export</value>
+  </data>
+  <data name="Msg_NoFIleError" xml:space="preserve">
+    <value>The selected file was not found.</value>
+  </data>
+  <data name="Msg_NoGoalToExportError" xml:space="preserve">
+    <value>Goal not set. Set a goal before exporting</value>
   </data>
   <data name="Msg_RecordSaved" xml:space="preserve">
     <value>Record saved!</value>
@@ -167,6 +203,13 @@
   </data>
   <data name="Msg_SettingsSaved" xml:space="preserve">
     <value>Settings saved</value>
+  </data>
+  <data name="Msg_SuccessExportInfo" xml:space="preserve">
+    <value>Export completed successfully!</value>
+  </data>
+  <data name="Msg_SuccessImportInfo" xml:space="preserve">
+    <value>Data imported successfully!
+Records imported: {0}</value>
   </data>
   <data name="Msg_ThemeReadError" xml:space="preserve">
     <value>Failed to read Theme from database. Check logs</value>
@@ -209,6 +252,9 @@
   </data>
   <data name="Title_Appearance" xml:space="preserve">
     <value>Appearance</value>
+  </data>
+  <data name="Title_Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
   </data>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Data management</value>
@@ -260,5 +306,11 @@
   </data>
   <data name="Title_YourGoal" xml:space="preserve">
     <value>Your goal</value>
+  </data>
+  <data name="Title_ImportData" xml:space="preserve">
+    <value>Import Data</value>
+  </data>
+  <data name="Title_ExportData" xml:space="preserve">
+    <value>Export Data</value>
   </data>
 </root>

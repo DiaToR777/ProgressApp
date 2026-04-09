@@ -106,11 +106,47 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Database save error. Check logs.
+        /// </summary>
+        public static string Msg_DbSaveWhileImportError {
+            get {
+                return ResourceManager.GetString("Msg_DbSaveWhileImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Description cannot be empty!.
         /// </summary>
         public static string Msg_DescriptionEmpty {
             get {
                 return ResourceManager.GetString("Msg_DescriptionEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Duplicate records found. Each record must be unique..
+        /// </summary>
+        public static string Msg_DuplicateRecordsImportError {
+            get {
+                return ResourceManager.GetString("Msg_DuplicateRecordsImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error during import: The description cannot be empty. Line: {0}.
+        /// </summary>
+        public static string Msg_EmptyDescriptionImportError {
+            get {
+                return ResourceManager.GetString("Msg_EmptyDescriptionImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No records to import.
+        /// </summary>
+        public static string Msg_EntriesIsEmptyImportError {
+            get {
+                return ResourceManager.GetString("Msg_EntriesIsEmptyImportError", resourceCulture);
             }
         }
         
@@ -160,6 +196,24 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на The file could not be saved. It may be open in another program, or the program does not have write permissions.
+        /// </summary>
+        public static string Msg_ExportError {
+            get {
+                return ResourceManager.GetString("Msg_ExportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The file is empty.
+        /// </summary>
+        public static string Msg_FileIsEmpty {
+            get {
+                return ResourceManager.GetString("Msg_FileIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Critical error during setup finish. Check logs.
         /// </summary>
         public static string Msg_FinishSetupError {
@@ -174,6 +228,60 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_GoalEmpty {
             get {
                 return ResourceManager.GetString("Msg_GoalEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Goal in the file is empty..
+        /// </summary>
+        public static string Msg_GoalIsEmptyImportError {
+            get {
+                return ResourceManager.GetString("Msg_GoalIsEmptyImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на All current records will be deleted and replaced with the data from the file. Are you sure?.
+        /// </summary>
+        public static string Msg_ImportConfirmation {
+            get {
+                return ResourceManager.GetString("Msg_ImportConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error while import. Check logs.
+        /// </summary>
+        public static string Msg_ImportCsvError {
+            get {
+                return ResourceManager.GetString("Msg_ImportCsvError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No records to export.
+        /// </summary>
+        public static string Msg_NoEntriesToExportError {
+            get {
+                return ResourceManager.GetString("Msg_NoEntriesToExportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The selected file was not found..
+        /// </summary>
+        public static string Msg_NoFIleError {
+            get {
+                return ResourceManager.GetString("Msg_NoFIleError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Goal not set. Set a goal before exporting.
+        /// </summary>
+        public static string Msg_NoGoalToExportError {
+            get {
+                return ResourceManager.GetString("Msg_NoGoalToExportError", resourceCulture);
             }
         }
         
@@ -210,6 +318,25 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_SettingsSaved {
             get {
                 return ResourceManager.GetString("Msg_SettingsSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Export completed successfully!.
+        /// </summary>
+        public static string Msg_SuccessExportInfo {
+            get {
+                return ResourceManager.GetString("Msg_SuccessExportInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Data imported successfully!
+        ///Records imported: {0}.
+        /// </summary>
+        public static string Msg_SuccessImportInfo {
+            get {
+                return ResourceManager.GetString("Msg_SuccessImportInfo", resourceCulture);
             }
         }
         
@@ -340,6 +467,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Confirmation.
+        /// </summary>
+        public static string Title_Confirmation {
+            get {
+                return ResourceManager.GetString("Title_Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Data management.
         /// </summary>
         public static string Title_DataManagement {
@@ -390,6 +526,24 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_Error {
             get {
                 return ResourceManager.GetString("Title_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Export Data.
+        /// </summary>
+        public static string Title_ExportData {
+            get {
+                return ResourceManager.GetString("Title_ExportData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Import Data.
+        /// </summary>
+        public static string Title_ImportData {
+            get {
+                return ResourceManager.GetString("Title_ImportData", resourceCulture);
             }
         }
         

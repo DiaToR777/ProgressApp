@@ -31,16 +31,17 @@
                                     Margin="0,0,0,15"/>
 
                         <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" Margin="0,0,0,5"/>
+
+                    <ScrollViewer Height="80" VerticalScrollBarVisibility="Visible">
                         <TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}" 
                                     MaxLength="150"
-                                    Height="80"                
                                     TextWrapping="Wrap"        
                                     AcceptsReturn="True"       
                                     VerticalContentAlignment="Top"
                                     TabIndex="2"
                                     Margin="0,0,0,15"/>
-
-                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}" Margin="0,0,0,5"/>
+                    </ScrollViewer>
+                    <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}" Margin="0,0,0,5"/>
                         <ui:PasswordBox Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                         Icon="{ui:SymbolIcon Symbol=Password24}"
                                         PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}"

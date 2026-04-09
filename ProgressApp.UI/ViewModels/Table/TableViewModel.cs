@@ -33,7 +33,6 @@ namespace ProgressApp.WpfUI.ViewModels.Table
                 Log.Error(ex, "TableViewModel: Failed to load journal entries");
                 messageService.ShowError(ex);
             }
-
         }
 
         private async void GetEntries()
@@ -54,6 +53,6 @@ namespace ProgressApp.WpfUI.ViewModels.Table
                 Log.Error(ex, "TableViewModel: Failed to refresh");
             }
         }
+
     }
 }
-

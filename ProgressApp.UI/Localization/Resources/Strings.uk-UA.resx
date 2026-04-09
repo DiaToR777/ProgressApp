@@ -132,8 +132,23 @@
   <data name="Error_IncorrectPassword" xml:space="preserve">
     <value>Неправильний пароль. Спробуйте ще раз</value>
   </data>
+  <data name="Msg_DbSaveWhileImportError" xml:space="preserve">
+    <value>Помилка при збереженні в базу даних. Перевірте логи</value>
+  </data>
   <data name="Msg_DescriptionEmpty" xml:space="preserve">
     <value>Опис не може бути порожнім!</value>
+  </data>
+  <data name="Msg_DuplicateRecordsImportError" xml:space="preserve">
+    <value>У файлі знайдено дублікати. Кожен запис має бути унікальним.</value>
+  </data>
+  <data name="Msg_ImportCsvError" xml:space="preserve">
+    <value>Помилка під час імпорту. Перевірте логи</value>
+  </data>
+  <data name="Msg_EmptyDescriptionImportError" xml:space="preserve">
+    <value>Помилка під час імпорту: Опис не може бути порожнім. Рядок: {0}</value>
+  </data>
+  <data name="Msg_EntriesIsEmptyImportError" xml:space="preserve">
+    <value>Немає записів для імпорту</value>
   </data>
   <data name="Msg_ErrorDbAccessFailed" xml:space="preserve">
     <value>Помилка доступу до бази даних. Перевірте логи</value>
@@ -150,11 +165,32 @@
   <data name="Msg_ErrorSetupFailed" xml:space="preserve">
     <value>Помилка під час створення бази даних. Перегляньте логи</value>
   </data>
+  <data name="Msg_ExportError" xml:space="preserve">
+    <value>Не вдалося зберегти файл. Можливо, він відкритий в іншій програмі або програма не має прав на запис</value>
+  </data>
+  <data name="Msg_FileIsEmpty" xml:space="preserve">
+    <value> Файл порожній</value>
+  </data>
   <data name="Msg_FinishSetupError" xml:space="preserve">
     <value>Сталася критична помилка під час завершення налаштування. Перевірте файл логів для деталей</value>
   </data>
   <data name="Msg_GoalEmpty" xml:space="preserve">
     <value>Ціль не може бути порожньою!</value>
+  </data>
+  <data name="Msg_GoalIsEmptyImportError" xml:space="preserve">
+    <value>Ціль у файлі порожня.</value>
+  </data>
+  <data name="Msg_ImportConfirmation" xml:space="preserve">
+    <value>Усі поточні записи будуть видалені та замінені даними з файлу. Ви впевнені?</value>
+  </data>
+  <data name="Msg_NoEntriesToExportError" xml:space="preserve">
+    <value>Немає записів для експорту</value>
+  </data>
+  <data name="Msg_NoFIleError" xml:space="preserve">
+    <value>Вибраний файл не знайдено</value>
+  </data>
+  <data name="Msg_NoGoalToExportError" xml:space="preserve">
+    <value>Ціль не встановлена. Встановіть ціль перед експортом</value>
   </data>
   <data name="Msg_RecordSaved" xml:space="preserve">
     <value>Запис збережений!</value>
@@ -167,6 +203,13 @@
   </data>
   <data name="Msg_SettingsSaved" xml:space="preserve">
     <value>Налаштування збережено</value>
+  </data>
+  <data name="Msg_SuccessExportInfo" xml:space="preserve">
+    <value>Експорт завершено успішно!</value>
+  </data>
+  <data name="Msg_SuccessImportInfo" xml:space="preserve">
+    <value>Дані успішно імпортовано!
+Імпортовано записів: {0}</value>
   </data>
   <data name="Msg_ThemeReadError" xml:space="preserve">
     <value>Не вдалося завантажити тему з бази даних. Перевірте логи</value>
@@ -209,6 +252,9 @@
   </data>
   <data name="Title_Appearance" xml:space="preserve">
     <value>Зовнішній вигляд</value>
+  </data>
+  <data name="Title_Confirmation" xml:space="preserve">
+    <value>Підтвердження</value>
   </data>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Управління даними</value>
@@ -260,5 +306,11 @@
   </data>
   <data name="Title_YourGoal" xml:space="preserve">
     <value>Ваша ціль</value>
+  </data>
+  <data name="Title_ImportData" xml:space="preserve">
+    <value>Імпорт даних</value>
+  </data>
+  <data name="Title_ExportData" xml:space="preserve">
+    <value>Експорт даних</value>
   </data>
 </root>

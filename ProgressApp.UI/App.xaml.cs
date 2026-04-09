@@ -47,7 +47,7 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<IDbState>(new DbState(dbPath));
 
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
-            services.AddSingleton<IThemeService, ThemeWrapper>();
+            services.AddSingleton<IAppThemeService, ThemeWrapper>();
 
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IJournalService, JournalService>();
@@ -74,7 +74,7 @@ namespace ProgressApp.WpfUI
 
             var config = appConfig.Load();
 
-            var themeService = _serviceProvider.GetRequiredService<IThemeService>();
+            var themeService = _serviceProvider.GetRequiredService<IAppThemeService>();
             themeService.SetTheme(Enum.Parse<AppTheme>(config.Theme));
 
             var locService = _serviceProvider.GetRequiredService<ILocalizationService>();
