@@ -70,6 +70,33 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Apply.
+        /// </summary>
+        public static string Btn_Apply {
+            get {
+                return ResourceManager.GetString("Btn_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cancel.
+        /// </summary>
+        public static string Btn_Cancel {
+            get {
+                return ResourceManager.GetString("Btn_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Change Password.
+        /// </summary>
+        public static string Btn_ChangePassword {
+            get {
+                return ResourceManager.GetString("Btn_ChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Save.
         /// </summary>
         public static string Btn_SaveDay {
@@ -102,6 +129,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Error_IncorrectPassword {
             get {
                 return ResourceManager.GetString("Error_IncorrectPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to change password. Check logs.
+        /// </summary>
+        public static string Msg_ChangePasswordFailedError {
+            get {
+                return ResourceManager.GetString("Msg_ChangePasswordFailedError", resourceCulture);
             }
         }
         
@@ -282,6 +318,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_NoGoalToExportError {
             get {
                 return ResourceManager.GetString("Msg_NoGoalToExportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Password changed successfully.
+        /// </summary>
+        public static string Msg_PasswordChangedSuccess {
+            get {
+                return ResourceManager.GetString("Msg_PasswordChangedSuccess", resourceCulture);
             }
         }
         
@@ -472,6 +517,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_Confirmation {
             get {
                 return ResourceManager.GetString("Title_Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Confirm Password.
+        /// </summary>
+        public static string Title_ConfirmPassword {
+            get {
+                return ResourceManager.GetString("Title_ConfirmPassword", resourceCulture);
             }
         }
         

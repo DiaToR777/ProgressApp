@@ -27,11 +27,14 @@
                 <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}"  Margin="0,0,0,5"/>
 
                 <ui:PasswordBox x:Name="PassBox"
-                Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterPass]}"
-                Icon="{ui:SymbolIcon Symbol=Password24}"
-                ClearButtonEnabled="True"
-                MaxLength="8"/>
+                                Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterPass]}"
+                                Icon="{ui:SymbolIcon Symbol=Password24}"
+                                ClearButtonEnabled="True"
+                                MaxLength="8"
+                                PreviewKeyDown="PasswordBox_PreviewKeyDown"
+                                DataObject.Pasting="PasswordBox_Pasting"/>
+
 
                 <ui:Button Content="Login" 
                            Command="{Binding LoginCommand}" 

@@ -9,5 +9,8 @@ namespace ProgressApp.Core.Interfaces.IService
         Task ChangePasswordAsync(string newPassword);
         
         Task RemovePasswordAsync();
+        Task<bool> IsDatabaseEncrypted();
+
+
     }
 }

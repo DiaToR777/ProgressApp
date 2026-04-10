@@ -47,9 +47,22 @@
                                         PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}"
                                         MaxLength="8"
                                         TabIndex="3"
-                                        Margin="0,0,0,15"/>
+                                        Margin="0,0,0,15"
+                                        PreviewKeyDown="PasswordBox_PreviewKeyDown"
+                                        DataObject.Pasting="PasswordBox_Pasting"/>
 
-                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" Margin="0,0,0,5"/>
+                    <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_ConfirmPassword]}" Margin="0,0,0,5"/>
+                    <ui:PasswordBox Password="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Icon="{ui:SymbolIcon Symbol=Password24}"
+                                        PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}"
+                                        MaxLength="8"
+                                        TabIndex="4"
+                                        Margin="0,0,0,15"
+                                        PreviewKeyDown="PasswordBox_PreviewKeyDown"
+                                        DataObject.Pasting="PasswordBox_Pasting"/>
+
+
+                    <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_SelectLanguage]}" Margin="0,0,0,5"/>
                         <ComboBox ItemsSource="{Binding AvailableLanguages}" 
                                      SelectedItem="{Binding SelectedLanguage}"
                                      HorizontalAlignment="Stretch"

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Exceptions;
@@ -91,7 +92,7 @@ namespace ProgressApp.Core.Services.Auth
 
         public async Task RemovePasswordAsync()
         {
-            Log.Information("AuthService: Starting password removal process...");
+            Log.Information("AuthService: Starting password removal process..."); 
             await EditPassword(string.Empty);
         }
 
@@ -102,21 +103,51 @@ namespace ProgressApp.Core.Services.Auth
                 using (var scope = _scopeFactory.CreateScope())
                 {
                     var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-                    var safePassword = password?.Replace("'", "''") ?? "";
-                    await context.Database.ExecuteSqlRawAsync($"PRAGMA rekey = '{safePassword}'");
+                    var connection = context.Database.GetDbConnection();
+
+                    await connection.OpenAsync();
+
+                    using (var command = connection.CreateCommand())
+                    {
+                        var safePassword = password?.Replace("'", "''") ?? "";
+                        command.CommandText = $"PRAGMA rekey = '{safePassword}';";
+                        await command.ExecuteNonQueryAsync();
+                    }
                 }
+
+                if(password != null)
                 _dbState.SetPassword(password);
+
                 Log.Information("AuthService: Password changed successfully.");
                 return;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "AuthService: Error during password change");
-                throw new AppException("Msg_ErrorChangePasswordFailed");
+                throw new AppException("Msg_ChangePasswordFailedError"); 
             }
 
         }
 
+        public async Task<bool> IsDatabaseEncrypted()
+        {
+            using var connection = new SqliteConnection(_dbState.GetConnectionString(string.Empty));
+            try
+            {
+                
+                await connection.OpenAsync();
+
+                using var command = connection.CreateCommand();
+                command.CommandText = "SELECT count(*) FROM sqlite_master;";
+                await command.ExecuteScalarAsync();
+
+                return false;
+            }
+            catch (SqliteException ex) when (ex.SqliteErrorCode == 26 || ex.SqliteExtendedErrorCode == 3390)
+            {
+                return true;
+            }
+        }
 
     }
 }

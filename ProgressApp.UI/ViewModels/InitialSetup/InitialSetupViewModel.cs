@@ -24,10 +24,16 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
         private LanguageModel _selectedLanguage;
 
         private string _password = string.Empty;
+        private string _confirmPassword = string.Empty;
         public string Password
         {
             get => _password;
             set => SetProperty(ref _password, value);
+        }
+        public string ConfirmPassword
+        {
+            get => _confirmPassword;
+            set => SetProperty(ref _confirmPassword, value);
         }
 
         public LanguageModel SelectedLanguage
@@ -93,7 +99,11 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                         IsBusy = false;
                     }
                 },
-                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal) && !string.IsNullOrWhiteSpace(Password) && !IsBusy
+                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal) 
+                && !string.IsNullOrWhiteSpace(Password) 
+                && !string.IsNullOrWhiteSpace(ConfirmPassword)
+                && !IsBusy
+                && !string.IsNullOrWhiteSpace(Password) && Password == ConfirmPassword
               );
         }
 
