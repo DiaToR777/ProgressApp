@@ -331,4 +331,17 @@ Records imported: {0}</value>
   <data name="Btn_Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="Msg_PasswordSetSuccess" xml:space="preserve">
+    <value>Password set successfully</value>
+    <comment> </comment>
+  </data>
+  <data name="Msg_PasswordRemovedSuccess" xml:space="preserve">
+    <value>Database password removed successfully</value>
+  </data>
+  <data name="Msg_RemovePasswordConfirmation" xml:space="preserve">
+    <value>Are you sure you want to remove the database password? Your data will no longer be encrypted</value>
+  </data>
+  <data name="Btn_SetPassword" xml:space="preserve">
+    <value>Set password</value>
+  </data>
 </root>

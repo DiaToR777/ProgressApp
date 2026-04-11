@@ -44,12 +44,6 @@
                            Margin="0,30,0,0"
                            HorizontalAlignment="Stretch"
                            Icon="{ui:SymbolIcon Symbol=Checkmark24}"/>
-
-                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}" 
-                              Appearance="Tertiary"
-                              FontSize="11"
-                              Margin="0,10,0,0"
-                              HorizontalAlignment="Center"/>
             </StackPanel>
         </ui:Card>
     </Grid>

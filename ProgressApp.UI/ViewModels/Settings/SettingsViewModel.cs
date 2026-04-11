@@ -27,6 +27,12 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         private string _newDbPassword = string.Empty;
         private string _confirmDbPassword = string.Empty;
         private bool _isChangingPassword;
+        private bool _isDbEncrypted;
+        public bool IsDbEncrypted
+        {
+            get => _isDbEncrypted;
+            set => SetProperty(ref _isDbEncrypted, value);
+        }
 
         public bool IsChangingPassword
         {
@@ -44,7 +50,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         {
             get => _newDbPassword;
             set => SetProperty(ref _newDbPassword, value);
-            
+
         }
 
         public string ConfirmDbPassword
@@ -93,6 +99,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         public ICommand ImportEntriesCommand { get; }
         public ICommand TogglePasswordFieldsCommand { get; }
         public ICommand ApplyNewPasswordCommand { get; }
+        public ICommand RemovePasswordCommand { get; }
 
         public SettingsViewModel(
             ISettingsService settingsService,
@@ -127,27 +134,63 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             );
 
             TogglePasswordFieldsCommand = new RelayCommand(_ => IsChangingPassword = !IsChangingPassword);
+
+            RemovePasswordCommand = new RelayCommand(
+                executeAsync: async _ => await RemovePasswordAsync(),
+                canExecute: _ => IsDbEncrypted);
         }
 
-
+        private async Task RemovePasswordAsync()
+        {
+            var confirmed = _messageService.ShowConfirmation("Msg_RemovePasswordConfirmation");
+            if (!confirmed) return;
+            try
+            {
+                await _authService.RemovePasswordAsync();
+                IsDbEncrypted = false;
+                Log.Debug("SettingsVM: IsDbEncrypted = {Value}", IsDbEncrypted);
+                _messageService.ShowInfo("Msg_PasswordRemovedSuccess");
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "SettingsVM: Error removing password");
+                _messageService.ShowError(ex);
+            }
+        }
         private async Task ApplyNewPassword()
         {
             try
             {
-                Log.Information("SettingsVM: Changing DB password to a new one.");
+                if (IsDbEncrypted)
+                {
+                    Log.Information("SettingsVM: Changing DB password to a new one.");
 
-                await _authService.ChangePasswordAsync(NewDbPassword);
+                    await _authService.ChangePasswordAsync(NewDbPassword);
 
-                _messageService.ShowInfo("Msg_PasswordChangedSuccess"); 
+                    _messageService.ShowInfo("Msg_PasswordChangedSuccess");
 
-                NewDbPassword = string.Empty;
-                ConfirmDbPassword = string.Empty;
-                IsChangingPassword = false;
+                    NewDbPassword = string.Empty;
+                    ConfirmDbPassword = string.Empty;
+                    IsChangingPassword = false;
+                }
+                else
+                {
+                    Log.Information("SettingsVM: Setting new DB password for unencrypted database.");
+                    await _authService.SetPasswordAsync(NewDbPassword);
+                    IsDbEncrypted = true;
+
+                    Log.Debug("SettingsVM: IsDbEncrypted = {Value}", IsDbEncrypted);
+                    _messageService.ShowInfo("Msg_PasswordSetSuccess");
+
+                    NewDbPassword = string.Empty;
+                    ConfirmDbPassword = string.Empty;
+                    IsChangingPassword = false;
+                }
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Password change failed");
-                _messageService.ShowError(ex); 
+                _messageService.ShowError(ex);
             }
         }
 
@@ -163,7 +206,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 return;
             }
 
-            var confirmed = _messageService.ShowConfirmation("Msg_ImportConfirmation"); 
+            var confirmed = _messageService.ShowConfirmation("Msg_ImportConfirmation");
 
             if (!confirmed) return;
 
@@ -236,6 +279,8 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         {
             try
             {
+                IsDbEncrypted = await _authService.GetDbStatusAsync() == DbStatus.Encrypted;
+
                 var goalTask = _settingsService.GetGoalAsync();
                 var config = _appConfigService.Load();
 

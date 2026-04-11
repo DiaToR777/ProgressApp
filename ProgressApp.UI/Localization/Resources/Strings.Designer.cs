@@ -106,6 +106,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Set password.
+        /// </summary>
+        public static string Btn_SetPassword {
+            get {
+                return ResourceManager.GetString("Btn_SetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Date.
         /// </summary>
         public static string DataGrid_Date {
@@ -331,11 +340,38 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Database password removed successfully.
+        /// </summary>
+        public static string Msg_PasswordRemovedSuccess {
+            get {
+                return ResourceManager.GetString("Msg_PasswordRemovedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Password set successfully.
+        /// </summary>
+        public static string Msg_PasswordSetSuccess {
+            get {
+                return ResourceManager.GetString("Msg_PasswordSetSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Record saved!.
         /// </summary>
         public static string Msg_RecordSaved {
             get {
                 return ResourceManager.GetString("Msg_RecordSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Are you sure you want to remove the database password? Your data will no longer be encrypted.
+        /// </summary>
+        public static string Msg_RemovePasswordConfirmation {
+            get {
+                return ResourceManager.GetString("Msg_RemovePasswordConfirmation", resourceCulture);
             }
         }
         

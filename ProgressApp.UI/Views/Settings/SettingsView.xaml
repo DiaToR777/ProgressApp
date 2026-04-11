@@ -127,18 +127,57 @@
                 </Grid>
 
                 <StackPanel>
-                    <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_ChangePassword]}" 
-               Command="{Binding TogglePasswordFieldsCommand}"
-               Visibility="{Binding IsNotChangingPassword, Converter={StaticResource BoolToVis}}"
-               HorizontalAlignment="Stretch" 
-               Margin="0,0,0,10"/>
+                    <Grid Margin="0,0,0,10"
+          Visibility="{Binding IsNotChangingPassword, Converter={StaticResource BoolToVis}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
+                        <ui:Button Grid.Column="0"
+                   Margin="0,0,5,0"
+                   HorizontalAlignment="Stretch"
+                   Command="{Binding TogglePasswordFieldsCommand}">
+                            <ui:Button.Style>
+                                <Style TargetType="ui:Button">
+                                    <Setter Property="Content" 
+                            Value="{Binding Source={StaticResource Langs}, Path=[Btn_SetPassword]}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDbEncrypted}" Value="True">
+                                            <Setter Property="Content" 
+                                    Value="{Binding Source={StaticResource Langs}, Path=[Btn_ChangePassword]}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:Button.Style>
+                        </ui:Button>
+
+                        <ui:Button Grid.Column="1"
+                   Appearance="Danger"
+                   Icon="{ui:SymbolIcon Symbol=LockOpen24}"
+                   Command="{Binding RemovePasswordCommand}"
+                   Visibility="{Binding IsDbEncrypted, Converter={StaticResource BoolToVis}}"
+                   ToolTip="{Binding Source={StaticResource Langs}, Path=[Btn_RemovePassword]}"/>
+                    </Grid>
+                    
                     <ui:Card Margin="0,0,0,25" Padding="20" HorizontalAlignment="Stretch"
              Visibility="{Binding IsChangingPassword, Converter={StaticResource BoolToVis}}">
                         <StackPanel>
-                            <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Btn_ChangePassword]}" 
-                          FontWeight="SemiBold" Margin="0,0,0,15" />
-
+                            <ui:TextBlock FontWeight="SemiBold" Margin="0,0,0,15">
+                                <ui:TextBlock.Style>
+                                    <Style TargetType="ui:TextBlock">
+                                        <Setter Property="Text" 
+                    Value="{Binding Source={StaticResource Langs}, Path=[Btn_SetPassword]}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDbEncrypted}" Value="True">
+                                                <Setter Property="Text" 
+                            Value="{Binding Source={StaticResource Langs}, Path=[Btn_ChangePassword]}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:TextBlock.Style>
+                            </ui:TextBlock>
+                            
                             <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}" Margin="0,0,0,5"/>
                             <ui:PasswordBox Password="{Binding NewDbPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                             Margin="0,0,0,10"
