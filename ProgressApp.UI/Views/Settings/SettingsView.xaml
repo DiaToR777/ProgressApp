@@ -5,9 +5,19 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vm="clr-namespace:ProgressApp.WpfUI.ViewModels.Settings"
+             xmlns:conv="clr-namespace:ProgressApp.WpfUI.Converters"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance Type=vm:SettingsViewModel}"
              TextElement.Foreground="{DynamicResource TextFillColorPrimaryBrush}">
+
+
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:InverseBoolConverter x:Key="InverseBool" />
+
+        <conv:InverseBoolConverter x:Key="InverseBoolToVis" />
+    </UserControl.Resources>
+
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <Grid Margin="30">
@@ -115,6 +125,92 @@
                         </StackPanel>
                     </ui:Button>
                 </Grid>
+
+                <StackPanel>
+                    <Grid Margin="0,0,0,10"
+          Visibility="{Binding IsNotChangingPassword, Converter={StaticResource BoolToVis}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <ui:Button Grid.Column="0"
+                   Margin="0,0,5,0"
+                   HorizontalAlignment="Stretch"
+                   Command="{Binding TogglePasswordFieldsCommand}">
+                            <ui:Button.Style>
+                                <Style TargetType="ui:Button">
+                                    <Setter Property="Content" 
+                            Value="{Binding Source={StaticResource Langs}, Path=[Btn_SetPassword]}"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsDbEncrypted}" Value="True">
+                                            <Setter Property="Content" 
+                                    Value="{Binding Source={StaticResource Langs}, Path=[Btn_ChangePassword]}"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ui:Button.Style>
+                        </ui:Button>
+
+                        <ui:Button Grid.Column="1"
+                   Appearance="Danger"
+                   Icon="{ui:SymbolIcon Symbol=LockOpen24}"
+                   Command="{Binding RemovePasswordCommand}"
+                   Visibility="{Binding IsDbEncrypted, Converter={StaticResource BoolToVis}}"
+                   ToolTip="{Binding Source={StaticResource Langs}, Path=[Btn_RemovePassword]}"/>
+                    </Grid>
+                    
+                    <ui:Card Margin="0,0,0,25" Padding="20" HorizontalAlignment="Stretch"
+             Visibility="{Binding IsChangingPassword, Converter={StaticResource BoolToVis}}">
+                        <StackPanel>
+                            <ui:TextBlock FontWeight="SemiBold" Margin="0,0,0,15">
+                                <ui:TextBlock.Style>
+                                    <Style TargetType="ui:TextBlock">
+                                        <Setter Property="Text" 
+                    Value="{Binding Source={StaticResource Langs}, Path=[Btn_SetPassword]}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsDbEncrypted}" Value="True">
+                                                <Setter Property="Text" 
+                            Value="{Binding Source={StaticResource Langs}, Path=[Btn_ChangePassword]}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ui:TextBlock.Style>
+                            </ui:TextBlock>
+                            
+                            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_password]}" Margin="0,0,0,5"/>
+                            <ui:PasswordBox Password="{Binding NewDbPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Margin="0,0,0,10"
+                                            MaxLength="8"
+                                            PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}"
+                                            PreviewKeyDown="PasswordBox_PreviewKeyDown"
+                                            DataObject.Pasting="PasswordBox_Pasting"/>
+                            
+                            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_ConfirmPassword]}" Margin="0,0,0,5"/>
+                            <ui:PasswordBox Password="{Binding ConfirmDbPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                            Margin="0,0,0,15"                      
+                                            MaxLength="8"
+                                            PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_Max8Ch]}"
+                                            PreviewKeyDown="PasswordBox_PreviewKeyDown"
+                                            DataObject.Pasting="PasswordBox_Pasting"/>
+                            
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <ui:Button Grid.Column="0" Content="{Binding Source={StaticResource Langs}, Path=[Btn_Cancel]}" 
+                           Command="{Binding TogglePasswordFieldsCommand}"
+                           Margin="0,0,5,0" HorizontalAlignment="Stretch" />
+
+                                <ui:Button Grid.Column="1" Content="{Binding Source={StaticResource Langs}, Path=[Btn_Apply]}" Appearance="Primary"
+                           Command="{Binding ApplyNewPasswordCommand}"
+                           Margin="5,0,0,0" HorizontalAlignment="Stretch" />
+                            </Grid>
+                        </StackPanel>
+                    </ui:Card>
+                </StackPanel>
 
             </StackPanel>
         </Grid>

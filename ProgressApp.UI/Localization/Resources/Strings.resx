@@ -313,4 +313,35 @@ Records imported: {0}</value>
   <data name="Title_ExportData" xml:space="preserve">
     <value>Export Data</value>
   </data>
+  <data name="Msg_PasswordChangedSuccess" xml:space="preserve">
+    <value>Password changed successfully</value>
+  </data>
+  <data name="Msg_ChangePasswordFailedError" xml:space="preserve">
+    <value>Failed to change password. Check logs</value>
+  </data>
+  <data name="Title_ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Btn_ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Btn_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Btn_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Msg_PasswordSetSuccess" xml:space="preserve">
+    <value>Password set successfully</value>
+    <comment> </comment>
+  </data>
+  <data name="Msg_PasswordRemovedSuccess" xml:space="preserve">
+    <value>Database password removed successfully</value>
+  </data>
+  <data name="Msg_RemovePasswordConfirmation" xml:space="preserve">
+    <value>Are you sure you want to remove the database password? Your data will no longer be encrypted</value>
+  </data>
+  <data name="Btn_SetPassword" xml:space="preserve">
+    <value>Set password</value>
+  </data>
 </root>

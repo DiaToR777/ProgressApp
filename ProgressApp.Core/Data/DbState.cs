@@ -14,12 +14,12 @@ namespace ProgressApp.Core.Data
 
         public void SetPassword(string password) => _password = password;
 
-        public string GetConnectionString()
+        public string GetConnectionString(string? passwordOverride = null)
         {
             return new SqliteConnectionStringBuilder
             {
                 DataSource = DbPath,
-                Password = _password
+                Password = passwordOverride ?? _password
             }.ToString();
         }
     }

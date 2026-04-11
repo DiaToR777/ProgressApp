@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Enums;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
@@ -51,22 +52,20 @@ namespace ProgressApp.WpfUI.ViewModels
             ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
         }
 
-        private void InitializeNavigationAsync()
+        private async void InitializeNavigationAsync()
         {
             try
             {
-                IsNavigationVisible = false;
-                bool dbExists = _authService.IsDatabaseCreated();
+                var status = await _authService.GetDbStatusAsync();
 
-                if (!dbExists)
+                switch (status)
                 {
-                    ShowInitialsSetup();
-                }
-                else
-                {
-                    ShowLogin();
+                    case DbStatus.NotCreated: ShowInitialsSetup(); break;
+                    case DbStatus.Encrypted: ShowLogin(); break;
+                    case DbStatus.Unencrypted: ShowToday(); break;
                 }
             }
+
             catch (Exception ex)
             {
                 Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
