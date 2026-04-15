@@ -55,6 +55,7 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IAppConfigService, AppConfigService>();
             services.AddSingleton<IDataExchangeService, DataExchangeService>();
+            services.AddSingleton<IAnalyticsService, AnalyticsService>();
 
             services.AddTransient<LoginViewModel>();
             services.AddTransient<TableViewModel>();
