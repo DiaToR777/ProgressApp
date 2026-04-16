@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Heatmap;
 using ProgressApp.Core.Models.Journal;
 
 namespace ProgressApp.Core.Services
@@ -15,6 +16,34 @@ namespace ProgressApp.Core.Services
         {
             _scopeFactory = scopeFactory;
         }
+
+        //add logging and error handling
+
+        public async Task<List<DayCell>> GetHeatmapCells(DateTime from, DateTime to)
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
+            var entries = context.Entries
+                .Where(e => e.Date >= from && e.Date <= to)
+                .ToDictionary(e => e.Date.Date, e => e.Result);
+
+            var cells = new List<DayCell>();
+
+            for (var date = from.Date; date <= to.Date; date = date.AddDays(1))
+            {
+
+                DayResult? result = entries.TryGetValue(date, out var dbResult) ? dbResult : null;
+
+                cells.Add(new DayCell
+                {
+                    Date = date,
+                    Result = result
+                });
+            }
+            return cells;
+        }
+
         public async Task<int> GetCurrentStreakAsync()
         {
             using var scope = _scopeFactory.CreateScope();

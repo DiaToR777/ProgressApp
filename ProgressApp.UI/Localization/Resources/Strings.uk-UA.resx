@@ -343,4 +343,10 @@
   <data name="Btn_SetPassword" xml:space="preserve">
     <value>Встановити пароль</value>
   </data>
+  <data name="AnalyticsMode_Table" xml:space="preserve">
+    <value>Вигляд таблиці</value>
+  </data>
+  <data name="AnalyticsMode_Heatmap" xml:space="preserve">
+    <value>Вигляд теплової карти</value>
+  </data>
 </root>

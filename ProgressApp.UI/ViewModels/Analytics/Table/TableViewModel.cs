@@ -4,7 +4,7 @@ using ProgressApp.Core.Models.Journal;
 using Serilog;
 using System.Collections.ObjectModel;
 
-namespace ProgressApp.WpfUI.ViewModels.Table
+namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
 {
     public class TableViewModel : ViewModelBase
     {

@@ -61,6 +61,24 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Heatmap view.
+        /// </summary>
+        public static string AnalyticsMode_Heatmap {
+            get {
+                return ResourceManager.GetString("AnalyticsMode_Heatmap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Table View.
+        /// </summary>
+        public static string AnalyticsMode_Table {
+            get {
+                return ResourceManager.GetString("AnalyticsMode_Table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на ProgressApp .
         /// </summary>
         public static string AppTitle {
