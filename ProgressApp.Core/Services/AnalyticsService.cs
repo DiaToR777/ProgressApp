@@ -19,28 +19,46 @@ namespace ProgressApp.Core.Services
 
         //add logging and error handling
 
+        public async Task<List<DayCell>> GetAllHeatmapCellsAsync()
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
+            return await context.Entries
+                .OrderBy(e => e.Date)
+                .Select(e => new DayCell
+                {
+                    Date = e.Date,
+                    Result = e.Result,
+                    Description = e.Description
+                })
+                .ToListAsync();
+        }
+
         public async Task<List<DayCell>> GetHeatmapCells(DateTime from, DateTime to)
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            var entries = context.Entries
+            var entries = await context.Entries
                 .Where(e => e.Date >= from && e.Date <= to)
-                .ToDictionary(e => e.Date.Date, e => e.Result);
+                .OrderBy(e => e.Date)
+                .ToDictionaryAsync(e => e.Date.Date, e => e); // берём весь JournalEntry
 
             var cells = new List<DayCell>();
 
             for (var date = from.Date; date <= to.Date; date = date.AddDays(1))
             {
-
-                DayResult? result = entries.TryGetValue(date, out var dbResult) ? dbResult : null;
+                var entry = entries.GetValueOrDefault(date);
 
                 cells.Add(new DayCell
                 {
                     Date = date,
-                    Result = result
+                    Result = entry?.Result,
+                    Description = entry?.Description
                 });
             }
+
             return cells;
         }
 

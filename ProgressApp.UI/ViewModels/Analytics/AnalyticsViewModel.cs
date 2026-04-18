@@ -45,7 +45,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
             UpdateView(AnalyticsMode.Table);
         }
 
-        private void UpdateView(AnalyticsMode option)
+        private async void UpdateView(AnalyticsMode option)
         {
             switch (option)
             {
@@ -58,7 +58,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
                 case AnalyticsMode.Heatmap:
                     var heatmapVm = _serviceProvider.GetRequiredService<HeatmapViewModel>();
 
-                    _ = heatmapVm.LoadAsync(DateTime.Today.AddDays(-7), DateTime.Today);
+                    await heatmapVm.LoadAsync(HeatmapRange.Week); //TODO
 
                     CurrentAnalyticsView = heatmapVm;
                     break;

@@ -62,12 +62,13 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
 
             services.AddSingleton<MainViewModel>();
+
             services.AddTransient<InitialSetupViewModel>();
             services.AddTransient<LoginViewModel>();
             services.AddTransient<TableViewModel>();
-            services.AddSingleton<AnalyticsViewModel>();
+            services.AddTransient<AnalyticsViewModel>();
             services.AddTransient<TodayViewModel>();
-            services.AddSingleton<HeatmapViewModel>();
+            services.AddTransient<HeatmapViewModel>();
             services.AddTransient<SettingsViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();
