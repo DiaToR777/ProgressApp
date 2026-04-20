@@ -37,7 +37,7 @@
 
         <StackPanel Grid.Column="1" Margin="25,0">
 
-            <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_DayDatails]}"
+            <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_DayDetails]}"
                           FontWeight="Bold"
                           FontSize="20"
                           Margin="0,0,0,15"/>

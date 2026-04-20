@@ -30,7 +30,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15">
-            <TextBlock Text="Режим просмотра:" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="Gray"/>
+            <TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Analytics_ViewMode]}" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="Gray"/>
 
             <ComboBox ItemsSource="{Binding ViewOptions}"
           SelectedValue="{Binding SelectedViewOption}"

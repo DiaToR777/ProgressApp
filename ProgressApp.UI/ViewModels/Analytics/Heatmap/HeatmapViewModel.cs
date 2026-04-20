@@ -1,6 +1,7 @@
 ﻿using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Heatmap;
 using ProgressApp.WpfUI.Localization.Helpers;
+using ProgressApp.WpfUI.Localization.Managers;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -8,13 +9,13 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 {
     public class HeatmapViewModel : ViewModelBase
     {
+        private DateOnly? _firstEntryDate;
+
         private readonly IAnalyticsService _analyticsService;
         public string[] DayLabels => CultureHelper.GetAbbreviatedDayNames();
 
         private DateTime _currentDate = DateTime.Today;
         public ObservableCollection<List<DayCell>> Weeks { get; } = new();
-
-        public bool ShowWeekLabels => _selectedRange != HeatmapRange.AllTime;
 
         private DayCell? _selectedCell;
         public DayCell? SelectedCell
@@ -22,6 +23,22 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             get => _selectedCell;
             set => SetProperty(ref _selectedCell, value);
         }
+
+        public string PeriodTitle => _selectedRange switch
+        {
+            HeatmapRange.Week => $"{GetCurrentWeek().from.ToString("dd MMM", TranslationSource.Instance.CurrentCulture)} — {GetCurrentWeek().to.ToString("dd MMM yyyy", TranslationSource.Instance.CurrentCulture)}",
+            HeatmapRange.Month => _currentDate.ToString("MMMM yyyy", TranslationSource.Instance.CurrentCulture),
+            HeatmapRange.AllTime => string.Empty,
+            _ => string.Empty
+        };
+        public bool ShowNavigation => _selectedRange switch
+        {
+            HeatmapRange.AllTime => _firstEntryDate.HasValue && _firstEntryDate.Value.Year < DateTime.Today.Year,
+            _ => true
+        };
+
+        public ICommand PreviousPeriodCommand { get; }
+        public ICommand NextPeriodCommand { get; }
 
         public IEnumerable<LocalizedEnum<HeatmapRange>> Ranges { get; }
 
@@ -35,18 +52,18 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 {
                     OnPropertyChanged(nameof(CellSize));
                     OnPropertyChanged(nameof(CellMargin));
-                    OnPropertyChanged(nameof(ShowWeekLabels));
+                    OnPropertyChanged(nameof(ShowNavigation));
 
                     _ = LoadAsync(value);
                 }
             }
         }
 
-
         public int CellSize => _selectedRange switch
         {
             HeatmapRange.Week => 40,
             HeatmapRange.Month => 30,
+            HeatmapRange.AllTime => 13,
             _ => 30
         };
 
@@ -54,30 +71,101 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
         {
             HeatmapRange.Week => 4,
             HeatmapRange.Month => 3,
+            HeatmapRange.AllTime => 1,
             _ => 3
         };
 
+        private void NotifyPeriodChanged()
+        {
+            OnPropertyChanged(nameof(PeriodTitle));
+            OnPropertyChanged(nameof(ShowNavigation));
+        }
+
         public ICommand CellClickCommand { get; }
 
-
-        //TODO heatmap allTime stats, add loading state, add error handling and logging
+        //TODO heatmap add loading state, add error handling and logging
         public HeatmapViewModel(IAnalyticsService analyticsService)
         {
+            _analyticsService = analyticsService;
+
             Ranges = Enum.GetValues(typeof(HeatmapRange))
                 .Cast<HeatmapRange>()
                 .Select(r => new LocalizedEnum<HeatmapRange>(r))
                 .ToList();
 
-            _analyticsService = analyticsService;
+            GetFirstEntryDate();
+
             CellClickCommand = new RelayCommand(cell => SelectedCell = cell as DayCell);
             _ = LoadAsync(_selectedRange);
+
+            PreviousPeriodCommand = new RelayCommand(_ =>
+            {
+                _currentDate = _selectedRange switch
+                {
+                    HeatmapRange.Week => _currentDate.AddDays(-7),
+                    HeatmapRange.Month => _currentDate.AddMonths(-1),
+                    HeatmapRange.AllTime => _currentDate.AddYears(-1),
+                    _ => _currentDate
+                };
+                NotifyPeriodChanged();
+                _ = LoadAsync(_selectedRange);
+
+            }, _ => CanGoBack());
+
+
+            NextPeriodCommand = new RelayCommand(_ =>
+                {
+                    _currentDate = _selectedRange switch
+                    {
+                        HeatmapRange.Week => _currentDate.AddDays(7),
+                        HeatmapRange.Month => _currentDate.AddMonths(1),
+                        HeatmapRange.AllTime => _currentDate.AddYears(1),
+                        _ => _currentDate
+                    };
+                    NotifyPeriodChanged();
+                    _ = LoadAsync(_selectedRange);
+                }, _ => CanGoForward());
+        }
+
+        private async void GetFirstEntryDate()  //TODO try catch error handling and logging
+        {
+            var firstEntryDate = await _analyticsService.GetFirstEntryDateAsync();
+            _firstEntryDate = firstEntryDate.HasValue ? DateOnly.FromDateTime(firstEntryDate.Value) : (DateOnly?)null;
+        }
+
+        private bool CanGoBack()
+        {
+            if (!_firstEntryDate.HasValue) return false;
+
+            DateOnly firstDate = _firstEntryDate.Value;
+
+            if (_selectedRange == HeatmapRange.AllTime)
+                return _currentDate.Year > firstDate.Year;
+
+            DateOnly currentViewStart = _selectedRange == HeatmapRange.Week
+                ? DateOnly.FromDateTime(GetCurrentWeek().from)
+                : new DateOnly(_currentDate.Year, _currentDate.Month, 1);
+
+            return currentViewStart > firstDate;
+        }
+
+        private bool CanGoForward()
+        {
+            if (_selectedRange == HeatmapRange.AllTime) return false;
+
+            DateTime today = DateTime.Today;
+
+            if (_selectedRange == HeatmapRange.Month)
+                return new DateTime(_currentDate.Year, _currentDate.Month, 1) < new DateTime(today.Year, today.Month, 1);
+
+            return GetCurrentWeek().to < today;
         }
 
         public async Task LoadAsync(HeatmapRange range)
         {
             if (range == HeatmapRange.AllTime)
             {
-                await LoadAllTimeAsync();
+                await LoadYearAsync(_currentDate.Year);
                 return;
             }
             var (from, to) = range switch
@@ -107,13 +195,16 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 
                     current = current.AddDays(1);
                 }
-
                 Weeks.Add(week);
             }
         }
-        private async Task LoadAllTimeAsync()
+
+        private async Task LoadYearAsync(int year)
         {
-            var cells = await _analyticsService.GetAllHeatmapCellsAsync();
+            var from = new DateTime(year, 1, 1);
+            var to = new DateTime(year, 12, 31);
+
+            var cells = await _analyticsService.GetHeatmapCells(from, to);
 
             Weeks.Clear();
             SelectedCell = null;
@@ -121,6 +212,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             foreach (var chunk in cells.Chunk(7))
                 Weeks.Add(chunk.ToList());
         }
+
         private (DateTime from, DateTime to) GetCurrentWeek()
         {
             var monday = _currentDate.AddDays(-(((int)_currentDate.DayOfWeek + 6) % 7));
@@ -132,15 +224,13 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             var firstDay = new DateTime(_currentDate.Year, _currentDate.Month, 1);
             var lastDay = firstDay.AddMonths(1).AddDays(-1);
 
-            // Начало: Понедельник недели, на которую выпало 1-е число
             var start = firstDay.AddDays(-(((int)firstDay.DayOfWeek + 6) % 7));
-            // Конец: Воскресенье недели, на которую выпало последнее число
             var end = lastDay.AddDays((7 - (int)lastDay.AddDays(1).DayOfWeek + 6) % 7);
-            // Упростим: просто берем +6 дней от понедельника последней недели
             var lastMonday = lastDay.AddDays(-(((int)lastDay.DayOfWeek + 6) % 7));
             var finalEnd = lastMonday.AddDays(6);
 
             return (start, finalEnd);
         }
+
     }
 }

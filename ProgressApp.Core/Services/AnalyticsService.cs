@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
-using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Heatmap;
 using ProgressApp.Core.Models.Journal;
@@ -18,6 +17,15 @@ namespace ProgressApp.Core.Services
         }
 
         //add logging and error handling
+        public async Task<DateTime?> GetFirstEntryDateAsync()
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+            var firstEntry = await context.Entries
+                .OrderBy(e => e.Date)
+                .FirstOrDefaultAsync();
+            return firstEntry?.Date;
+        }
 
         public async Task<List<DayCell>> GetAllHeatmapCellsAsync()
         {
@@ -43,7 +51,7 @@ namespace ProgressApp.Core.Services
             var entries = await context.Entries
                 .Where(e => e.Date >= from && e.Date <= to)
                 .OrderBy(e => e.Date)
-                .ToDictionaryAsync(e => e.Date.Date, e => e); // берём весь JournalEntry
+                .ToDictionaryAsync(e => e.Date.Date, e => e);
 
             var cells = new List<DayCell>();
 
@@ -67,45 +75,42 @@ namespace ProgressApp.Core.Services
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            var dates = await context.Entries
-                            .Where(e => e.Result == DayResult.Success || e.Result == DayResult.PartialSuccess)
-                            .Select(e => e.Date)
-                            .OrderByDescending(d => d)
-                            .ToListAsync();
+            var entries = await context.Entries
+                                .OrderByDescending(e => e.Date)
+                                .Select(e => new { e.Date, e.Result })
+                                .ToListAsync();
 
-
-            return CalculateStreak(dates);
+            return CalculateCurrentStreak(entries.Select(e => (e.Date, e.Result)));
         }
 
-        private int CalculateStreak(List<DateTime> dates)
+        private int CalculateCurrentStreak(IEnumerable<(DateTime Date, DayResult Result)> entries)
         {
-            if (!dates.Any()) return 0;
+            var entriesList = entries.ToList();
+            if (!entriesList.Any()) return 0;
 
             var today = DateTime.Today;
-            var lastEntryDate = dates[0].Date;
 
-            if (lastEntryDate < today.AddDays(-1))
+            if (entriesList[0].Date.Date < today.AddDays(-1))
                 return 0;
 
-            int streak = 1;
-            var currentCompare = lastEntryDate;
+            int streak = 0;
+            DateTime expectedDate = entriesList[0].Date.Date;
 
-            for (int i = 1; i < dates.Count; i++)
+            foreach (var entry in entriesList)
             {
-                var nextDate = dates[i].Date;
-                if (nextDate == currentCompare) continue;
-                if (nextDate == currentCompare.AddDays(-1))
+                if (entry.Result == DayResult.Relapse)
+                    break;
+
+                if (entry.Date.Date == expectedDate)
                 {
                     streak++;
-                    currentCompare = nextDate;
+                    expectedDate = expectedDate.AddDays(-1);
                 }
-                else
-                {
+                else if (entry.Date.Date < expectedDate)
                     break;
-                }
             }
-
             return streak;
         }
+
     }
 }

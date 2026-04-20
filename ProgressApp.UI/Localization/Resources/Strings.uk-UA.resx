@@ -259,7 +259,7 @@
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Управління даними</value>
   </data>
-  <data name="Title_DayDatails" xml:space="preserve">
+  <data name="Title_DayDetails" xml:space="preserve">
     <value>Деталі Дня</value>
   </data>
   <data name="Title_DayDescription" xml:space="preserve">
@@ -348,5 +348,20 @@
   </data>
   <data name="AnalyticsMode_Heatmap" xml:space="preserve">
     <value>Вигляд теплової карти</value>
+  </data>
+  <data name="Range_Week" xml:space="preserve">
+    <value>Тиждень</value>
+  </data>
+  <data name="Range_Month" xml:space="preserve">
+    <value>Місяць</value>
+  </data>
+  <data name="Range_AllTIme" xml:space="preserve">
+    <value>За весь час</value>
+  </data>
+  <data name="Analytics_ViewMode" xml:space="preserve">
+    <value>Режим перегляду:</value>
+  </data>
+  <data name="Analytics_Heatmap_HintSelectCell" xml:space="preserve">
+    <value>натисніть на клітинку</value>
   </data>
 </root>

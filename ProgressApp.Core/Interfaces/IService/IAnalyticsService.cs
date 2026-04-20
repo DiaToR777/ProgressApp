@@ -7,6 +7,7 @@ namespace ProgressApp.Core.Interfaces.IService
     {
         Task<int> GetCurrentStreakAsync();
         Task<List<DayCell>> GetHeatmapCells(DateTime from, DateTime to);
-        Task<List<DayCell>> GetAllHeatmapCellsAsync(); 
+        Task<List<DayCell>> GetAllHeatmapCellsAsync();
+        Task<DateTime?> GetFirstEntryDateAsync();
     }
 }

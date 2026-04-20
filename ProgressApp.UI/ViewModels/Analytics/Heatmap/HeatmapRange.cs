@@ -10,4 +10,4 @@ public enum HeatmapRange
     Month,
     [Description("Range_AllTime")]
     AllTime
-}
+} 
