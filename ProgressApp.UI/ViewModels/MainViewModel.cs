@@ -39,7 +39,7 @@ namespace ProgressApp.WpfUI.ViewModels
         }
 
         public ICommand ShowTodayCommand { get; }
-        public ICommand ShowTableCommand { get; }
+        public ICommand ShowAnalyticsCommand { get; }
         public ICommand ShowSettingsCommand { get; }
 
         public MainViewModel(IAuthService authSevice, IServiceProvider serviceProvider)
@@ -50,7 +50,7 @@ namespace ProgressApp.WpfUI.ViewModels
             InitializeNavigationAsync();
 
             ShowTodayCommand = new RelayCommand(async _ => ShowToday());
-            ShowTableCommand = new RelayCommand(async _ => ShowAnalytics()); //TODO Rename to ShowAnalytics
+            ShowAnalyticsCommand = new RelayCommand(async _ => ShowAnalytics());
             ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
         }
 
@@ -101,13 +101,10 @@ namespace ProgressApp.WpfUI.ViewModels
             IsNavigationVisible = false;
          }
 
-        private void ShowAnalytics() //TODO
+        private void ShowAnalytics() 
         {
-            var vm = _serviceProvider.GetRequiredService<AnalyticsViewModel>(); 
-
-            CurrentView = vm;
+            CurrentView = _serviceProvider.GetRequiredService<AnalyticsViewModel>();
             IsNavigationVisible = true;
-
         }
 
         private void ShowToday()

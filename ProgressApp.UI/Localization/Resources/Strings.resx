@@ -364,4 +364,13 @@ Records imported: {0}</value>
   <data name="Analytics_Heatmap_HintSelectCell" xml:space="preserve">
     <value>click on the cell</value>
   </data>
+  <data name="Msg_ErrorLoadingStreak" xml:space="preserve">
+    <value>Error calculating streak. Check logs</value>
+  </data>
+  <data name="Msg_ErrorLoadingHeatmapData" xml:space="preserve">
+    <value>Error loading heatmap data. Check logs</value>
+  </data>
+  <data name="NavBtn_Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
 </root>

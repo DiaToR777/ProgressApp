@@ -355,7 +355,7 @@
   <data name="Range_Month" xml:space="preserve">
     <value>Місяць</value>
   </data>
-  <data name="Range_AllTIme" xml:space="preserve">
+  <data name="Range_AllTime" xml:space="preserve">
     <value>За весь час</value>
   </data>
   <data name="Analytics_ViewMode" xml:space="preserve">
@@ -363,5 +363,14 @@
   </data>
   <data name="Analytics_Heatmap_HintSelectCell" xml:space="preserve">
     <value>натисніть на клітинку</value>
+  </data>
+  <data name="Msg_ErrorLoadingStreak" xml:space="preserve">
+    <value>Помилка розрахунку серії. Перевірте логи</value>
+  </data>
+  <data name="Msg_ErrorLoadingHeatmapData" xml:space="preserve">
+    <value>Помилка завантаження даних теплової карти. Перевірте логи</value>
+  </data>
+  <data name="NavBtn_Analytics" xml:space="preserve">
+    <value>Аналітика</value>
   </data>
 </root>

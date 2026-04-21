@@ -1,7 +1,9 @@
-﻿using ProgressApp.Core.Interfaces.IService;
+﻿using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Heatmap;
 using ProgressApp.WpfUI.Localization.Helpers;
 using ProgressApp.WpfUI.Localization.Managers;
+using Serilog;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -12,6 +14,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
         private DateOnly? _firstEntryDate;
 
         private readonly IAnalyticsService _analyticsService;
+        private readonly IMessageService _messageService;
         public string[] DayLabels => CultureHelper.GetAbbreviatedDayNames();
 
         private DateTime _currentDate = DateTime.Today;
@@ -83,9 +86,9 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 
         public ICommand CellClickCommand { get; }
 
-        //TODO heatmap add loading state, add error handling and logging
-        public HeatmapViewModel(IAnalyticsService analyticsService)
+        public HeatmapViewModel(IAnalyticsService analyticsService, IMessageService messageService)
         {
+            _messageService = messageService;   
             _analyticsService = analyticsService;
 
             Ranges = Enum.GetValues(typeof(HeatmapRange))
@@ -129,8 +132,18 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 
         private async void GetFirstEntryDate()  //TODO try catch error handling and logging
         {
-            var firstEntryDate = await _analyticsService.GetFirstEntryDateAsync();
-            _firstEntryDate = firstEntryDate.HasValue ? DateOnly.FromDateTime(firstEntryDate.Value) : (DateOnly?)null;
+            try
+            {
+                Log.Debug("HeatmapViewModel: Fetching first entry date.");
+                var firstEntryDate = await _analyticsService.GetFirstEntryDateAsync();
+                _firstEntryDate = firstEntryDate.HasValue ? DateOnly.FromDateTime(firstEntryDate.Value) : (DateOnly?)null;
+                Log.Debug("HeatmapViewModel: First entry date: {Date}", _firstEntryDate);
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "HeatmapViewModel: Failed to get first entry date.");
+                _messageService.ShowError(ex);
+            }
         }
 
         private bool CanGoBack()
@@ -163,54 +176,77 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 
         public async Task LoadAsync(HeatmapRange range)
         {
-            if (range == HeatmapRange.AllTime)
+            try
             {
-                await LoadYearAsync(_currentDate.Year);
-                return;
-            }
-            var (from, to) = range switch
-            {
-                HeatmapRange.Week => GetCurrentWeek(),
-                HeatmapRange.Month => GetCurrentMonthAligned(),
-                _ => GetCurrentWeek()
-            };
+                Log.Debug("HeatmapViewModel: Loading heatmap for range {Range}.", range);
 
-            var allCells = await _analyticsService.GetHeatmapCells(from, to);
-            var lookup = allCells.ToDictionary(c => c.Date.Date);
-
-            Weeks.Clear();
-            SelectedCell = null;
-
-            var current = from.Date;
-
-            while (current <= to.Date)
-            {
-                var week = new List<DayCell>();
-
-                for (int i = 0; i < 7 && current <= to.Date; i++)
+                if (range == HeatmapRange.AllTime)
                 {
-                    week.Add(lookup.TryGetValue(current, out var cell)
-                        ? cell
-                        : new DayCell { Date = current, Result = null });
-
-                    current = current.AddDays(1);
+                    await LoadYearAsync(_currentDate.Year);
+                    return;
                 }
-                Weeks.Add(week);
+                var (from, to) = range switch
+                {
+                    HeatmapRange.Week => GetCurrentWeek(),
+                    HeatmapRange.Month => GetCurrentMonthAligned(),
+                    _ => GetCurrentWeek()
+                };
+
+                var allCells = await _analyticsService.GetHeatmapCells(from, to);
+                var lookup = allCells.ToDictionary(c => c.Date.Date);
+
+                Weeks.Clear();
+                SelectedCell = null;
+
+                var current = from.Date;
+
+                while (current <= to.Date)
+                {
+                    var week = new List<DayCell>();
+
+                    for (int i = 0; i < 7 && current <= to.Date; i++)
+                    {
+                        week.Add(lookup.TryGetValue(current, out var cell)
+                            ? cell
+                            : new DayCell { Date = current, Result = null });
+
+                        current = current.AddDays(1);
+                    }
+                    Weeks.Add(week);
+                }
+                Log.Information("HeatmapViewModel: Loaded {Count} weeks for range {Range}.", Weeks.Count, range);
+
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "HeatmapViewModel: Failed to load heatmap for range {Range}.", range);
+                _messageService.ShowError(ex);
+
             }
         }
 
         private async Task LoadYearAsync(int year)
         {
-            var from = new DateTime(year, 1, 1);
-            var to = new DateTime(year, 12, 31);
+            try
+            {
+                Log.Debug("HeatmapViewModel: Loading heatmap data for year {Year}.", year);
 
-            var cells = await _analyticsService.GetHeatmapCells(from, to);
+                var from = new DateTime(year, 1, 1);
+                var to = new DateTime(year, 12, 31);
 
-            Weeks.Clear();
-            SelectedCell = null;
+                var cells = await _analyticsService.GetHeatmapCells(from, to);
 
-            foreach (var chunk in cells.Chunk(7))
-                Weeks.Add(chunk.ToList());
+                Weeks.Clear();
+                SelectedCell = null;
+
+                foreach (var chunk in cells.Chunk(7))
+                    Weeks.Add(chunk.ToList());
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "HeatmapViewModel: Failed to load heatmap data for year {Year}.", year);
+                _messageService.ShowError(ex);
+            }   
         }
 
         private (DateTime from, DateTime to) GetCurrentWeek()

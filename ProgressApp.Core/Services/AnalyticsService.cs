@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
+using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Heatmap;
 using ProgressApp.Core.Models.Journal;
+using Serilog;
 
 namespace ProgressApp.Core.Services
 {
@@ -16,71 +18,92 @@ namespace ProgressApp.Core.Services
             _scopeFactory = scopeFactory;
         }
 
-        //add logging and error handling
         public async Task<DateTime?> GetFirstEntryDateAsync()
         {
-            using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-            var firstEntry = await context.Entries
-                .OrderBy(e => e.Date)
-                .FirstOrDefaultAsync();
-            return firstEntry?.Date;
-        }
+            try
+            {
+                using var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-        public async Task<List<DayCell>> GetAllHeatmapCellsAsync()
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+                var firstEntry = await context.Entries
+                    .AsNoTracking()
+                    .OrderBy(e => e.Date)
+                    .FirstOrDefaultAsync()
+                    .ConfigureAwait(false);
 
-            return await context.Entries
-                .OrderBy(e => e.Date)
-                .Select(e => new DayCell
-                {
-                    Date = e.Date,
-                    Result = e.Result,
-                    Description = e.Description
-                })
-                .ToListAsync();
+                Log.Debug("AnalyticsService: First entry date: {Date}", firstEntry?.Date);
+                return firstEntry?.Date;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "AnalyticsService: Failed to get first entry date.");
+                throw new AppException("Msg_ErrorLoadingHeatmapData"); 
+                //TODO Custom ServiceResult 
+            }
         }
 
         public async Task<List<DayCell>> GetHeatmapCells(DateTime from, DateTime to)
         {
-            using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-
-            var entries = await context.Entries
-                .Where(e => e.Date >= from && e.Date <= to)
-                .OrderBy(e => e.Date)
-                .ToDictionaryAsync(e => e.Date.Date, e => e);
-
-            var cells = new List<DayCell>();
-
-            for (var date = from.Date; date <= to.Date; date = date.AddDays(1))
+            try
             {
-                var entry = entries.GetValueOrDefault(date);
+                using var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-                cells.Add(new DayCell
+                var entries = await context.Entries
+                    .AsNoTracking()
+                    .Where(e => e.Date >= from && e.Date <= to)
+                    .OrderBy(e => e.Date)
+                    .ToDictionaryAsync(e => e.Date.Date, e => e)
+                    .ConfigureAwait(false);
+
+                var cells = new List<DayCell>();
+
+                for (var date = from.Date; date <= to.Date; date = date.AddDays(1))
                 {
-                    Date = date,
-                    Result = entry?.Result,
-                    Description = entry?.Description
-                });
-            }
+                    var entry = entries.GetValueOrDefault(date);
+                    cells.Add(new DayCell
+                    {
+                        Date = date,
+                        Result = entry?.Result,
+                        Description = entry?.Description
+                    });
+                }
 
-            return cells;
+                Log.Debug("AnalyticsService: Fetched {Count} heatmap cells from {From} to {To}.",
+                    cells.Count, from.ToShortDateString(), to.ToShortDateString());
+
+                return cells;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "AnalyticsService: Failed to get heatmap cells from {From} to {To}.", from, to);
+                throw new AppException("Msg_ErrorLoadingHeatmapData"); 
+            }
         }
 
         public async Task<int> GetCurrentStreakAsync()
         {
-            using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+            try
+            {
+                using var scope = _scopeFactory.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            var entries = await context.Entries
-                                .OrderByDescending(e => e.Date)
-                                .Select(e => new { e.Date, e.Result })
-                                .ToListAsync();
+                var entries = await context.Entries
+                    .AsNoTracking()
+                    .OrderByDescending(e => e.Date)
+                    .Select(e => new { e.Date, e.Result })
+                    .ToListAsync()
+                    .ConfigureAwait(false);
 
-            return CalculateCurrentStreak(entries.Select(e => (e.Date, e.Result)));
+                var streak = CalculateCurrentStreak(entries.Select(e => (e.Date, e.Result)));
+                Log.Debug("AnalyticsService: Current streak: {Streak} days.", streak);
+                return streak;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "AnalyticsService: Failed to calculate current streak.");
+                throw new AppException("Msg_ErrorLoadingStreak");
+            }
         }
 
         private int CalculateCurrentStreak(IEnumerable<(DateTime Date, DayResult Result)> entries)
@@ -109,8 +132,8 @@ namespace ProgressApp.Core.Services
                 else if (entry.Date.Date < expectedDate)
                     break;
             }
+
             return streak;
         }
-
     }
 }

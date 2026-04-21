@@ -69,9 +69,9 @@
                                      Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
 
                 <!--rename to ShowAnalyticsCommand and langs keys...-->
-                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Table]}"
+                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Analytics]}"
                                      Icon="{ui:SymbolIcon Symbol=Table24}"
-                                     Command="{Binding ShowTableCommand}" 
+                                     Command="{Binding ShowAnalyticsCommand}" 
                                      Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
 
                 <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Settings]}"

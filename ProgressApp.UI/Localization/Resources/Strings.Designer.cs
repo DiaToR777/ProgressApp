@@ -250,11 +250,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Error loading heatmap data. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingHeatmapData {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingHeatmapData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Unable to load settings: “{0}”. Please try again or check the database.
         /// </summary>
         public static string Msg_ErrorLoadingSetting {
             get {
                 return ResourceManager.GetString("Msg_ErrorLoadingSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error calculating streak. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingStreak {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingStreak", resourceCulture);
             }
         }
         
@@ -472,6 +490,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_UsernameEmpty {
             get {
                 return ResourceManager.GetString("Msg_UsernameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Analytics.
+        /// </summary>
+        public static string NavBtn_Analytics {
+            get {
+                return ResourceManager.GetString("NavBtn_Analytics", resourceCulture);
             }
         }
         

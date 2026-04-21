@@ -3,6 +3,7 @@ using ProgressApp.WpfUI.Localization.Helpers;
 using ProgressApp.WpfUI.ViewModels.Analytics.Enums;
 using ProgressApp.WpfUI.ViewModels.Analytics.Heatmap;
 using ProgressApp.WpfUI.ViewModels.Analytics.Table;
+using Serilog;
 
 namespace ProgressApp.WpfUI.ViewModels.Analytics
 {
@@ -17,7 +18,13 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
         public object? CurrentAnalyticsView
         {
             get => _currentAnalyticsView;
-            set => SetProperty(ref _currentAnalyticsView, value);
+            set
+            {
+                if (SetProperty(ref _currentAnalyticsView, value))
+                {
+                    Log.Information("AnalyticsViewModel: switched to {ViewModelName}", value?.GetType().Name ?? "null");
+                }
+            }
         }
 
         public AnalyticsMode SelectedViewOption
@@ -31,7 +38,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
                 }
             }
         }
-        //TODO add logging and error handling
+        //TODO switch heatmap/table first load option
         public AnalyticsViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -47,21 +54,25 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
 
         private async void UpdateView(AnalyticsMode option)
         {
-            switch (option)
+            try
             {
-                case AnalyticsMode.Table:
-                    var tableVm = _serviceProvider.GetRequiredService<TableViewModel>();
+                switch (option)
+                {
+                    case AnalyticsMode.Table:
+                        var tableVm = _serviceProvider.GetRequiredService<TableViewModel>();
+                        CurrentAnalyticsView = tableVm;
+                        break;
 
-                    CurrentAnalyticsView = tableVm;
-                    break;
-
-                case AnalyticsMode.Heatmap:
-                    var heatmapVm = _serviceProvider.GetRequiredService<HeatmapViewModel>();
-
-                    await heatmapVm.LoadAsync(HeatmapRange.Week); //TODO
-
-                    CurrentAnalyticsView = heatmapVm;
-                    break;
+                    case AnalyticsMode.Heatmap:
+                        var heatmapVm = _serviceProvider.GetRequiredService<HeatmapViewModel>();
+                        await heatmapVm.LoadAsync(HeatmapRange.Week);
+                        CurrentAnalyticsView = heatmapVm;
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "AnalyticsViewModel: Failed to switch to {Option}.", option);
             }
         }
     }
