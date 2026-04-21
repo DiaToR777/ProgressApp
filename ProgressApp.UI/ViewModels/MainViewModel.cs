@@ -1,11 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Enums;
+
+using ProgressApp.WpfUI.ViewModels.Analytics;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
-using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
+
 using Serilog;
 using System.Windows.Input;
 
@@ -37,7 +39,7 @@ namespace ProgressApp.WpfUI.ViewModels
         }
 
         public ICommand ShowTodayCommand { get; }
-        public ICommand ShowTableCommand { get; }
+        public ICommand ShowAnalyticsCommand { get; }
         public ICommand ShowSettingsCommand { get; }
 
         public MainViewModel(IAuthService authSevice, IServiceProvider serviceProvider)
@@ -48,7 +50,7 @@ namespace ProgressApp.WpfUI.ViewModels
             InitializeNavigationAsync();
 
             ShowTodayCommand = new RelayCommand(async _ => ShowToday());
-            ShowTableCommand = new RelayCommand(async _ => ShowTable());
+            ShowAnalyticsCommand = new RelayCommand(async _ => ShowAnalytics());
             ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
         }
 
@@ -97,11 +99,11 @@ namespace ProgressApp.WpfUI.ViewModels
 
             CurrentView = vm;
             IsNavigationVisible = false;
-        }
+         }
 
-        private void ShowTable()
+        private void ShowAnalytics() 
         {
-            CurrentView = _serviceProvider.GetRequiredService<TableViewModel>();
+            CurrentView = _serviceProvider.GetRequiredService<AnalyticsViewModel>();
             IsNavigationVisible = true;
         }
 

@@ -259,8 +259,8 @@ Records imported: {0}</value>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Data management</value>
   </data>
-  <data name="Title_DayDatails" xml:space="preserve">
-    <value>Day Datails</value>
+  <data name="Title_DayDetails" xml:space="preserve">
+    <value>Day Details</value>
   </data>
   <data name="Title_DayDescription" xml:space="preserve">
     <value>Day Description:</value>
@@ -333,7 +333,6 @@ Records imported: {0}</value>
   </data>
   <data name="Msg_PasswordSetSuccess" xml:space="preserve">
     <value>Password set successfully</value>
-    <comment> </comment>
   </data>
   <data name="Msg_PasswordRemovedSuccess" xml:space="preserve">
     <value>Database password removed successfully</value>
@@ -343,5 +342,35 @@ Records imported: {0}</value>
   </data>
   <data name="Btn_SetPassword" xml:space="preserve">
     <value>Set password</value>
+  </data>
+  <data name="AnalyticsMode_Table" xml:space="preserve">
+    <value>Table View</value>
+  </data>
+  <data name="AnalyticsMode_Heatmap" xml:space="preserve">
+    <value>Heatmap view</value>
+  </data>
+  <data name="Range_Week" xml:space="preserve">
+    <value>Week</value>
+  </data>
+  <data name="Range_Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Range_AllTime" xml:space="preserve">
+    <value>All time</value>
+  </data>
+  <data name="Analytics_ViewMode" xml:space="preserve">
+    <value>View mode:</value>
+  </data>
+  <data name="Analytics_Heatmap_HintSelectCell" xml:space="preserve">
+    <value>click on the cell</value>
+  </data>
+  <data name="Msg_ErrorLoadingStreak" xml:space="preserve">
+    <value>Error calculating streak. Check logs</value>
+  </data>
+  <data name="Msg_ErrorLoadingHeatmapData" xml:space="preserve">
+    <value>Error loading heatmap data. Check logs</value>
+  </data>
+  <data name="NavBtn_Analytics" xml:space="preserve">
+    <value>Analytics</value>
   </data>
 </root>

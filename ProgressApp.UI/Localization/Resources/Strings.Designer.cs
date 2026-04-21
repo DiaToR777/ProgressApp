@@ -61,6 +61,42 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на click on the cell.
+        /// </summary>
+        public static string Analytics_Heatmap_HintSelectCell {
+            get {
+                return ResourceManager.GetString("Analytics_Heatmap_HintSelectCell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на View mode:.
+        /// </summary>
+        public static string Analytics_ViewMode {
+            get {
+                return ResourceManager.GetString("Analytics_ViewMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Heatmap view.
+        /// </summary>
+        public static string AnalyticsMode_Heatmap {
+            get {
+                return ResourceManager.GetString("AnalyticsMode_Heatmap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Table View.
+        /// </summary>
+        public static string AnalyticsMode_Table {
+            get {
+                return ResourceManager.GetString("AnalyticsMode_Table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на ProgressApp .
         /// </summary>
         public static string AppTitle {
@@ -214,11 +250,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Error loading heatmap data. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingHeatmapData {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingHeatmapData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Unable to load settings: “{0}”. Please try again or check the database.
         /// </summary>
         public static string Msg_ErrorLoadingSetting {
             get {
                 return ResourceManager.GetString("Msg_ErrorLoadingSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error calculating streak. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingStreak {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingStreak", resourceCulture);
             }
         }
         
@@ -440,6 +494,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Analytics.
+        /// </summary>
+        public static string NavBtn_Analytics {
+            get {
+                return ResourceManager.GetString("NavBtn_Analytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Settings.
         /// </summary>
         public static string NavBtn_Settings {
@@ -512,6 +575,33 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на All time.
+        /// </summary>
+        public static string Range_AllTime {
+            get {
+                return ResourceManager.GetString("Range_AllTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Month.
+        /// </summary>
+        public static string Range_Month {
+            get {
+                return ResourceManager.GetString("Range_Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Week.
+        /// </summary>
+        public static string Range_Week {
+            get {
+                return ResourceManager.GetString("Range_Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Partial Succes.
         /// </summary>
         public static string Result_Partial {
@@ -575,20 +665,20 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Day Datails.
-        /// </summary>
-        public static string Title_DayDatails {
-            get {
-                return ResourceManager.GetString("Title_DayDatails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Day Description:.
         /// </summary>
         public static string Title_DayDescription {
             get {
                 return ResourceManager.GetString("Title_DayDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Day Details.
+        /// </summary>
+        public static string Title_DayDetails {
+            get {
+                return ResourceManager.GetString("Title_DayDetails", resourceCulture);
             }
         }
         
