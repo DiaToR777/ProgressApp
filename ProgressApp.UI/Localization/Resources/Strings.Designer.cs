@@ -133,6 +133,33 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на No.
+        /// </summary>
+        public static string Btn_No {
+            get {
+                return ResourceManager.GetString("Btn_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ok.
+        /// </summary>
+        public static string Btn_Ok {
+            get {
+                return ResourceManager.GetString("Btn_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Open logs folder.
+        /// </summary>
+        public static string Btn_OpenLogs {
+            get {
+                return ResourceManager.GetString("Btn_OpenLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Save.
         /// </summary>
         public static string Btn_SaveDay {
@@ -147,6 +174,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Btn_SetPassword {
             get {
                 return ResourceManager.GetString("Btn_SetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Yes.
+        /// </summary>
+        public static string Btn_Yes {
+            get {
+                return ResourceManager.GetString("Btn_Yes", resourceCulture);
             }
         }
         

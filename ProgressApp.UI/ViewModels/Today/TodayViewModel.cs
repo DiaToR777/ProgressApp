@@ -60,13 +60,13 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                             await _journalService.SaveTodayAsync(Description, SelectedResult);
                             CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
 
-                            _messageService.ShowInfo("Msg_RecordSaved");
+                            await _messageService.ShowInfoAsync("Msg_RecordSaved");
                             Log.Debug("TodayViewModel: UI Success notification shown to user");
                         }
                         catch (AppException ex)
                         {
                             Log.Error(ex, "TodayViewModel: Failed to save entry");
-                            _messageService.ShowError(ex);
+                            await _messageService.ShowErrorAsync(ex);
                         }
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Description)
@@ -83,7 +83,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             catch (AppException ex)
             {
                 Log.Error(ex, "TodayViewModel: Error loading today's entry");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
 

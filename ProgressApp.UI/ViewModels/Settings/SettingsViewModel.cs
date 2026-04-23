@@ -142,19 +142,19 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
 
         private async Task RemovePasswordAsync()
         {
-            var confirmed = _messageService.ShowConfirmation("Msg_RemovePasswordConfirmation");
+            var confirmed = await _messageService.ShowConfirmationAsync("Msg_RemovePasswordConfirmation");
             if (!confirmed) return;
             try
             {
                 await _authService.RemovePasswordAsync();
                 IsDbEncrypted = false;
                 Log.Debug("SettingsVM: IsDbEncrypted = {Value}", IsDbEncrypted);
-                _messageService.ShowInfo("Msg_PasswordRemovedSuccess");
+                await _messageService.ShowInfoAsync("Msg_PasswordRemovedSuccess");
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Error removing password");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
         private async Task ApplyNewPassword()
@@ -167,7 +167,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
 
                     await _authService.ChangePasswordAsync(NewDbPassword);
 
-                    _messageService.ShowInfo("Msg_PasswordChangedSuccess");
+                    await _messageService.ShowInfoAsync("Msg_PasswordChangedSuccess");
 
                     NewDbPassword = string.Empty;
                     ConfirmDbPassword = string.Empty;
@@ -180,7 +180,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                     IsDbEncrypted = true;
 
                     Log.Debug("SettingsVM: IsDbEncrypted = {Value}", IsDbEncrypted);
-                    _messageService.ShowInfo("Msg_PasswordSetSuccess");
+                    await _messageService.ShowInfoAsync("Msg_PasswordSetSuccess");
 
                     NewDbPassword = string.Empty;
                     ConfirmDbPassword = string.Empty;
@@ -190,7 +190,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Password change failed");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
 
@@ -206,19 +206,19 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 return;
             }
 
-            var confirmed = _messageService.ShowConfirmation("Msg_ImportConfirmation");
+            var confirmed = await _messageService.ShowConfirmationAsync("Msg_ImportConfirmation");
 
             if (!confirmed) return;
 
             try
             {
                 var importedCount = await _dataExchangeService.ImportFromCsvAsync(path);
-                _messageService.ShowInfo("Msg_SuccessImportInfo", importedCount);
+                await _messageService.ShowInfoAsync("Msg_SuccessImportInfo", importedCount);
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Import failed");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
         private async Task ExportEntriesAsync()
@@ -240,12 +240,12 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 Log.Information("SettingsVM: Exporting data to {FilePath}", path);
                 await _dataExchangeService.ExportToCsvAsync(path);
 
-                _messageService.ShowInfo("Msg_SuccessExportInfo");
+                await _messageService.ShowInfoAsync("Msg_SuccessExportInfo");
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Error exporting entries");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
         private async Task SaveSettings()
@@ -266,13 +266,13 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 _localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
                 _themeService.SetTheme(SelectedTheme);
 
-                _messageService.ShowInfo("Msg_SettingsSaved");
+                await _messageService.ShowInfoAsync("Msg_SettingsSaved");
                 Log.Information("SettingsVM: Settings updated successfully.");
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Error saving settings");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
         private async void Initialize()
@@ -294,7 +294,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             catch (AppException ex)
             {
                 Log.Error(ex, "SettingsVM: Error while getting settings");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
 
