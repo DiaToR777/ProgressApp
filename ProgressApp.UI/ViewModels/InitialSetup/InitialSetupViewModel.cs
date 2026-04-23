@@ -92,7 +92,7 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                     catch (AppException ex)
                     {
                         Log.Error(ex, "InitialSetup: Critical error during setup finish");
-                        _messageService.ShowError(ex);
+                        await messageService.ShowErrorAsync(ex);
                     }
                     finally
                     {

@@ -373,4 +373,16 @@
   <data name="NavBtn_Analytics" xml:space="preserve">
     <value>Аналітика</value>
   </data>
+  <data name="Btn_Ok" xml:space="preserve">
+    <value>Ок</value>
+  </data>
+  <data name="Btn_Yes" xml:space="preserve">
+    <value>Так</value>
+  </data>
+  <data name="Btn_No" xml:space="preserve">
+    <value>Ні</value>
+  </data>
+  <data name="Btn_OpenLogs" xml:space="preserve">
+    <value>Відкрити логи</value>
+  </data>
 </root>

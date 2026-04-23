@@ -130,7 +130,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 }, _ => CanGoForward());
         }
 
-        private async void GetFirstEntryDate()  //TODO try catch error handling and logging
+        private async void GetFirstEntryDate() 
         {
             try
             {
@@ -142,7 +142,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             catch (AppException ex)
             {
                 Log.Error(ex, "HeatmapViewModel: Failed to get first entry date.");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
 
@@ -220,7 +220,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             catch (AppException ex)
             {
                 Log.Error(ex, "HeatmapViewModel: Failed to load heatmap for range {Range}.", range);
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
 
             }
         }
@@ -245,7 +245,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             catch (AppException ex)
             {
                 Log.Error(ex, "HeatmapViewModel: Failed to load heatmap data for year {Year}.", year);
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }   
         }
 
