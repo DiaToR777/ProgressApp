@@ -29,8 +29,7 @@ namespace ProgressAppTest.ViewModelTests
         [TestMethod]
         public void Constructor_ShouldSetDefaultLanguage()
         {
-            var vm = new InitialSetupViewModel(_settingsService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
-
+            var vm = CreateViewModel();
             vm.SelectedLanguage.Should().NotBeNull();
             vm.SelectedLanguage.CultureCode.Should().Be("en-US"); //first language in config
         }
@@ -38,11 +37,11 @@ namespace ProgressAppTest.ViewModelTests
         [TestMethod]
         public void FinishCommand_CanExecute_ShouldReturnFalse_WhenPasswordsDoNotMatch()
         {
-            var vm = new InitialSetupViewModel(_settingsService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
+            var vm = CreateViewModel();
             vm.Username = "test";
             vm.Goal = "test";
             vm.Password = "testpass";
-            vm.ConfirmPassword = "differentpass"; 
+            vm.ConfirmPassword = "differentpass";
 
             vm.FinishCommand.CanExecute(null).Should().BeFalse();
         }
@@ -51,7 +50,7 @@ namespace ProgressAppTest.ViewModelTests
         public async Task FinishCommand_WhenValid_ShouldFlowCorrect()
         {
             // Arrange
-            var vm = new InitialSetupViewModel(_settingsService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
+            var vm = CreateViewModel();
             vm.Username = "test";
             vm.Goal = "test";
             vm.Password = "testpass";
@@ -65,7 +64,7 @@ namespace ProgressAppTest.ViewModelTests
             // Act
             vm.FinishCommand.Execute(null);
 
-            await Task.Delay(100); 
+            await Task.Delay(100);
 
             // Assert
             _authService.Verify(a => a.RegisterAsync("testpass"), Times.Once);
@@ -78,7 +77,7 @@ namespace ProgressAppTest.ViewModelTests
         public async Task FinishCommand_WhenException_ShouldShowError()
         {
             // Arrange
-            var vm = new InitialSetupViewModel(_settingsService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
+            var vm = CreateViewModel();
             vm.Username = "username";
             vm.Goal = "test";
             vm.Password = "123";
@@ -93,6 +92,11 @@ namespace ProgressAppTest.ViewModelTests
 
             // Assert
             _messageService.Verify(m => m.ShowErrorAsync(ex), Times.Once);
+        }
+
+        private InitialSetupViewModel CreateViewModel()
+        {
+            return new InitialSetupViewModel(_settingsService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
         }
     }
 }
