@@ -151,7 +151,7 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Open logs folder.
+        ///   Ищет локализованную строку, похожую на Open logs.
         /// </summary>
         public static string Btn_OpenLogs {
             get {
@@ -665,6 +665,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на It looks a bit empty here. Start by adding your first journal entry to track your progress..
+        /// </summary>
+        public static string Subtitle_EmptyTable {
+            get {
+                return ResourceManager.GetString("Subtitle_EmptyTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Appearance.
         /// </summary>
         public static string Title_Appearance {
@@ -733,6 +742,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_Description {
             get {
                 return ResourceManager.GetString("Title_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No entries yet.
+        /// </summary>
+        public static string Title_EmptyTable {
+            get {
+                return ResourceManager.GetString("Title_EmptyTable", resourceCulture);
             }
         }
         

@@ -385,4 +385,10 @@
   <data name="Btn_OpenLogs" xml:space="preserve">
     <value>Відкрити логи</value>
   </data>
+  <data name="Title_EmptyTable" xml:space="preserve">
+    <value>Тут поки що порожньо</value>
+  </data>
+  <data name="Subtitle_EmptyTable" xml:space="preserve">
+    <value>Ви ще не додали жодного запису. Створіть перший запис, щоб почати відстежувати свій прогрес.</value>
+  </data>
 </root>

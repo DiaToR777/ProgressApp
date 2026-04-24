@@ -1,8 +1,6 @@
-﻿using Accessibility;
-using ProgressApp.Core.Exceptions;
+﻿using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
-using ProgressApp.WpfUI.Services.Message;
 using Serilog;
 using System.Collections.ObjectModel;
 
@@ -14,7 +12,36 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
         private readonly IMessageService _messageService;
 
         private JournalEntry? _selectedEntry;
+
         public ObservableCollection<JournalEntry> Entries { get; } = new();
+
+        private bool _showTable;
+        public bool ShowTable
+        {
+            get => _showTable;
+            set => SetProperty(ref _showTable, value);
+        }
+
+        private bool _showEmptyState;
+        public bool ShowEmptyState
+        {
+            get => _showEmptyState;
+            set => SetProperty(ref _showEmptyState, value);
+        }
+
+        private void UpdateUIState()
+        {
+            if (Entries.Count > 0)
+            {
+                ShowTable = true;
+                ShowEmptyState = false;
+            }
+            else
+            {
+                ShowTable = false;
+                ShowEmptyState = true;
+            }
+        }
         public JournalEntry? SelectedEntry
         {
             get => _selectedEntry;
@@ -25,8 +52,8 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
         {
             _service = service;
             _messageService = messageService;
+            Entries.CollectionChanged += (s, e) => UpdateUIState();
 
-            Log.Debug("TableViewModel: Fetching all journal entries...");
             GetEntries();
         }
 
@@ -41,7 +68,8 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
                 {
                     Entries.Add(entry);
                 }
-                Log.Information("TableViewModel: Successfully loaded {Count} entries", Entries.Count);
+
+                UpdateUIState();
             }
             catch (AppException ex)
             {
@@ -49,6 +77,5 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
                 await _messageService.ShowErrorAsync(ex);
             }
         }
-
     }
 }
