@@ -1,8 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
+using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
-using ProgressApp.WpfUI.ViewModels.Table;
+using ProgressApp.WpfUI.ViewModels.Analytics.Table;
 
 namespace ProgressAppTest.ViewModelTests
 {
@@ -20,20 +21,45 @@ namespace ProgressAppTest.ViewModelTests
         }
 
         [TestMethod]
-        public void Constructor_ShouldPopulateEntriesCollection()
+        public async Task GetEntries_WhenDataExists_ShouldShowTableAndHideEmptyState()
         {
             var testEntries = new List<JournalEntry>
             {
-                  new JournalEntry { Id = 1, Date = DateTime.Today, Description = "Entry 1" },
-                  new JournalEntry { Id = 2, Date = DateTime.Today.AddDays(-1), Description = "Entry 2" }
+                 new JournalEntry { Id = 1, Description = "Day 1" }
             };
-
-            _serviceMock.Setup(s => s.GetAllEntries()).Returns(testEntries);
+            _serviceMock.Setup(s => s.GetAllEntriesAsync()).ReturnsAsync(testEntries);
 
             var vm = new TableViewModel(_serviceMock.Object, _messageServiceMock.Object);
+            await Task.Delay(50); 
 
-            vm.Entries.Should().HaveCount(2);
-            vm.Entries.Should().ContainSingle(e => e.Description == "Entry 1");
+            vm.Entries.Should().HaveCount(1);
+            vm.ShowTable.Should().BeTrue();
+            vm.ShowEmptyState.Should().BeFalse();
+        }
+
+        [TestMethod]
+        public async Task GetEntries_WhenNoData_ShouldShowEmptyState()
+        {
+            _serviceMock.Setup(s => s.GetAllEntriesAsync()).ReturnsAsync(new List<JournalEntry>());
+
+            var vm = new TableViewModel(_serviceMock.Object, _messageServiceMock.Object);
+            await Task.Delay(50);
+
+            vm.Entries.Should().BeEmpty();
+            vm.ShowTable.Should().BeFalse();
+            vm.ShowEmptyState.Should().BeTrue();
+        }
+
+        [TestMethod]
+        public async Task GetEntries_WhenServiceFails_ShouldShowError()
+        {
+            var ex = new AppException("DB Error", "Title");
+            _serviceMock.Setup(s => s.GetAllEntriesAsync()).ThrowsAsync(ex);
+
+            var vm = new TableViewModel(_serviceMock.Object, _messageServiceMock.Object);
+            await Task.Delay(50);
+
+            _messageServiceMock.Verify(m => m.ShowErrorAsync(ex), Times.Once);
         }
     }
 }
