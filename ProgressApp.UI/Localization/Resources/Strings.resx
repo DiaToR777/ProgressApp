@@ -385,4 +385,10 @@ Records imported: {0}</value>
   <data name="Btn_OpenLogs" xml:space="preserve">
     <value>Open logs</value>
   </data>
+  <data name="Title_EmptyTable" xml:space="preserve">
+    <value>No entries yet</value>
+  </data>
+  <data name="Subtitle_EmptyTable" xml:space="preserve">
+    <value>It looks a bit empty here. Start by adding your first journal entry to track your progress.</value>
+  </data>
 </root>

@@ -13,8 +13,6 @@
 
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
-        <conv:InverseBoolConverter x:Key="InverseBool" />
-
         <conv:InverseBoolConverter x:Key="InverseBoolToVis" />
     </UserControl.Resources>
 
