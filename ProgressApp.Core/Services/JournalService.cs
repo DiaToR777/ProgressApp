@@ -36,7 +36,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Error while checking for today's entry in database.");
-                throw new AppException("Msg_ErrorLoadingData");
+                throw new AppException("Msg_ErrorLoadingData", isCritical: true);
             }
         }
 
@@ -82,7 +82,7 @@ namespace ProgressApp.Core.Services
             {
 
                 Log.Error(ex, "Error occurred while saving today's entry");
-                throw new AppException("Msg_SaveEntryError");
+                throw new AppException("Msg_SaveEntryError", isCritical: true);
             }
         }
 
@@ -105,7 +105,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to fetch all journal entries.");
-                throw new AppException("Msg_ErrorLoadingData");
+                throw new AppException("Msg_ErrorLoadingData", isCritical: true);
             }
         }                
     }

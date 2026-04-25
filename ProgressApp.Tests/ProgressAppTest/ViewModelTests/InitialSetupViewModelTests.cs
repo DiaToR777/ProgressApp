@@ -79,7 +79,7 @@ namespace ProgressAppTest.ViewModelTests
             vm.Password = "123";
             vm.ConfirmPassword = "123";
 
-            var ex = new AppException("Registration Failed", "Error");
+            var ex = new AppException("Registration Failed", isCritical: false, "Error");
             _authService.Setup(a => a.RegisterAsync(It.IsAny<string>())).ThrowsAsync(ex);
 
             vm.FinishCommand.Execute(null);

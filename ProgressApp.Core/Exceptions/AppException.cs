@@ -6,17 +6,20 @@ namespace ProgressApp.Core.Exceptions
         public string ResourceKey { get; }
         public object[]? Args { get; }
 
-        public AppException(string errorKey, params object[] args) : base(errorKey)
+        public bool IsCritical { get; } = false;
+        public AppException(string errorKey, bool isCritical = false, params object[] args) : base(errorKey)
         {
             ResourceKey = errorKey;
             Args = args;
+            IsCritical = isCritical;
         }
 
-        public AppException(string errorKey, Exception inner, params object[] args)
+        public AppException(string errorKey, bool isCritical, Exception inner, params object[] args)
             : base(errorKey, inner)
         {
             ResourceKey = errorKey;
             Args = args;
+            IsCritical = isCritical;
         }
     }
 }

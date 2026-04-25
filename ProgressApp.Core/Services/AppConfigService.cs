@@ -29,7 +29,7 @@ namespace ProgressApp.Core.Services
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "AppConfig: Failed to load config");
+                Log.Error(ex, "AppConfig: Failed to load config" );
                 return new AppConfig();
             }
         }
@@ -45,7 +45,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "AppConfig: Failed to save config");
-                throw new AppException("Msg_SaveSettingsError"); 
+                throw new AppException("Msg_SaveSettingsError", isCritical: true); 
             }
         }
 

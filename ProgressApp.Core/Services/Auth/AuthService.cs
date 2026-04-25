@@ -37,7 +37,7 @@ namespace ProgressApp.Core.Services.Auth
             catch (Exception ex)
             {
                 Log.Error(ex, "AuthService: Error while checking database file existence");
-                throw new AppException("Msg_ErrorDbAccessFailed");
+                throw new AppException("Msg_ErrorDbAccessFailed", isCritical: true);
             }
         }
         public async Task<bool> LoginAsync(string password)
@@ -62,7 +62,7 @@ namespace ProgressApp.Core.Services.Auth
             catch (Exception ex)
             {
                 Log.Error(ex, "AuthService: Critical error during login process");
-                throw new AppException("Msg_ErrorLoginFailed");
+                throw new AppException("Msg_ErrorLoginFailed", isCritical: true);
             }
         }
 
@@ -88,7 +88,7 @@ namespace ProgressApp.Core.Services.Auth
             catch (Exception ex)
             {
                 Log.Fatal(ex, "AuthService: FAILED to register new database. Path: {Path}", _dbState.DbPath);
-                throw new AppException("Msg_ErrorSetupFailed");
+                throw new AppException("Msg_ErrorSetupFailed", isCritical: true);
             }
         }
 
@@ -117,7 +117,7 @@ namespace ProgressApp.Core.Services.Auth
             {
                 if (File.Exists(tempPath)) File.Delete(tempPath);
                 Log.Error(ex, "AuthService: Error during password removal");
-                throw new AppException("Msg_ChangePasswordFailedError");
+                throw new AppException("Msg_ChangePasswordFailedError", isCritical: true);
             }
         }
 
@@ -184,7 +184,7 @@ namespace ProgressApp.Core.Services.Auth
             catch (Exception ex)
             {
                 Log.Error(ex, "AuthService: Error during password change");
-                throw new AppException("Msg_ChangePasswordFailedError"); 
+                throw new AppException("Msg_ChangePasswordFailedError", isCritical: true); 
             }
         }
 

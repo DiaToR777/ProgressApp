@@ -23,18 +23,22 @@ namespace ProgressApp.WpfUI.Services.Message
         public async Task ShowErrorAsync(AppException ex)
         {
             string message = GetFormattedText(ex.ResourceKey, ex.Args);
-
             string title = GetLocalizedText("Title_Error");
 
             var uiMessageBox = CreateMessageBox(title, message, SymbolRegular.ErrorCircle24, "SystemFillColorCriticalBrush");
 
-            uiMessageBox.SecondaryButtonText = GetLocalizedText("Btn_OpenLogs");
-            uiMessageBox.SecondaryButtonAppearance = ControlAppearance.Transparent;
+            if (ex.IsCritical)
+            {
+                uiMessageBox.SecondaryButtonText = GetLocalizedText("Btn_OpenLogs");
+                uiMessageBox.SecondaryButtonAppearance = ControlAppearance.Transparent;
+            }
 
             var result = await uiMessageBox.ShowDialogAsync();
 
-            if (result == Wpf.Ui.Controls.MessageBoxResult.Secondary)
-                OpenLogsFolder(); 
+            if (ex.IsCritical && result == Wpf.Ui.Controls.MessageBoxResult.Secondary)
+            {
+                OpenLogsFolder();
+            }
         }
 
         private void OpenLogsFolder()
