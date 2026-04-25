@@ -53,7 +53,7 @@ namespace ProgressAppTest.ViewModelTests
         [TestMethod]
         public async Task GetEntries_WhenServiceFails_ShouldShowError()
         {
-            var ex = new AppException("DB Error", "Title");
+            var ex = new AppException("DB Error", isCritical: true, "Title");
             _serviceMock.Setup(s => s.GetAllEntriesAsync()).ThrowsAsync(ex);
 
             var vm = new TableViewModel(_serviceMock.Object, _messageServiceMock.Object);
