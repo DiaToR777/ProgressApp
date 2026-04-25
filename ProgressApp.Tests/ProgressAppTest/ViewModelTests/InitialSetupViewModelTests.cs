@@ -49,7 +49,6 @@ namespace ProgressAppTest.ViewModelTests
         [TestMethod]
         public async Task FinishCommand_WhenValid_ShouldFlowCorrect()
         {
-            // Arrange
             var vm = CreateViewModel();
             vm.Username = "test";
             vm.Goal = "test";
@@ -61,12 +60,10 @@ namespace ProgressAppTest.ViewModelTests
 
             _authService.Setup(a => a.RegisterAsync(vm.Password)).ReturnsAsync(true);
 
-            // Act
             vm.FinishCommand.Execute(null);
 
             await Task.Delay(100);
 
-            // Assert
             _authService.Verify(a => a.RegisterAsync("testpass"), Times.Once);
             _settingsService.Verify(s => s.SaveGoalAsync("test"), Times.Once);
             _appConfigService.Verify(c => c.Save(It.IsAny<AppConfig>()), Times.Once);
@@ -76,7 +73,6 @@ namespace ProgressAppTest.ViewModelTests
         [TestMethod]
         public async Task FinishCommand_WhenException_ShouldShowError()
         {
-            // Arrange
             var vm = CreateViewModel();
             vm.Username = "username";
             vm.Goal = "test";
@@ -86,11 +82,9 @@ namespace ProgressAppTest.ViewModelTests
             var ex = new AppException("Registration Failed", "Error");
             _authService.Setup(a => a.RegisterAsync(It.IsAny<string>())).ThrowsAsync(ex);
 
-            // Act
             vm.FinishCommand.Execute(null);
             await Task.Delay(100);
 
-            // Assert
             _messageService.Verify(m => m.ShowErrorAsync(ex), Times.Once);
         }
 

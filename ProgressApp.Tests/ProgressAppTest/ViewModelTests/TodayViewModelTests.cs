@@ -39,7 +39,6 @@ namespace ProgressAppTest.ViewModelTests
         [TestMethod]
         public async Task SaveCommand_ShouldUpdateStreakAfterSaving()
         {
-            // Arrange
             _serviceMock.Setup(s => s.GetTodayAsync()).ReturnsAsync((JournalEntry)null);
             _analyticsMock.Setup(a => a.GetCurrentStreakAsync()).ReturnsAsync(10); 
 
@@ -50,11 +49,9 @@ namespace ProgressAppTest.ViewModelTests
 
             _analyticsMock.Setup(a => a.GetCurrentStreakAsync()).ReturnsAsync(11);
 
-            // Act
             vm.SaveCommand.Execute(null);
             await Task.Delay(100);
 
-            // Assert
             _serviceMock.Verify(s => s.SaveTodayAsync("Valid description", It.IsAny<DayResult>()), Times.Once);
             vm.CurrentStreak.Should().Be(11); 
             _messageMock.Verify(m => m.ShowInfoAsync("Msg_RecordSaved"), Times.Once);
