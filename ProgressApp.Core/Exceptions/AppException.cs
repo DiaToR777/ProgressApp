@@ -14,11 +14,12 @@ namespace ProgressApp.Core.Exceptions
             IsCritical = isCritical;
         }
 
-        public AppException(string errorKey, Exception inner, params object[] args)
+        public AppException(string errorKey, bool isCritical, Exception inner, params object[] args)
             : base(errorKey, inner)
         {
             ResourceKey = errorKey;
             Args = args;
+            IsCritical = isCritical;
         }
     }
 }
