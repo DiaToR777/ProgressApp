@@ -37,7 +37,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "AnalyticsService: Failed to get first entry date.");
-                throw new AppException("Msg_ErrorLoadingHeatmapData"); 
+                throw new AppException("Msg_ErrorLoadingHeatmapData", isCritical: true); 
                 //TODO Custom ServiceResult 
             }
         }
@@ -77,7 +77,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "AnalyticsService: Failed to get heatmap cells from {From} to {To}.", from, to);
-                throw new AppException("Msg_ErrorLoadingHeatmapData"); 
+                throw new AppException("Msg_ErrorLoadingHeatmapData", isCritical: true); 
             }
         }
 
@@ -102,7 +102,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "AnalyticsService: Failed to calculate current streak.");
-                throw new AppException("Msg_ErrorLoadingStreak");
+                throw new AppException("Msg_ErrorLoadingStreak", isCritical: true);
             }
         }
 

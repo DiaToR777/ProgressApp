@@ -64,7 +64,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex) when (ex is not AppException)
             {
                 Log.Error(ex, "Failed to export data to {FilePath}", filePath);
-                throw new AppException("Msg_ExportError", ex);
+                throw new AppException("Msg_ExportError", isCritical: true, ex);
             }
         }
 
@@ -90,10 +90,10 @@ namespace ProgressApp.Core.Services
 
         private async Task<(IEnumerable<string> entries, IEnumerable<string> settings)> PrepareSourceDataAsync(string filePath)
         {
-            if (!File.Exists(filePath)) throw new AppException("Msg_NoFIleError");
+            if (!File.Exists(filePath)) throw new AppException("Msg_NoFIleError") ;
 
             var allLines = await File.ReadAllLinesAsync(filePath);
-            if (allLines.All(l => string.IsNullOrWhiteSpace(l)) || allLines.Length == 0) throw new AppException("Msg_FileIsEmpty");//TODO
+            if (allLines.All(l => string.IsNullOrWhiteSpace(l)) || allLines.Length == 0) throw new AppException("Msg_FileIsEmpty");
 
             int separatorIndex = Array.FindIndex(allLines, l => l.StartsWith("---Settings---"));
 
@@ -116,7 +116,7 @@ namespace ProgressApp.Core.Services
                 foreach (var record in csv.GetRecords<JournalEntry>())
                 {
                     if (string.IsNullOrWhiteSpace(record.Description))
-                        throw new AppException("Msg_EmptyDescriptionImportError", csv.Context.Parser.Row);
+                        throw new AppException("Msg_EmptyDescriptionImportError", isCritical: false, csv.Context.Parser.Row);
 
                     record.Id = 0;
                     entries.Add(record);
@@ -125,7 +125,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex) when (ex is not AppException)
             {
                 Log.Warning(ex, "CSV parsing error");
-                throw new AppException("Msg_ImportCsvError", ex);
+                throw new AppException("Msg_ImportCsvError", isCritical:false, ex);
             }
             return entries;
         }
@@ -172,7 +172,7 @@ namespace ProgressApp.Core.Services
                 }
 
                 Log.Error(ex, "DB Import Error");
-                throw new AppException("Msg_DbSaveWhileImportError", ex); 
+                throw new AppException("Msg_DbSaveWhileImportError", isCritical: true, ex); 
             }
         }
     }
