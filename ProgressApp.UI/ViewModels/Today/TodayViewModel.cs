@@ -103,5 +103,6 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 SelectedResult = DayResult.PartialSuccess;
             }
         }
+
     }
 }

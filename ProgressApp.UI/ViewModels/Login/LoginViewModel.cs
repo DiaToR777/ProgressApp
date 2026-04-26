@@ -7,7 +7,7 @@ namespace ProgressApp.WpfUI.ViewModels.Login
 {
     public class LoginViewModel : ViewModelBase
     {
-        public Action? Completed;
+        public Action? Completed; //TOOO Event
 
         private readonly IAuthService _authService;
         private readonly IMessageService _messageService;

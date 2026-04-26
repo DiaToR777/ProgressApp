@@ -20,7 +20,12 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
         private DateTime _currentDate = DateTime.Today;
         public ObservableCollection<List<DayCell>> Weeks { get; } = new();
 
+        public IEnumerable<LocalizedEnum<HeatmapRange>> Ranges { get; }
+
+
         private DayCell? _selectedCell;
+        private HeatmapRange _selectedRange = HeatmapRange.Week;
+
         public DayCell? SelectedCell
         {
             get => _selectedCell;
@@ -40,12 +45,6 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             _ => true
         };
 
-        public ICommand PreviousPeriodCommand { get; }
-        public ICommand NextPeriodCommand { get; }
-
-        public IEnumerable<LocalizedEnum<HeatmapRange>> Ranges { get; }
-
-        private HeatmapRange _selectedRange = HeatmapRange.Week;
         public HeatmapRange SelectedRange
         {
             get => _selectedRange;
@@ -83,7 +82,8 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             OnPropertyChanged(nameof(PeriodTitle));
             OnPropertyChanged(nameof(ShowNavigation));
         }
-
+        public ICommand PreviousPeriodCommand { get; }
+        public ICommand NextPeriodCommand { get; }
         public ICommand CellClickCommand { get; }
 
         public HeatmapViewModel(IAnalyticsService analyticsService, IMessageService messageService)

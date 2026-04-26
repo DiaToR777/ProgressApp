@@ -1,13 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Enums;
-
 using ProgressApp.WpfUI.ViewModels.Analytics;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Today;
-
 using Serilog;
 using System.Windows.Input;
 

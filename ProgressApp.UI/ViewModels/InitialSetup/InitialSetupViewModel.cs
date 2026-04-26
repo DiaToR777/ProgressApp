@@ -16,7 +16,6 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
         private readonly IAuthService _authService;
         private readonly IAppConfigService _appConfigService;
 
-
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
         private string _username = string.Empty;
