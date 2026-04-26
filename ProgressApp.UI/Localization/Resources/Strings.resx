@@ -132,8 +132,23 @@
   <data name="Error_IncorrectPassword" xml:space="preserve">
     <value>Incorrect password. Please try again</value>
   </data>
+  <data name="Msg_DbSaveWhileImportError" xml:space="preserve">
+    <value>Database save error. Check logs</value>
+  </data>
   <data name="Msg_DescriptionEmpty" xml:space="preserve">
     <value>Description cannot be empty!</value>
+  </data>
+  <data name="Msg_DuplicateRecordsImportError" xml:space="preserve">
+    <value>Duplicate records found. Each record must be unique.</value>
+  </data>
+  <data name="Msg_ImportCsvError" xml:space="preserve">
+    <value>Error while import. Check logs</value>
+  </data>
+  <data name="Msg_EmptyDescriptionImportError" xml:space="preserve">
+    <value>Error during import: The description cannot be empty. Line: {0}</value>
+  </data>
+  <data name="Msg_EntriesIsEmptyImportError" xml:space="preserve">
+    <value>No records to import</value>
   </data>
   <data name="Msg_ErrorDbAccessFailed" xml:space="preserve">
     <value>Database access error. Check logs</value>
@@ -150,11 +165,32 @@
   <data name="Msg_ErrorSetupFailed" xml:space="preserve">
     <value>Error while database creation. Check logs</value>
   </data>
+  <data name="Msg_ExportError" xml:space="preserve">
+    <value>The file could not be saved. It may be open in another program, or the program does not have write permissions</value>
+  </data>
+  <data name="Msg_FileIsEmpty" xml:space="preserve">
+    <value>The file is empty</value>
+  </data>
   <data name="Msg_FinishSetupError" xml:space="preserve">
     <value>Critical error during setup finish. Check logs</value>
   </data>
   <data name="Msg_GoalEmpty" xml:space="preserve">
     <value>Goal cannot be empty!</value>
+  </data>
+  <data name="Msg_GoalIsEmptyImportError" xml:space="preserve">
+    <value>Goal in the file is empty.</value>
+  </data>
+  <data name="Msg_ImportConfirmation" xml:space="preserve">
+    <value>All current records will be deleted and replaced with the data from the file. Are you sure?</value>
+  </data>
+  <data name="Msg_NoEntriesToExportError" xml:space="preserve">
+    <value>No records to export</value>
+  </data>
+  <data name="Msg_NoFIleError" xml:space="preserve">
+    <value>The selected file was not found.</value>
+  </data>
+  <data name="Msg_NoGoalToExportError" xml:space="preserve">
+    <value>Goal not set. Set a goal before exporting</value>
   </data>
   <data name="Msg_RecordSaved" xml:space="preserve">
     <value>Record saved!</value>
@@ -167,6 +203,13 @@
   </data>
   <data name="Msg_SettingsSaved" xml:space="preserve">
     <value>Settings saved</value>
+  </data>
+  <data name="Msg_SuccessExportInfo" xml:space="preserve">
+    <value>Export completed successfully!</value>
+  </data>
+  <data name="Msg_SuccessImportInfo" xml:space="preserve">
+    <value>Data imported successfully!
+Records imported: {0}</value>
   </data>
   <data name="Msg_ThemeReadError" xml:space="preserve">
     <value>Failed to read Theme from database. Check logs</value>
@@ -210,11 +253,14 @@
   <data name="Title_Appearance" xml:space="preserve">
     <value>Appearance</value>
   </data>
+  <data name="Title_Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
   <data name="Title_DataManagement" xml:space="preserve">
     <value>Data management</value>
   </data>
-  <data name="Title_DayDatails" xml:space="preserve">
-    <value>Day Datails</value>
+  <data name="Title_DayDetails" xml:space="preserve">
+    <value>Day Details</value>
   </data>
   <data name="Title_DayDescription" xml:space="preserve">
     <value>Day Description:</value>
@@ -260,5 +306,89 @@
   </data>
   <data name="Title_YourGoal" xml:space="preserve">
     <value>Your goal</value>
+  </data>
+  <data name="Title_ImportData" xml:space="preserve">
+    <value>Import Data</value>
+  </data>
+  <data name="Title_ExportData" xml:space="preserve">
+    <value>Export Data</value>
+  </data>
+  <data name="Msg_PasswordChangedSuccess" xml:space="preserve">
+    <value>Password changed successfully</value>
+  </data>
+  <data name="Msg_ChangePasswordFailedError" xml:space="preserve">
+    <value>Failed to change password. Check logs</value>
+  </data>
+  <data name="Title_ConfirmPassword" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Btn_ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Btn_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Btn_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Msg_PasswordSetSuccess" xml:space="preserve">
+    <value>Password set successfully</value>
+  </data>
+  <data name="Msg_PasswordRemovedSuccess" xml:space="preserve">
+    <value>Database password removed successfully</value>
+  </data>
+  <data name="Msg_RemovePasswordConfirmation" xml:space="preserve">
+    <value>Are you sure you want to remove the database password? Your data will no longer be encrypted</value>
+  </data>
+  <data name="Btn_SetPassword" xml:space="preserve">
+    <value>Set password</value>
+  </data>
+  <data name="AnalyticsMode_Table" xml:space="preserve">
+    <value>Table View</value>
+  </data>
+  <data name="AnalyticsMode_Heatmap" xml:space="preserve">
+    <value>Heatmap view</value>
+  </data>
+  <data name="Range_Week" xml:space="preserve">
+    <value>Week</value>
+  </data>
+  <data name="Range_Month" xml:space="preserve">
+    <value>Month</value>
+  </data>
+  <data name="Range_AllTime" xml:space="preserve">
+    <value>All time</value>
+  </data>
+  <data name="Analytics_ViewMode" xml:space="preserve">
+    <value>View mode:</value>
+  </data>
+  <data name="Analytics_Heatmap_HintSelectCell" xml:space="preserve">
+    <value>click on the cell</value>
+  </data>
+  <data name="Msg_ErrorLoadingStreak" xml:space="preserve">
+    <value>Error calculating streak. Check logs</value>
+  </data>
+  <data name="Msg_ErrorLoadingHeatmapData" xml:space="preserve">
+    <value>Error loading heatmap data. Check logs</value>
+  </data>
+  <data name="NavBtn_Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
+  <data name="Btn_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="Btn_Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="Btn_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Btn_OpenLogs" xml:space="preserve">
+    <value>Open logs</value>
+  </data>
+  <data name="Title_EmptyTable" xml:space="preserve">
+    <value>No entries yet</value>
+  </data>
+  <data name="Subtitle_EmptyTable" xml:space="preserve">
+    <value>It looks a bit empty here. Start by adding your first journal entry to track your progress.</value>
   </data>
 </root>

@@ -1,39 +1,45 @@
 # ProgressApp 🚀
 
 ### [UA] Про застосунок
-**ProgressApp** — це простий та ефективний інструмент для саморозвитку. Застосунок допомагає вести щоденник, відстежувати прогрес у боротьбі зі звичками та візуалізувати свій шлях до мети.
+ProgressApp — простий та ефективний інструмент для саморозвитку. 
+Застосунок допомагає вести щоденник, відстежувати щоденний прогрес та 
+візуалізувати свій шлях до мети.
 
 ### [EN] About The App
-**ProgressApp** is a simple and effective tool for self-improvement. The application helps you maintain a journal, track progress in overcoming habits, and visualize your journey toward your goals.
+ProgressApp is a simple and effective self-improvement tool.
+The application helps you maintain a journal, track daily progress,
+and visualize your journey toward your goals.
 
 ---
 
 ## 🛠 Tech Stack / Стек технологій
-* **Language:** C# (.NET 8/9)
-* **UI:** WPF (XAML)
-* **Database:** SQLite + Entity Framework Core
-* **Architecture:** MVVM (Work in progress)
+* Language: C# (.NET 8)
+* UI: WPF + WPF-UI (Fluent Design)
+* Database: SQLite + Entity Framework Core + SQLCipher (encryption)
+* Architecture: Clean Architecture, MVVM
+* DI: Microsoft.Extensions.DependencyInjection
+* Logging: Serilog
+* Testing: MSTest + Moq
 
 ---
 
 ## ✨ Features / Функції
 
-| Feature / Функція | Status / Статус | Description / Опис |
-| :--- | :--- | :--- |
-| **Daily Journal** | ✅ Done | Recording daily thoughts and events. / Запис щоденних думок та подій. |
-| **Data Persistence** | ✅ Done | SQLite database integration. / Інтеграція бази даних SQLite. |
-| **History View** | ✅ Done | View past entries in a structured table. / Перегляд минулих записів у вигляді таблиці. |
-| **Charts & Analytics** | 🚧 In Progress | Visualizing progress over time. / Візуалізація прогресу у часі. |
-| **Habit Tracking** | 🚧 In Progress | Streak counter for overcoming habits. / Лічильник "стріків" для боротьби зі звичками. |
-| **MVVM Refactoring** | ✅ Done | Decoupling logic from View. / Розділення логіки та інтерфейсу. |
-| **Reminders** | 📅 Planned | Desktop notifications and alerts. / Сповіщення на робочий стіл. |
+| Feature / Функція | Status / Статус |
+| :--- | :--- |
+| Daily Journal | ✅ Done |
+| History Table | ✅ Done |
+| Streak Tracking | ✅ Done |
+| DB Encryption & Auth | ✅ Done |
+| Password Management | ✅ Done |
+| Export / Import CSV | ✅ Done |
+| Localization (EN/UA) | ✅ Done |
+| Light / Dark Theme | ✅ Done |
+| Charts & Heatmap | ✅ Done (Heatmap)|
+| Reminders & Notifications | 📅 Planned |
+| Cloud Sync | 📅 Planned |
 
 ---
 
-## 🚀 Future Goals / Плани на майбутнє
-- [ ] Add Unit Tests for core logic / Додати Юніт-тести для базової логіки.
-- [ ] Polish UI with custom styles / Покращити інтерфейс за допомогою кастомних стилів.
-
----
-*Created by a developer with a goal to reach Junior+ level by 2028.*
-*Проєкт створений розробником, який планує вийти на рівень Junior+ до 2028 року.*
+*Created by a developer on the way to Junior level.*
+*Проєкт створений розробником на шляху до рівня Junior.*

@@ -9,9 +9,9 @@ namespace ProgressApp.WpfUI.ViewModels.Today
 {
     public class TodayViewModel : ViewModelBase
     {
-        private readonly IJournalService _service;
+        private readonly IJournalService _journalService;
         private readonly IMessageService _messageService;
-
+        private readonly IAnalyticsService _analyticsService;
 
         private string _description = string.Empty;
         private DayResult _selectedResult;
@@ -41,11 +41,11 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         }
         public ICommand SaveCommand { get; }
 
-        public TodayViewModel(IJournalService service, IMessageService messageService)
+        public TodayViewModel(IJournalService journalService, IMessageService messageService, IAnalyticsService analyticsService)
         {
-            _service = service;
+            _journalService = journalService;
             _messageService = messageService;
-
+            _analyticsService = analyticsService;
 
             AllResult = Enum.GetValues(typeof(DayResult))
                             .Cast<DayResult>()
@@ -57,16 +57,16 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                     {
                         try
                         {
-                            await _service.SaveTodayAsync(Description, SelectedResult);
-                            CurrentStreak = await _service.GetCurrentStreakAsync();
+                            await _journalService.SaveTodayAsync(Description, SelectedResult);
+                            CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
 
-                            _messageService.ShowInfo("Msg_RecordSaved");
+                            await _messageService.ShowInfoAsync("Msg_RecordSaved");
                             Log.Debug("TodayViewModel: UI Success notification shown to user");
                         }
                         catch (AppException ex)
                         {
                             Log.Error(ex, "TodayViewModel: Failed to save entry");
-                            _messageService.ShowError(ex);
+                            await _messageService.ShowErrorAsync(ex);
                         }
                     },
                     canExecute: _ => !string.IsNullOrWhiteSpace(Description)
@@ -83,16 +83,16 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             catch (AppException ex)
             {
                 Log.Error(ex, "TodayViewModel: Error loading today's entry");
-                _messageService.ShowError(ex);
+                await _messageService.ShowErrorAsync(ex);
             }
         }
 
         private async Task LoadTodayAsync()
         {
             Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
-            var entry = await _service.GetTodayAsync();
+            var entry = await _journalService.GetTodayAsync();
 
-            CurrentStreak = await _service.GetCurrentStreakAsync();
+            CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
             if (entry != null)
             {
                 Description = entry.Description;
@@ -103,5 +103,6 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 SelectedResult = DayResult.PartialSuccess;
             }
         }
+
     }
 }

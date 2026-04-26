@@ -7,7 +7,7 @@ namespace ProgressApp.WpfUI.ViewModels.Login
 {
     public class LoginViewModel : ViewModelBase
     {
-        public Action? Completed;
+        public Action? Completed; //TOOO Event
 
         private readonly IAuthService _authService;
         private readonly IMessageService _messageService;
@@ -44,7 +44,7 @@ namespace ProgressApp.WpfUI.ViewModels.Login
                        {
                            Log.Warning("LoginViewModel: Invalid password entered");
                            Password = string.Empty;
-                           _messageService.ShowErrorIncorrectPassword();
+                           await _messageService.ShowErrorIncorrectPasswordAsync();
                        }
 
                        Log.Debug("LoginViewModel: UI Success notification shown to user");
@@ -52,7 +52,7 @@ namespace ProgressApp.WpfUI.ViewModels.Login
                    catch (AppException ex)
                    {
                        Log.Error(ex, "LoginViewModel: Critical error loging");
-                       _messageService.ShowError(ex);
+                       await messageService.ShowErrorAsync(ex);
                    }
                    finally
                    {

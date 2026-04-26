@@ -36,7 +36,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to load setting for key: {Key}", key);
-                throw new AppException("Msg_ErrorLoadingSetting", key);
+                throw new AppException("Msg_ErrorLoadingSetting", isCritical: true, key);
             }
         }
 
@@ -56,7 +56,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex) when (ex is not AppException)
             {
                 Log.Error(ex, "Fatal error while saving settings!");
-                throw new AppException("Msg_SaveSettingsError");
+                throw new AppException("Msg_SaveSettingsError", isCritical: true);
             }
         }
 

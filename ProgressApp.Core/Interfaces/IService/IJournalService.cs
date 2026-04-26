@@ -8,7 +8,6 @@ namespace ProgressApp.Core.Interfaces.IService
         Task<JournalEntry?> GetTodayAsync();
         Task SaveTodayAsync(string description, DayResult result);
         Task<List<JournalEntry>> GetAllEntriesAsync();
-        Task<int> GetCurrentStreakAsync();
 
     }
 }

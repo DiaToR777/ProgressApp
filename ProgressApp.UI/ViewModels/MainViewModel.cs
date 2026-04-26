@@ -1,9 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Enums;
+using ProgressApp.WpfUI.ViewModels.Analytics;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
-using ProgressApp.WpfUI.ViewModels.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
 using Serilog;
 using System.Windows.Input;
@@ -36,7 +37,7 @@ namespace ProgressApp.WpfUI.ViewModels
         }
 
         public ICommand ShowTodayCommand { get; }
-        public ICommand ShowTableCommand { get; }
+        public ICommand ShowAnalyticsCommand { get; }
         public ICommand ShowSettingsCommand { get; }
 
         public MainViewModel(IAuthService authSevice, IServiceProvider serviceProvider)
@@ -47,26 +48,24 @@ namespace ProgressApp.WpfUI.ViewModels
             InitializeNavigationAsync();
 
             ShowTodayCommand = new RelayCommand(async _ => ShowToday());
-            ShowTableCommand = new RelayCommand(async _ => ShowTable());
+            ShowAnalyticsCommand = new RelayCommand(async _ => ShowAnalytics());
             ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
         }
 
-        private void InitializeNavigationAsync()
+        private async void InitializeNavigationAsync()
         {
             try
             {
-                IsNavigationVisible = false;
-                bool dbExists = _authService.IsDatabaseCreated();
+                var status = await _authService.GetDbStatusAsync();
 
-                if (!dbExists)
+                switch (status)
                 {
-                    ShowInitialsSetup();
-                }
-                else
-                {
-                    ShowLogin();
+                    case DbStatus.NotCreated: ShowInitialsSetup(); break;
+                    case DbStatus.Encrypted: ShowLogin(); break;
+                    case DbStatus.Unencrypted: ShowToday(); break;
                 }
             }
+
             catch (Exception ex)
             {
                 Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
@@ -98,11 +97,11 @@ namespace ProgressApp.WpfUI.ViewModels
 
             CurrentView = vm;
             IsNavigationVisible = false;
-        }
+         }
 
-        private void ShowTable()
+        private void ShowAnalytics() 
         {
-            CurrentView = _serviceProvider.GetRequiredService<TableViewModel>();
+            CurrentView = _serviceProvider.GetRequiredService<AnalyticsViewModel>();
             IsNavigationVisible = true;
         }
 

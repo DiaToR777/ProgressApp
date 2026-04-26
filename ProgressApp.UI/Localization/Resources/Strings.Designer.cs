@@ -61,6 +61,42 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на click on the cell.
+        /// </summary>
+        public static string Analytics_Heatmap_HintSelectCell {
+            get {
+                return ResourceManager.GetString("Analytics_Heatmap_HintSelectCell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на View mode:.
+        /// </summary>
+        public static string Analytics_ViewMode {
+            get {
+                return ResourceManager.GetString("Analytics_ViewMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Heatmap view.
+        /// </summary>
+        public static string AnalyticsMode_Heatmap {
+            get {
+                return ResourceManager.GetString("AnalyticsMode_Heatmap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Table View.
+        /// </summary>
+        public static string AnalyticsMode_Table {
+            get {
+                return ResourceManager.GetString("AnalyticsMode_Table", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на ProgressApp .
         /// </summary>
         public static string AppTitle {
@@ -70,11 +106,83 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Apply.
+        /// </summary>
+        public static string Btn_Apply {
+            get {
+                return ResourceManager.GetString("Btn_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Cancel.
+        /// </summary>
+        public static string Btn_Cancel {
+            get {
+                return ResourceManager.GetString("Btn_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Change Password.
+        /// </summary>
+        public static string Btn_ChangePassword {
+            get {
+                return ResourceManager.GetString("Btn_ChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No.
+        /// </summary>
+        public static string Btn_No {
+            get {
+                return ResourceManager.GetString("Btn_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ok.
+        /// </summary>
+        public static string Btn_Ok {
+            get {
+                return ResourceManager.GetString("Btn_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Open logs.
+        /// </summary>
+        public static string Btn_OpenLogs {
+            get {
+                return ResourceManager.GetString("Btn_OpenLogs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Save.
         /// </summary>
         public static string Btn_SaveDay {
             get {
                 return ResourceManager.GetString("Btn_SaveDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Set password.
+        /// </summary>
+        public static string Btn_SetPassword {
+            get {
+                return ResourceManager.GetString("Btn_SetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Yes.
+        /// </summary>
+        public static string Btn_Yes {
+            get {
+                return ResourceManager.GetString("Btn_Yes", resourceCulture);
             }
         }
         
@@ -106,11 +214,56 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Failed to change password. Check logs.
+        /// </summary>
+        public static string Msg_ChangePasswordFailedError {
+            get {
+                return ResourceManager.GetString("Msg_ChangePasswordFailedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Database save error. Check logs.
+        /// </summary>
+        public static string Msg_DbSaveWhileImportError {
+            get {
+                return ResourceManager.GetString("Msg_DbSaveWhileImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Description cannot be empty!.
         /// </summary>
         public static string Msg_DescriptionEmpty {
             get {
                 return ResourceManager.GetString("Msg_DescriptionEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Duplicate records found. Each record must be unique..
+        /// </summary>
+        public static string Msg_DuplicateRecordsImportError {
+            get {
+                return ResourceManager.GetString("Msg_DuplicateRecordsImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error during import: The description cannot be empty. Line: {0}.
+        /// </summary>
+        public static string Msg_EmptyDescriptionImportError {
+            get {
+                return ResourceManager.GetString("Msg_EmptyDescriptionImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No records to import.
+        /// </summary>
+        public static string Msg_EntriesIsEmptyImportError {
+            get {
+                return ResourceManager.GetString("Msg_EntriesIsEmptyImportError", resourceCulture);
             }
         }
         
@@ -133,11 +286,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Error loading heatmap data. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingHeatmapData {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingHeatmapData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Unable to load settings: “{0}”. Please try again or check the database.
         /// </summary>
         public static string Msg_ErrorLoadingSetting {
             get {
                 return ResourceManager.GetString("Msg_ErrorLoadingSetting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error calculating streak. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingStreak {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingStreak", resourceCulture);
             }
         }
         
@@ -160,6 +331,24 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на The file could not be saved. It may be open in another program, or the program does not have write permissions.
+        /// </summary>
+        public static string Msg_ExportError {
+            get {
+                return ResourceManager.GetString("Msg_ExportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The file is empty.
+        /// </summary>
+        public static string Msg_FileIsEmpty {
+            get {
+                return ResourceManager.GetString("Msg_FileIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Critical error during setup finish. Check logs.
         /// </summary>
         public static string Msg_FinishSetupError {
@@ -178,11 +367,101 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Goal in the file is empty..
+        /// </summary>
+        public static string Msg_GoalIsEmptyImportError {
+            get {
+                return ResourceManager.GetString("Msg_GoalIsEmptyImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на All current records will be deleted and replaced with the data from the file. Are you sure?.
+        /// </summary>
+        public static string Msg_ImportConfirmation {
+            get {
+                return ResourceManager.GetString("Msg_ImportConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Error while import. Check logs.
+        /// </summary>
+        public static string Msg_ImportCsvError {
+            get {
+                return ResourceManager.GetString("Msg_ImportCsvError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на No records to export.
+        /// </summary>
+        public static string Msg_NoEntriesToExportError {
+            get {
+                return ResourceManager.GetString("Msg_NoEntriesToExportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на The selected file was not found..
+        /// </summary>
+        public static string Msg_NoFIleError {
+            get {
+                return ResourceManager.GetString("Msg_NoFIleError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Goal not set. Set a goal before exporting.
+        /// </summary>
+        public static string Msg_NoGoalToExportError {
+            get {
+                return ResourceManager.GetString("Msg_NoGoalToExportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Password changed successfully.
+        /// </summary>
+        public static string Msg_PasswordChangedSuccess {
+            get {
+                return ResourceManager.GetString("Msg_PasswordChangedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Database password removed successfully.
+        /// </summary>
+        public static string Msg_PasswordRemovedSuccess {
+            get {
+                return ResourceManager.GetString("Msg_PasswordRemovedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Password set successfully.
+        /// </summary>
+        public static string Msg_PasswordSetSuccess {
+            get {
+                return ResourceManager.GetString("Msg_PasswordSetSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Record saved!.
         /// </summary>
         public static string Msg_RecordSaved {
             get {
                 return ResourceManager.GetString("Msg_RecordSaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Are you sure you want to remove the database password? Your data will no longer be encrypted.
+        /// </summary>
+        public static string Msg_RemovePasswordConfirmation {
+            get {
+                return ResourceManager.GetString("Msg_RemovePasswordConfirmation", resourceCulture);
             }
         }
         
@@ -214,6 +493,25 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Export completed successfully!.
+        /// </summary>
+        public static string Msg_SuccessExportInfo {
+            get {
+                return ResourceManager.GetString("Msg_SuccessExportInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Data imported successfully!
+        ///Records imported: {0}.
+        /// </summary>
+        public static string Msg_SuccessImportInfo {
+            get {
+                return ResourceManager.GetString("Msg_SuccessImportInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Failed to read Theme from database. Check logs.
         /// </summary>
         public static string Msg_ThemeReadError {
@@ -228,6 +526,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_UsernameEmpty {
             get {
                 return ResourceManager.GetString("Msg_UsernameEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Analytics.
+        /// </summary>
+        public static string NavBtn_Analytics {
+            get {
+                return ResourceManager.GetString("NavBtn_Analytics", resourceCulture);
             }
         }
         
@@ -304,6 +611,33 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на All time.
+        /// </summary>
+        public static string Range_AllTime {
+            get {
+                return ResourceManager.GetString("Range_AllTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Month.
+        /// </summary>
+        public static string Range_Month {
+            get {
+                return ResourceManager.GetString("Range_Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Week.
+        /// </summary>
+        public static string Range_Week {
+            get {
+                return ResourceManager.GetString("Range_Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Partial Succes.
         /// </summary>
         public static string Result_Partial {
@@ -331,11 +665,38 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на It looks a bit empty here. Start by adding your first journal entry to track your progress..
+        /// </summary>
+        public static string Subtitle_EmptyTable {
+            get {
+                return ResourceManager.GetString("Subtitle_EmptyTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Appearance.
         /// </summary>
         public static string Title_Appearance {
             get {
                 return ResourceManager.GetString("Title_Appearance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Confirmation.
+        /// </summary>
+        public static string Title_Confirmation {
+            get {
+                return ResourceManager.GetString("Title_Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Confirm Password.
+        /// </summary>
+        public static string Title_ConfirmPassword {
+            get {
+                return ResourceManager.GetString("Title_ConfirmPassword", resourceCulture);
             }
         }
         
@@ -349,20 +710,20 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Day Datails.
-        /// </summary>
-        public static string Title_DayDatails {
-            get {
-                return ResourceManager.GetString("Title_DayDatails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на Day Description:.
         /// </summary>
         public static string Title_DayDescription {
             get {
                 return ResourceManager.GetString("Title_DayDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Day Details.
+        /// </summary>
+        public static string Title_DayDetails {
+            get {
+                return ResourceManager.GetString("Title_DayDetails", resourceCulture);
             }
         }
         
@@ -385,11 +746,38 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на No entries yet.
+        /// </summary>
+        public static string Title_EmptyTable {
+            get {
+                return ResourceManager.GetString("Title_EmptyTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Error.
         /// </summary>
         public static string Title_Error {
             get {
                 return ResourceManager.GetString("Title_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Export Data.
+        /// </summary>
+        public static string Title_ExportData {
+            get {
+                return ResourceManager.GetString("Title_ExportData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Import Data.
+        /// </summary>
+        public static string Title_ImportData {
+            get {
+                return ResourceManager.GetString("Title_ImportData", resourceCulture);
             }
         }
         

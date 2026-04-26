@@ -2,19 +2,23 @@
 using ProgressApp.Core.Configuration;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Config;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Services;
 using ProgressApp.Core.Services.Auth;   
+
 using ProgressApp.WpfUI.Localization.Managers;
 using ProgressApp.WpfUI.Services.Message;
 using ProgressApp.WpfUI.Themes;
+
 using ProgressApp.WpfUI.ViewModels;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
-using ProgressApp.WpfUI.ViewModels.Table;
+using ProgressApp.WpfUI.ViewModels.Analytics;
+using ProgressApp.WpfUI.ViewModels.Analytics.Heatmap;
+using ProgressApp.WpfUI.ViewModels.Analytics.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
+
 using ProgressApp.WpfUI.Views;
 using Serilog;
 using System.Windows;
@@ -47,21 +51,26 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<IDbState>(new DbState(dbPath));
 
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
-            services.AddSingleton<IThemeService, ThemeWrapper>();
+            services.AddSingleton<IAppThemeService, ThemeWrapper>();
 
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IJournalService, JournalService>();
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IAppConfigService, AppConfigService>();
+            services.AddSingleton<IDataExchangeService, DataExchangeService>();
+            services.AddSingleton<IAnalyticsService, AnalyticsService>();
 
+            services.AddSingleton<MainViewModel>();
+
+            services.AddTransient<InitialSetupViewModel>();
             services.AddTransient<LoginViewModel>();
             services.AddTransient<TableViewModel>();
-            services.AddTransient<InitialSetupViewModel>();
+            services.AddTransient<AnalyticsViewModel>();
             services.AddTransient<TodayViewModel>();
+            services.AddTransient<HeatmapViewModel>();
             services.AddTransient<SettingsViewModel>();
-            services.AddSingleton<MainViewModel>();
-            
+
             _serviceProvider = services.BuildServiceProvider();
         }
         protected async override void OnStartup(StartupEventArgs e)
@@ -73,7 +82,7 @@ namespace ProgressApp.WpfUI
 
             var config = appConfig.Load();
 
-            var themeService = _serviceProvider.GetRequiredService<IThemeService>();
+            var themeService = _serviceProvider.GetRequiredService<IAppThemeService>();
             themeService.SetTheme(Enum.Parse<AppTheme>(config.Theme));
 
             var locService = _serviceProvider.GetRequiredService<ILocalizationService>();

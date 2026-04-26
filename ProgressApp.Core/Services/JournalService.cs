@@ -36,7 +36,7 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Error while checking for today's entry in database.");
-                throw new AppException("Msg_ErrorLoadingData");
+                throw new AppException("Msg_ErrorLoadingData", isCritical: true);
             }
         }
 
@@ -82,7 +82,7 @@ namespace ProgressApp.Core.Services
             {
 
                 Log.Error(ex, "Error occurred while saving today's entry");
-                throw new AppException("Msg_SaveEntryError");
+                throw new AppException("Msg_SaveEntryError", isCritical: true);
             }
         }
 
@@ -105,55 +105,8 @@ namespace ProgressApp.Core.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to fetch all journal entries.");
-                throw new AppException("Msg_ErrorLoadingData");
+                throw new AppException("Msg_ErrorLoadingData", isCritical: true);
             }
-        }
-
-        public async Task<int> GetCurrentStreakAsync()
-        {
-            using var scope = _scopeFactory.CreateScope();
-            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-
-            var dates = await context.Entries
-                            .Where(e => e.Result == DayResult.Success || e.Result == DayResult.PartialSuccess)
-                            .Select(e => e.Date)
-                            .OrderByDescending(d => d)
-                            .ToListAsync();
-
-
-            return CalculateStreak(dates);
-        }
-
-        private int CalculateStreak(List<DateTime> dates)
-        {
-            if (!dates.Any()) return 0;
-
-            var today = DateTime.Today;
-            var lastEntryDate = dates[0].Date;
-
-            if (lastEntryDate < today.AddDays(-1))
-                return 0;
-
-            int streak = 1;
-            var currentCompare = lastEntryDate;
-
-            for (int i = 1; i < dates.Count; i++)
-            {
-                var nextDate = dates[i].Date;
-                if (nextDate == currentCompare) continue;
-                if (nextDate == currentCompare.AddDays(-1))
-                {
-                    streak++;
-                    currentCompare = nextDate;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return streak;
-        }
-                
+        }                
     }
 }

@@ -1,82 +1,95 @@
 ﻿using FluentAssertions;
 using Moq;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Enums;
-using ProgressApp.Core.Models.Localization;
-using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.Core.Exceptions;
+using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Config;
+using ProgressApp.WpfUI.ViewModels.InitialSetup;
 
-namespace ProgressAppTest.ViewModelTests
+namespace ProgressAppTest.ViewModelTests;
+
+[TestClass]
+public sealed class InitialSetupViewModelTests
 {
-    [TestClass]
-    public sealed class InitialSetupViewModelTests
+    private Mock<ISettingsService> _settingsService;
+    private Mock<IMessageService> _messageService;
+    private Mock<ILocalizationService> _localizationService;
+    private Mock<IAuthService> _authService;
+    private Mock<IAppConfigService> _appConfigService;
+
+    [TestInitialize]
+    public void TestInit()
     {
-        private Mock<ISettingsService> _settingsService;
-        private Mock<IMessageService> _messageService;
-        private Mock<ILocalizationService> _localizationService;
+        _settingsService = new Mock<ISettingsService>();
+        _messageService = new Mock<IMessageService>();
+        _localizationService = new Mock<ILocalizationService>();
+        _authService = new Mock<IAuthService>();
+        _appConfigService = new Mock<IAppConfigService>();
+    }
 
-        private LanguageModel _defaultLanguage;
+    [TestMethod]
+    public void Constructor_ShouldSetDefaultLanguage()
+    {
+        var vm = CreateViewModel();
+        vm.SelectedLanguage.Should().NotBeNull();
+        vm.SelectedLanguage.CultureCode.Should().Be("en-US"); //first language in config
+    }
 
+    [TestMethod]
+    public void FinishCommand_CanExecute_ShouldReturnFalse_WhenPasswordsDoNotMatch()
+    {
+        var vm = CreateViewModel();
+        vm.Username = "test";
+        vm.Goal = "test";
+        vm.Password = "testpass";
+        vm.ConfirmPassword = "differentpass";
 
-        [TestInitialize]
-        public void TestInit()
-        {
-            _settingsService = new Mock<ISettingsService>();
-            _messageService = new Mock<IMessageService>();
-            _localizationService = new Mock<ILocalizationService>();
+        vm.FinishCommand.CanExecute(null).Should().BeFalse();
+    }
 
-            _defaultLanguage = new LanguageModel { CultureCode = "en-US", Name = "English" };
+    [TestMethod]
+    public async Task FinishCommand_WhenValid_ShouldFlowCorrect()
+    {
+        var vm = CreateViewModel();
+        vm.Username = "test";
+        vm.Goal = "test";
+        vm.Password = "testpass";
+        vm.ConfirmPassword = "testpass";
 
-            _settingsService.Setup(s => s.GetLanguage()).Returns(_defaultLanguage);
-        }
+        bool completedCalled = false;
+        vm.Completed = () => completedCalled = true;
 
-        [TestMethod]
-        public void Constructor_ShouldLoadSettingsAndSetLanguage()
-        {
-            var vm = new InitialSetupViewModel(_settingsService.Object, _localizationService.Object, _messageService.Object);
+        _authService.Setup(a => a.RegisterAsync(vm.Password)).ReturnsAsync(true);
 
-            vm.SelectedLanguage.Should().Be(_defaultLanguage);
-            _settingsService.Verify(s => s.GetLanguage(), Times.Once);
-        }
+        vm.FinishCommand.Execute(null);
 
-        [TestMethod]
-        public void FinishCommand_WhenValidData_ShouldSaveSettingsAndCallCompleted()
-        {
-            var vm = new InitialSetupViewModel(_settingsService.Object, _localizationService.Object, _messageService.Object);
-            vm.Username = "User";
-            vm.Goal = "Get Fit";
-            bool completedCalled = false;
-            vm.Completed = () => completedCalled = true;
+        await Task.Delay(100);
 
-            vm.FinishCommand.Execute(null);
+        _authService.Verify(a => a.RegisterAsync("testpass"), Times.Once);
+        _settingsService.Verify(s => s.SaveGoalAsync("test"), Times.Once);
+        _appConfigService.Verify(c => c.Save(It.IsAny<AppConfig>()), Times.Once);
+        completedCalled.Should().BeTrue();
+    }
 
-            _settingsService.Verify(s => s.SaveSettings(
-                "User",
-                "Get Fit", 
-                AppTheme.Light,
-                It.IsAny<LanguageModel>()), Times.Once);
+    [TestMethod]
+    public async Task FinishCommand_WhenException_ShouldShowError()
+    {
+        var vm = CreateViewModel();
+        vm.Username = "username";
+        vm.Goal = "test";
+        vm.Password = "123";
+        vm.ConfirmPassword = "123";
 
-            _localizationService.Verify(l => l.ChangeLanguage(It.IsAny<string>()), Times.Once);
-            completedCalled.Should().BeTrue();
-        }
+        var ex = new AppException("Registration Failed", isCritical: false, "Error");
+        _authService.Setup(a => a.RegisterAsync(It.IsAny<string>())).ThrowsAsync(ex);
 
-        [TestMethod]
-        public void FinishCommand_WhenInvalidData_ShouldShowError()
-        {
+        vm.FinishCommand.Execute(null);
+        await Task.Delay(100);
 
-            var expectedException = new AppException("Database error", "Error_Title");
+        _messageService.Verify(m => m.ShowErrorAsync(ex), Times.Once);
+    }
 
-
-            _settingsService.Setup(s => s.SaveSettings(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<AppTheme>(), It.IsAny<LanguageModel>()))
-                         .Throws(expectedException);
-
-            var vm = new InitialSetupViewModel(_settingsService.Object, _localizationService.Object, _messageService.Object);
-            vm.Username = "User";
-            vm.Goal = "Goal";
-
-            vm.FinishCommand.Execute(null);
-
-            _messageService.Verify(m => m.ShowError(expectedException), Times.Once);
-        }
+    private InitialSetupViewModel CreateViewModel()
+    {
+        return new InitialSetupViewModel(_settingsService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
     }
 }

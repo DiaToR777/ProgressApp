@@ -5,7 +5,7 @@ namespace ProgressApp.Core.Models.Journal
     public class JournalEntry
     {
         public int Id { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } //TODO DATEONLY
 
         [MaxLength(1500)]
         public string Description { get; set; } = string.Empty;

@@ -66,9 +66,10 @@
             </ui:Card>
 
             <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DayDescription]}" Margin="0,0,0,5"/>
-            <ui:TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+
+            <ScrollViewer Height="150" VerticalScrollBarVisibility="Visible">
+                <ui:TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
                     PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatYouAchive]}"
-                    Height="150"
                     AcceptsReturn="True"
                     TextWrapping="Wrap"
                     VerticalContentAlignment="Top"
@@ -76,7 +77,8 @@
                     MaxLength="1500"
                     Margin="0,0,0,20"
                     TabIndex="0"/>
-
+            </ScrollViewer>
+            
             <Label Content="{Binding Source={StaticResource Langs}, Path=[DataGrid_Result]}" Margin="0,0,0,5" />
             <ComboBox ItemsSource="{Binding AllResult}" 
                      SelectedValue="{Binding SelectedResult}"

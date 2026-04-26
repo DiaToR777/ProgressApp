@@ -5,14 +5,18 @@
         xmlns:conv="clr-namespace:ProgressApp.WpfUI.Converters"
         xmlns:vmToday="clr-namespace:ProgressApp.WpfUI.ViewModels.Today"
         xmlns:vmSettings="clr-namespace:ProgressApp.WpfUI.ViewModels.Settings"
-        xmlns:vmTable="clr-namespace:ProgressApp.WpfUI.ViewModels.Table"
+        xmlns:vmAnalytics="clr-namespace:ProgressApp.WpfUI.ViewModels.Analytics"
         xmlns:vmInitial="clr-namespace:ProgressApp.WpfUI.ViewModels.InitialSetup"
         xmlns:vmLogin="clr-namespace:ProgressApp.WpfUI.ViewModels.Login"
+                 
+                 
         xmlns:viewLogin="clr-namespace:ProgressApp.WpfUI.Views.Login"
         xmlns:viewToday="clr-namespace:ProgressApp.WpfUI.Views.Today"
         xmlns:viewSettings="clr-namespace:ProgressApp.WpfUI.Views.Settings"
-        xmlns:viewTable="clr-namespace:ProgressApp.WpfUI.Views.Table"
+        xmlns:viewAnalytics="clr-namespace:ProgressApp.WpfUI.Views.Analytics"
         xmlns:viewInitial="clr-namespace:ProgressApp.WpfUI.Views.InitialSetup"
+                 
+                 
         Title="{Binding Source={StaticResource Langs}, Path=[AppTitle]}"
         Height="600" Width="1000"
         ExtendsContentIntoTitleBar="True"
@@ -31,9 +35,11 @@
         <DataTemplate DataType="{x:Type vmSettings:SettingsViewModel}">
             <viewSettings:SettingsView />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type vmTable:TableViewModel}">
-            <viewTable:TableView />
+
+        <DataTemplate DataType="{x:Type vmAnalytics:AnalyticsViewModel}">
+            <viewAnalytics:AnalyticsView />
         </DataTemplate>
+        
         <DataTemplate DataType="{x:Type vmInitial:InitialSetupViewModel}">
             <viewInitial:InitialSetupView />
         </DataTemplate>
@@ -62,9 +68,10 @@
                                      Command="{Binding ShowTodayCommand}" 
                                      Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
 
-                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Table]}"
+                <!--rename to ShowAnalyticsCommand and langs keys...-->
+                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Analytics]}"
                                      Icon="{ui:SymbolIcon Symbol=Table24}"
-                                     Command="{Binding ShowTableCommand}" 
+                                     Command="{Binding ShowAnalyticsCommand}" 
                                      Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
 
                 <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Settings]}"
