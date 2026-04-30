@@ -62,6 +62,8 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
                     Entries.Add(entry);
                 }
 
+                Log.Debug("TableViewModel: Entries refreshed. Count: {Count}", Entries.Count);
+
                 UpdateUIState();
             }
             catch (AppException ex)
