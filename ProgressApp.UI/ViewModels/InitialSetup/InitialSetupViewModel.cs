@@ -1,14 +1,15 @@
-﻿using ProgressApp.Core.Models.Enums;
-using ProgressApp.Core.Models.Localization;
-using Serilog;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Config;
+using ProgressApp.Core.Models.Enums;
+using ProgressApp.Core.Models.Localization;
+using Serilog;
 
 namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
-    public class InitialSetupViewModel : ViewModelBase
+    public partial class InitialSetupViewModel : ObservableObject
     {
         private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
@@ -18,104 +19,71 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private string _username = string.Empty;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private string _goal = string.Empty;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        private string _password = string.Empty;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        private string _confirmPassword = string.Empty;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        private bool _isBusy;
+
+        [ObservableProperty]
         private LanguageModel _selectedLanguage;
 
-        private string _password = string.Empty;
-        private string _confirmPassword = string.Empty;
-        public string Password
+        partial void OnSelectedLanguageChanged(LanguageModel value)
         {
-            get => _password;
-            set => SetProperty(ref _password, value);
-        }
-        public string ConfirmPassword
-        {
-            get => _confirmPassword;
-            set => SetProperty(ref _confirmPassword, value);
-        }
-
-        public LanguageModel SelectedLanguage
-        {
-            get => _selectedLanguage;
-            set
+            if (value != null)
             {
-                if (SetProperty(ref _selectedLanguage, value))
-                {
-                    if (_selectedLanguage != null)
-                    {
-                        Log.Debug("InitialSetup: User selected language: {Culture}", _selectedLanguage.CultureCode);
-                        _localizationService.ChangeLanguage(_selectedLanguage.CultureCode);
-                    }
-                }
+                Log.Debug("InitialSetup: User selected language: {Culture}", value.CultureCode);
+                _localizationService.ChangeLanguage(value.CultureCode);
             }
         }
 
-        public string Username
-        {
-            get => _username;
-            set => SetProperty(ref _username, value);
-        }
-        public string Goal
-        {
-            get => _goal;
-            set => SetProperty(ref _goal, value);
-        }
-
-        public ICommand FinishCommand { get; }
-
         public Action? Completed { get; set; }
 
-        public InitialSetupViewModel(ISettingsService settings, IAppConfigService appConfigService, ILocalizationService localizationService, IMessageService messageService, IAuthService authService)
+        public InitialSetupViewModel(
+            ISettingsService settings,
+            IAppConfigService appConfigService,
+            ILocalizationService localizationService,
+            IMessageService messageService,
+            IAuthService authService)
         {
-            _messageService = messageService;
-            _localizationService = localizationService;
             _settingsService = settings;
-            _authService = authService;
             _appConfigService = appConfigService;
+            _localizationService = localizationService;
+            _messageService = messageService;
+            _authService = authService;
 
-            SelectedLanguage = LanguageConfig.AvailableLanguages.First();
-
-            FinishCommand = new RelayCommand(
-                executeAsync: async _ =>
-                {
-                    if (IsBusy) return;
-                    try
-                    {
-                        IsBusy = true;
-                        await Task.Run(async () =>
-                        {
-                            await FinishAsync();
-                        });
-                    }
-                    catch (AppException ex)
-                    {
-                        Log.Error(ex, "InitialSetup: Critical error during setup finish");
-                        await messageService.ShowErrorAsync(ex);
-                    }
-                    finally
-                    {
-                        IsBusy = false;
-                    }
-                },
-                canExecute: _ => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal) 
-                && !string.IsNullOrWhiteSpace(Password) 
-                && !string.IsNullOrWhiteSpace(ConfirmPassword)
-                && !IsBusy
-                && !string.IsNullOrWhiteSpace(Password) && Password == ConfirmPassword
-              );
+            _selectedLanguage = LanguageConfig.AvailableLanguages.First();
         }
 
+        [RelayCommand(CanExecute = nameof(CanFinish), AllowConcurrentExecutions = false)]
         private async Task FinishAsync()
         {
-            bool isRegistered = await _authService.RegisterAsync(Password);
-            if (isRegistered)
+            try
             {
-                Log.Information("InitialSetup: Registration success during setup finish");
+                IsBusy = true;
+
+                bool isRegistered = await Task.Run(() => _authService.RegisterAsync(Password));
+                if (!isRegistered) return;
+
+                Log.Information("InitialSetup: Registration success");
 
                 await _settingsService.SaveGoalAsync(Goal);
 
-                AppConfig config = new AppConfig
+                var config = new AppConfig
                 {
                     Language = SelectedLanguage.CultureCode,
                     Username = Username,
@@ -123,11 +91,28 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                 };
                 _appConfigService.Save(config);
 
-                Log.Information("InitialSetupVM: Setup saved successfully. Invoking completion.");
-
+                Log.Information("InitialSetupVM: Setup saved. Invoking completion.");
                 Completed?.Invoke();
-                return;
             }
+            catch (AppException ex)
+            {
+
+                Log.Error(ex, "InitialSetup: Critical error during setup finish");
+                await _messageService.ShowErrorAsync(ex);
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private bool CanFinish()
+        {
+            return !IsBusy &&
+                   !string.IsNullOrWhiteSpace(Username) &&
+                   !string.IsNullOrWhiteSpace(Goal) &&
+                   !string.IsNullOrWhiteSpace(Password) &&
+                   Password == ConfirmPassword;
         }
     }
 }
