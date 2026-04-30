@@ -22,6 +22,7 @@ using ProgressApp.WpfUI.ViewModels.Today;
 using ProgressApp.WpfUI.Views;
 using Serilog;
 using System.Windows;
+using ProgressApp.WpfUI.LogConfig;
 
 namespace ProgressApp.WpfUI
 {

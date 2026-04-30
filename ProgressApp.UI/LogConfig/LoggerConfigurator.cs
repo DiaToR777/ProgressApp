@@ -1,6 +1,9 @@
-﻿using Serilog;
+﻿using ProgressApp.Core.Configuration;
+using Serilog;
 using Serilog.Exceptions;
-namespace ProgressApp.Core.Configuration
+using System.IO;
+
+namespace ProgressApp.WpfUI.LogConfig
 {
     public static class LoggerConfigurator
     {
