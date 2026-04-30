@@ -1,66 +1,59 @@
-﻿using ProgressApp.Core.Exceptions;
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using CommunityToolkit.Mvvm.ComponentModel;
+using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
 using Serilog;
-using System.Collections.ObjectModel;
 
 namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
 {
-    public class TableViewModel : ViewModelBase
+    public partial class TableViewModel : ObservableObject
     {
         private readonly IJournalService _service;
         private readonly IMessageService _messageService;
 
-        private JournalEntry? _selectedEntry;
-
         public ObservableCollection<JournalEntry> Entries { get; } = new();
 
+        [ObservableProperty]
+        private JournalEntry? _selectedEntry;
+
+        [ObservableProperty]
         private bool _showTable;
-        public bool ShowTable
-        {
-            get => _showTable;
-            set => SetProperty(ref _showTable, value);
-        }
 
+        [ObservableProperty]
         private bool _showEmptyState;
-        public bool ShowEmptyState
-        {
-            get => _showEmptyState;
-            set => SetProperty(ref _showEmptyState, value);
-        }
 
-        private void UpdateUIState()
-        {
-            if (Entries.Count > 0)
-            {
-                ShowTable = true;
-                ShowEmptyState = false;
-            }
-            else
-            {
-                ShowTable = false;
-                ShowEmptyState = true;
-            }
-        }
-        public JournalEntry? SelectedEntry
-        {
-            get => _selectedEntry;
-            set => SetProperty(ref _selectedEntry, value);
-        }
+        [ObservableProperty]
+        private bool _isBusy;
 
         public TableViewModel(IJournalService service, IMessageService messageService)
         {
             _service = service;
             _messageService = messageService;
-            Entries.CollectionChanged += (s, e) => UpdateUIState();
 
-            GetEntries();
+            Entries.CollectionChanged += OnEntriesChanged;
+
+            _ = LoadEntriesAsync();
         }
 
-        private async void GetEntries()
+        private void OnEntriesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            UpdateUIState();
+        }
+
+        private void UpdateUIState()
+        {
+            ShowTable = Entries.Count > 0;
+            ShowEmptyState = !ShowTable;
+        }
+
+        private async Task LoadEntriesAsync()
         {
             try
             {
+                IsBusy = true;
+
                 var data = await _service.GetAllEntriesAsync();
 
                 Entries.Clear();
@@ -75,6 +68,10 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
             {
                 Log.Error(ex, "TableViewModel: Failed to load journal entries");
                 await _messageService.ShowErrorAsync(ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }
