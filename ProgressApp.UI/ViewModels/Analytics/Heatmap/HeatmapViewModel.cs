@@ -39,8 +39,9 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 
         public string PeriodTitle => SelectedRange switch
         {
-            HeatmapRange.Week => $"{GetCurrentWeek().from:dd MMM} — {GetCurrentWeek().to.ToString("dd MMM yyyy", TranslationSource.Instance.CurrentCulture)}",
+            HeatmapRange.Week => $"{GetCurrentWeek().from.ToString("dd MMM", TranslationSource.Instance.CurrentCulture)} — {GetCurrentWeek().to.ToString("dd MMM yyyy", TranslationSource.Instance.CurrentCulture)}",
             HeatmapRange.Month => _currentDate.ToString("MMMM yyyy", TranslationSource.Instance.CurrentCulture),
+            HeatmapRange.AllTime => string.Empty,
             _ => string.Empty
         };
 
