@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.WpfUI.Localization.Helpers;
 using ProgressApp.WpfUI.ViewModels.Analytics.Enums;
 using ProgressApp.WpfUI.ViewModels.Analytics.Heatmap;
@@ -7,38 +8,18 @@ using Serilog;
 
 namespace ProgressApp.WpfUI.ViewModels.Analytics
 {
-    public class AnalyticsViewModel : ViewModelBase
+    public partial class AnalyticsViewModel : ObservableObject
     {
         private readonly IServiceProvider _serviceProvider;
+
+        [ObservableProperty]
         private object? _currentAnalyticsView;
+
+        [ObservableProperty]
+        private AnalyticsMode _selectedViewOption;
+
         public IEnumerable<LocalizedEnum<AnalyticsMode>> ViewOptions { get; }
 
-        private AnalyticsMode _selectedMode;
-
-        public object? CurrentAnalyticsView
-        {
-            get => _currentAnalyticsView;
-            set
-            {
-                if (SetProperty(ref _currentAnalyticsView, value))
-                {
-                    Log.Information("AnalyticsViewModel: switched to {ViewModelName}", value?.GetType().Name ?? "null");
-                }
-            }
-        }
-
-        public AnalyticsMode SelectedViewOption
-        {
-            get => _selectedMode;
-            set
-            {
-                if (SetProperty(ref _selectedMode, value))
-                {
-                    UpdateView(value);
-                }
-            }
-        }
-        //TODO switch heatmap/table first load option
         public AnalyticsViewModel(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
@@ -48,19 +29,23 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
                       .Select(m => new LocalizedEnum<AnalyticsMode>(m))
                       .ToList();
 
-            SelectedViewOption = AnalyticsMode.Table;
-            UpdateView(AnalyticsMode.Table);
+            _selectedViewOption = AnalyticsMode.Table;
+
+            _ = UpdateViewAsync(AnalyticsMode.Table);
+        }   
+        partial void OnSelectedViewOptionChanged(AnalyticsMode value)
+        {
+            _ = UpdateViewAsync(value);
         }
 
-        private async void UpdateView(AnalyticsMode option)
+        private async Task UpdateViewAsync(AnalyticsMode option)
         {
             try
             {
                 switch (option)
                 {
                     case AnalyticsMode.Table:
-                        var tableVm = _serviceProvider.GetRequiredService<TableViewModel>();
-                        CurrentAnalyticsView = tableVm;
+                        CurrentAnalyticsView = _serviceProvider.GetRequiredService<TableViewModel>();
                         break;
 
                     case AnalyticsMode.Heatmap:
@@ -69,6 +54,8 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
                         CurrentAnalyticsView = heatmapVm;
                         break;
                 }
+
+                Log.Information("AnalyticsViewModel: switched to {Mode}", option);
             }
             catch (Exception ex)
             {
