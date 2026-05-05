@@ -160,7 +160,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 }
 
                 var (from, to) = range == HeatmapRange.Week ? GetCurrentWeek() : GetCurrentMonthAligned();
-                var allCells = await Task.Run(() => _analyticsService.GetHeatmapCells(from, to)) ?? new List<DayCell>();
+                var allCells = await _analyticsService.GetHeatmapCells(from, to) ?? new List<DayCell>();
 
                 var lookup = allCells.ToDictionary(c => c.Date.Date);
 
@@ -218,7 +218,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
         }
 
         private (DateTime from, DateTime to) GetCurrentWeek()
-        {
+        { 
             var monday = _currentDate.AddDays(-(((int)_currentDate.DayOfWeek + 6) % 7));
             return (monday, monday.AddDays(6));
         }
