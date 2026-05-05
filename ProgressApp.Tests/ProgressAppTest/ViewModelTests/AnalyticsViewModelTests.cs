@@ -1,4 +1,3 @@
-using CommunityToolkit.Mvvm.Input;
 using FluentAssertions;
 using Moq;
 using ProgressApp.Core.Interfaces.IService;
