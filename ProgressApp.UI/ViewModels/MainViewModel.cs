@@ -36,7 +36,7 @@ namespace ProgressApp.WpfUI.ViewModels
             _ = InitializeNavigationAsync();
         }
 
-        private async Task InitializeNavigationAsync()
+        internal async Task InitializeNavigationAsync()
         {
             try
             {
