@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.WpfUI.Localization.Helpers;
 using ProgressApp.WpfUI.ViewModels.Analytics.Enums;
@@ -31,14 +32,15 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
 
             _selectedViewOption = AnalyticsMode.Table;
 
-            _ = UpdateViewAsync(AnalyticsMode.Table);
+            _ = UpdateViewCommand.ExecuteAsync(AnalyticsMode.Table);
         }   
         partial void OnSelectedViewOptionChanged(AnalyticsMode value)
         {
-            _ = UpdateViewAsync(value);
+            _ = UpdateViewCommand.ExecuteAsync(value);
         }
 
-        private async Task UpdateViewAsync(AnalyticsMode option)
+        [RelayCommand]
+        internal async Task UpdateViewAsync(AnalyticsMode option)
         {
             try
             {

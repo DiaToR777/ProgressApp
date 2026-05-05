@@ -1,3 +1,4 @@
+using CommunityToolkit.Mvvm.Input;
 using FluentAssertions;
 using Moq;
 using ProgressApp.Core.Interfaces.IService;
@@ -38,9 +39,9 @@ public sealed class AnalyticsViewModelTests
 
         vm.SelectedViewOption = AnalyticsMode.Heatmap;
 
-        await Task.Delay(300);
+        await vm.UpdateViewCommand.ExecuteAsync(AnalyticsMode.Heatmap);
 
-        vm.CurrentAnalyticsView.Should().NotBeNull("потому что UpdateView должен был завершиться");
+        vm.CurrentAnalyticsView.Should().NotBeNull("because UpdateView should have completed");
         vm.CurrentAnalyticsView.Should().BeSameAs(heatmapVm);
     }
 }
