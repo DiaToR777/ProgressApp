@@ -22,16 +22,23 @@ public sealed class HeatmapViewModelTests
     [TestMethod]
     public async Task SelectedRange_Change_ShouldTriggerLoadAndChangeCellSize()
     {
+        _analyticsMock.Setup(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                      .ReturnsAsync(new List<DayCell>());
+
+        _analyticsMock.Setup(a => a.GetFirstEntryDateAsync())
+                      .ReturnsAsync(DateTime.Today);
+
         var vm = new HeatmapViewModel(_analyticsMock.Object, _messageMock.Object);
 
         vm.CellSize.Should().Be(40);
+
+        await vm.LoadAsync(HeatmapRange.AllTime);
 
         vm.SelectedRange = HeatmapRange.AllTime;
 
         vm.CellSize.Should().Be(13);
         _analyticsMock.Verify(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()), Times.AtLeastOnce());
     }
-
     [TestMethod]
     public async Task Navigation_ShouldBeDisabled_WhenNoFirstEntryDate()
     {

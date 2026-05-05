@@ -188,7 +188,8 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 
         private async Task LoadYearAsync(int year)
         {
-            var cells = await Task.Run(() => _analyticsService.GetHeatmapCells(new DateTime(year, 1, 1), new DateTime(year, 12, 31)));
+            var cells = await Task.Run(() => _analyticsService.GetHeatmapCells(new DateTime(year, 1, 1), new DateTime(year, 12, 31))) 
+                ?? new List<DayCell>();
             Weeks.Clear();
             SelectedCell = null;
             foreach (var chunk in cells.Chunk(7))
