@@ -178,15 +178,19 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         {
             try
             {
-                if (IsDbEncrypted)
-                    await _authService.ChangePasswordAsync(NewDbPassword);
+                bool wasEncrypted = IsDbEncrypted;
+                if (!wasEncrypted)
+                {
+                    await _authService.SetPasswordAsync(NewDbPassword);
+                    IsDbEncrypted = true;
+                }
                 else
                 {
                     await _authService.SetPasswordAsync(NewDbPassword);
                     IsDbEncrypted = true;
                 }
 
-                await _messageService.ShowInfoAsync(IsDbEncrypted ? "Msg_PasswordChangedSuccess" : "Msg_PasswordSetSuccess");
+                await _messageService.ShowInfoAsync(wasEncrypted ? "Msg_PasswordChangedSuccess" : "Msg_PasswordSetSuccess");
 
                 NewDbPassword = ConfirmDbPassword = string.Empty;
                 IsChangingPassword = false;
