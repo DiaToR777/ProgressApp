@@ -80,10 +80,11 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
             _ = InitializeAsync();
         }
 
-        private async Task InitializeAsync()
+        internal async Task InitializeAsync()
         {
             await GetFirstEntryDate();
             await LoadAsync(SelectedRange);
+            RefreshUI();
         }
 
         [RelayCommand]
@@ -159,7 +160,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 }
 
                 var (from, to) = range == HeatmapRange.Week ? GetCurrentWeek() : GetCurrentMonthAligned();
-                var allCells = await Task.Run(() => _analyticsService.GetHeatmapCells(from, to));
+                var allCells = await Task.Run(() => _analyticsService.GetHeatmapCells(from, to)) ?? new List<DayCell>();
 
                 var lookup = allCells.ToDictionary(c => c.Date.Date);
 

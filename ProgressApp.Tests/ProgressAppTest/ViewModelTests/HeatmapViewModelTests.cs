@@ -1,6 +1,7 @@
 using FluentAssertions;
 using Moq;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Core.Models.Heatmap;
 using ProgressApp.WpfUI.ViewModels.Analytics.Heatmap;
 
 namespace ProgressAppTest.ViewModelTests;
@@ -36,8 +37,11 @@ public sealed class HeatmapViewModelTests
     {
         _analyticsMock.Setup(a => a.GetFirstEntryDateAsync()).ReturnsAsync((DateTime?)null);
 
+        _analyticsMock.Setup(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                      .ReturnsAsync(new List<DayCell>());
+
         var vm = new HeatmapViewModel(_analyticsMock.Object, _messageMock.Object);
-        await Task.Delay(100);
+        await vm.InitializeAsync();
 
         vm.PreviousPeriodCommand.CanExecute(null).Should().BeFalse();
     }
