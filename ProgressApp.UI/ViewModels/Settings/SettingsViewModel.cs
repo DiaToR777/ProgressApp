@@ -18,6 +18,8 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
         private readonly IAppThemeService _themeService;
         private readonly IAuthService _authService;
 
+
+        public Task Initialization { get; }
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
@@ -79,7 +81,7 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             _localizationService = localizationService;
             _themeService = themeService;
 
-            _ = InitializeAsync();
+            Initialization = InitializeAsync();
         }
 
         private async Task InitializeAsync()
@@ -179,16 +181,14 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             try
             {
                 bool wasEncrypted = IsDbEncrypted;
+
                 if (!wasEncrypted)
-                {
                     await _authService.SetPasswordAsync(NewDbPassword);
-                    IsDbEncrypted = true;
-                }
+
                 else
-                {
-                    await _authService.SetPasswordAsync(NewDbPassword);
-                    IsDbEncrypted = true;
-                }
+                    await _authService.ChangePasswordAsync(NewDbPassword);
+
+                IsDbEncrypted = true;
 
                 await _messageService.ShowInfoAsync(wasEncrypted ? "Msg_PasswordChangedSuccess" : "Msg_PasswordSetSuccess");
 

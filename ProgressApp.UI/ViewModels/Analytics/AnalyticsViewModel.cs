@@ -12,6 +12,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
     public partial class AnalyticsViewModel : ObservableObject
     {
         private readonly IServiceProvider _serviceProvider;
+        public Task Initialization { get; }
 
         [ObservableProperty]
         private object? _currentAnalyticsView;
@@ -32,7 +33,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics
 
             _selectedViewOption = AnalyticsMode.Table;
 
-            _ = UpdateViewCommand.ExecuteAsync(AnalyticsMode.Table);
+            Initialization = UpdateViewCommand.ExecuteAsync(AnalyticsMode.Table);
         }   
         partial void OnSelectedViewOptionChanged(AnalyticsMode value)
         {

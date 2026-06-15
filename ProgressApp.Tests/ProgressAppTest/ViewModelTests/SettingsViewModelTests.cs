@@ -48,8 +48,6 @@ public sealed class SettingsViewModelTests
             _serviceMock.Object, _configMock.Object, _messageMock.Object,
             _localizationMock.Object, _themeMock.Object, _dataExchangeMock.Object, _authMock.Object);
 
-        await Task.Delay(50);
-
         vm.Username.Should().Be("TestName");
         vm.Goal.Should().Be("TestDescription");
         vm.SelectedTheme.Should().Be(AppTheme.Dark);
@@ -68,7 +66,8 @@ public sealed class SettingsViewModelTests
     public async Task SaveSettingsCommand_ShouldInvokeEverything_AndShowSuccess()
     {
         var vm = CreateViewModel();
-        await Task.Delay(50); 
+
+        await vm.Initialization;
 
         vm.Username = "NewName";
         vm.Goal = "NewGoal";
@@ -76,7 +75,6 @@ public sealed class SettingsViewModelTests
         vm.SelectedLanguage = newLang;
 
         vm.SaveSettingsCommand.Execute(null);
-        await Task.Delay(50); 
 
         _configMock.Verify(c => c.Save(It.Is<AppConfig>(acc => acc.Username == "NewName")), Times.Once);
         _serviceMock.Verify(s => s.SaveGoalAsync("NewGoal"), Times.Once);
@@ -87,14 +85,14 @@ public sealed class SettingsViewModelTests
     public async Task ApplyNewPassword_WhenPasswordsMatch_ShouldChangeAndReset()
     {
         var vm = CreateViewModel();
-        await Task.Delay(50);
 
+        await vm.Initialization;
+        
         vm.NewDbPassword = "pass";
         vm.ConfirmDbPassword = "pass";
         vm.IsDbEncrypted = true;
 
-        vm.ApplyNewPasswordCommand.Execute(null);
-        await Task.Delay(50);
+        await vm.ApplyNewPasswordCommand.ExecuteAsync(null);
 
         _authMock.Verify(a => a.ChangePasswordAsync("pass"), Times.Once);
         vm.NewDbPassword.Should().BeEmpty();

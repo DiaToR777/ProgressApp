@@ -10,6 +10,8 @@ namespace ProgressApp.WpfUI.ViewModels.Today
 {
     public partial class TodayViewModel : ObservableObject
     {
+        public Task Initialization { get; }
+
         private readonly IJournalService _journalService;
         private readonly IMessageService _messageService;
         private readonly IAnalyticsService _analyticsService;
@@ -44,7 +46,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                             .Select(r => new LocalizedEnum<DayResult>(r))
                             .ToList();
 
-            _ = InitializeAsync();
+            Initialization = InitializeAsync();
         }
 
         [RelayCommand(CanExecute = nameof(CanSave))]

@@ -16,6 +16,7 @@ namespace ProgressApp.WpfUI.ViewModels
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IAuthService _authService;
+        public Task Initialization { get; }
 
         [ObservableProperty]
         private object? _currentView;
@@ -33,7 +34,7 @@ namespace ProgressApp.WpfUI.ViewModels
             _authService = authSevice;
             _serviceProvider = serviceProvider;
 
-            _ = InitializeNavigationAsync();
+            Initialization = InitializeNavigationAsync();
         }
 
         internal async Task InitializeNavigationAsync()

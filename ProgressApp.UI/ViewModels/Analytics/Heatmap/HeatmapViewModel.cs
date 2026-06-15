@@ -12,6 +12,8 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 {
     public partial class HeatmapViewModel : ObservableObject
     {
+        public Task Initialization { get; }
+
         private readonly IAnalyticsService _analyticsService;
         private readonly IMessageService _messageService;
 
@@ -77,7 +79,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 .Select(r => new LocalizedEnum<HeatmapRange>(r))
                 .ToList();
 
-            _ = InitializeAsync();
+            Initialization = InitializeAsync();
         }
 
         internal async Task InitializeAsync()

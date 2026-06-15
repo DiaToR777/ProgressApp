@@ -12,6 +12,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
     {
         private readonly IJournalService _service;
         private readonly IMessageService _messageService;
+        public Task Initialization { get; }
 
         public ObservableCollection<JournalEntry> Entries { get; } = new();
 
@@ -34,7 +35,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
 
             Entries.CollectionChanged += OnEntriesChanged;
 
-            _ = LoadEntriesAsync();
+            Initialization = LoadEntriesAsync();
         }
 
         private void OnEntriesChanged(object? sender, NotifyCollectionChangedEventArgs e)
