@@ -106,8 +106,6 @@ namespace ProgressApp.Core.Services.Auth
         {
             Log.Information("AuthService: Starting password removal process...");
 
-            var tempPath = _dbState.DbPath + ".tmp";
-
             try
             {
                 await ExportToNewDatabase(string.Empty);
@@ -115,7 +113,6 @@ namespace ProgressApp.Core.Services.Auth
             }
             catch (Exception ex)
             {
-                if (File.Exists(tempPath)) File.Delete(tempPath);
                 Log.Error(ex, "AuthService: Error during password removal");
                 throw new AppException("Msg_ChangePasswordFailedError", isCritical: true);
             }
@@ -158,6 +155,11 @@ namespace ProgressApp.Core.Services.Auth
 
         private async Task EditPassword(string password)
         {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                //TODO 
+                return;
+            }
             try
             {
                 using (var scope = _scopeFactory.CreateScope())
@@ -169,22 +171,24 @@ namespace ProgressApp.Core.Services.Auth
 
                     using (var command = connection.CreateCommand())
                     {
-                            var safePassword = password.Replace("'", "''");
-                            command.CommandText = $"PRAGMA rekey = '{safePassword}';";
+                        var safePassword = password.Replace("'", "''");
+                        command.CommandText = $"PRAGMA rekey = '{safePassword}';";
+
+                        await command.ExecuteNonQueryAsync();
                     }
+                    await connection.CloseAsync();
                 }
 
                 SqliteConnection.ClearAllPools();
-                if (password != null)
+
                 _dbState.SetPassword(password);
 
                 Log.Information("AuthService: Password changed successfully.");
-                return;
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "AuthService: Error during password change");
-                throw new AppException("Msg_ChangePasswordFailedError", isCritical: true); 
+                throw new AppException("Msg_ChangePasswordFailedError", isCritical: true);
             }
         }
 
@@ -193,7 +197,7 @@ namespace ProgressApp.Core.Services.Auth
             using var connection = new SqliteConnection(_dbState.GetConnectionString(string.Empty));
             try
             {
-                
+
                 await connection.OpenAsync();
 
                 using var command = connection.CreateCommand();

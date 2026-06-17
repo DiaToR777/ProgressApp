@@ -30,7 +30,8 @@ public sealed class TableViewModelTests
         _serviceMock.Setup(s => s.GetAllEntriesAsync()).ReturnsAsync(testEntries);
 
         var vm = new TableViewModel(_serviceMock.Object, _messageServiceMock.Object);
-        await Task.Delay(50); 
+
+        await vm.Initialization;
 
         vm.Entries.Should().HaveCount(1);
         vm.ShowTable.Should().BeTrue();
@@ -43,7 +44,8 @@ public sealed class TableViewModelTests
         _serviceMock.Setup(s => s.GetAllEntriesAsync()).ReturnsAsync(new List<JournalEntry>());
 
         var vm = new TableViewModel(_serviceMock.Object, _messageServiceMock.Object);
-        await Task.Delay(50);
+
+        await vm.Initialization;
 
         vm.Entries.Should().BeEmpty();
         vm.ShowTable.Should().BeFalse();

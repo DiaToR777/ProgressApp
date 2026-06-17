@@ -26,12 +26,12 @@ public sealed class MainViewModelTests
     public async Task Initialize_WhenDbEncrypted_ShouldShowLoginAndHideNavigation()
     {
         _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.Encrypted);
-
         var loginVm = new LoginViewModel(_authMock.Object, new Mock<IMessageService>().Object);
         _spMock.Setup(sp => sp.GetService(typeof(LoginViewModel))).Returns(loginVm);
 
         var vm = new MainViewModel(_authMock.Object, _spMock.Object);
-        await Task.Delay(100); 
+
+        await vm.InitializeNavigationAsync();
 
         vm.CurrentView.Should().BeOfType<LoginViewModel>();
         vm.IsNavigationVisible.Should().BeFalse();
@@ -52,7 +52,8 @@ public sealed class MainViewModelTests
         _spMock.Setup(sp => sp.GetService(typeof(InitialSetupViewModel))).Returns(setupVm);
 
         var vm = new MainViewModel(_authMock.Object, _spMock.Object);
-        await Task.Delay(100);
+
+        await vm.InitializeNavigationAsync();
 
         vm.CurrentView.Should().BeOfType<InitialSetupViewModel>();
         vm.IsNavigationVisible.Should().BeFalse();
@@ -61,12 +62,22 @@ public sealed class MainViewModelTests
     [TestMethod]
     public async Task ShowToday_ShouldSetNavigationVisible()
     {
+        var todayVm = new Mock<TodayViewModel>(
+                new Mock<IJournalService>().Object,
+                new Mock<IMessageService>().Object,
+                new Mock<IAnalyticsService>().Object
+            ).Object;
+
         _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.Unencrypted);
-        _spMock.Setup(sp => sp.GetService(typeof(TodayViewModel))).Returns(new Mock<TodayViewModel>(null, null, null).Object);
+        _spMock.Setup(sp => sp.GetService(typeof(TodayViewModel))).Returns(todayVm);
 
         var vm = new MainViewModel(_authMock.Object, _spMock.Object);
-        await Task.Delay(100);
+
+        await vm.InitializeNavigationAsync();
+
+        vm.ShowTodayCommand.Execute(null);
 
         vm.IsNavigationVisible.Should().BeTrue();
+        vm.CurrentView.Should().Be(todayVm);
     }
 }

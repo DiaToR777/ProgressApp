@@ -29,7 +29,8 @@ public sealed class TodayViewModelTests
         _serviceMock.Setup(s => s.GetTodayAsync()).ReturnsAsync((JournalEntry)null);
 
         var vm = CreateViewModel();
-        await Task.Delay(100); 
+
+        await vm.Initialization;
 
         vm.CurrentStreak.Should().Be(5);
         vm.SelectedResult.Should().Be(DayResult.PartialSuccess);
@@ -43,14 +44,13 @@ public sealed class TodayViewModelTests
         _analyticsMock.Setup(a => a.GetCurrentStreakAsync()).ReturnsAsync(10); 
 
         var vm = CreateViewModel();
-        await Task.Delay(50);
+        await vm.Initialization;
 
         vm.Description = "Valid description";
 
         _analyticsMock.Setup(a => a.GetCurrentStreakAsync()).ReturnsAsync(11);
 
         vm.SaveCommand.Execute(null);
-        await Task.Delay(100);
 
         _serviceMock.Verify(s => s.SaveTodayAsync("Valid description", It.IsAny<DayResult>()), Times.Once);
         vm.CurrentStreak.Should().Be(11); 

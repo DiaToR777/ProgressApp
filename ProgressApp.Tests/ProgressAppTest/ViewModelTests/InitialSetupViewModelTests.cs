@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using CommunityToolkit.Mvvm.Input;
+using FluentAssertions;
 using Moq;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
@@ -23,7 +24,7 @@ public sealed class InitialSetupViewModelTests
         _messageService = new Mock<IMessageService>();
         _localizationService = new Mock<ILocalizationService>();
         _authService = new Mock<IAuthService>();
-        _appConfigService = new Mock<IAppConfigService>();
+        _appConfigService = new Mock<IAppConfigService>()!;
     }
 
     [TestMethod]
@@ -56,13 +57,12 @@ public sealed class InitialSetupViewModelTests
         vm.ConfirmPassword = "testpass";
 
         bool completedCalled = false;
-        vm.Completed = () => completedCalled = true;
+
+        vm.Completed = () => { completedCalled = true; };
 
         _authService.Setup(a => a.RegisterAsync(vm.Password)).ReturnsAsync(true);
 
-        vm.FinishCommand.Execute(null);
-
-        await Task.Delay(100);
+        await ((IAsyncRelayCommand)vm.FinishCommand).ExecuteAsync(null);
 
         _authService.Verify(a => a.RegisterAsync("testpass"), Times.Once);
         _settingsService.Verify(s => s.SaveGoalAsync("test"), Times.Once);
@@ -82,8 +82,7 @@ public sealed class InitialSetupViewModelTests
         var ex = new AppException("Registration Failed", isCritical: false, "Error");
         _authService.Setup(a => a.RegisterAsync(It.IsAny<string>())).ThrowsAsync(ex);
 
-        vm.FinishCommand.Execute(null);
-        await Task.Delay(100);
+        await ((IAsyncRelayCommand)vm.FinishCommand).ExecuteAsync(null);
 
         _messageService.Verify(m => m.ShowErrorAsync(ex), Times.Once);
     }
