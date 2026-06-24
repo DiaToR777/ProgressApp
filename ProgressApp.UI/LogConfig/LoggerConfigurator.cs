@@ -1,4 +1,4 @@
-﻿using ProgressApp.Core.Configuration;
+﻿using ProgressApp.Infrastructure.Configuration;
 using Serilog;
 using Serilog.Exceptions;
 using System.IO;

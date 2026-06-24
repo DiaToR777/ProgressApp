@@ -4,6 +4,7 @@ using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Config;
 using ProgressApp.Core.Models.Enums;
 using ProgressApp.Core.Models.Localization;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.Settings;
 
 namespace ProgressAppTest.ViewModelTests;

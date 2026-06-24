@@ -3,6 +3,7 @@ using Moq;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Journal;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.Analytics.Table;
 
 namespace ProgressAppTest.ViewModelTests;

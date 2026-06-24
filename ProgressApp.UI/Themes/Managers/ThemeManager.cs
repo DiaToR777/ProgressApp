@@ -1,5 +1,4 @@
-﻿using ProgressApp.Core.Models.Enums;
-using Wpf.Ui.Appearance;
+﻿using Wpf.Ui.Appearance;
 
 namespace ProgressApp.WpfUI.Themes.Managers;
 

@@ -2,6 +2,7 @@ using FluentAssertions;
 using Moq;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Heatmap;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.Analytics.Heatmap;
 
 namespace ProgressAppTest.ViewModelTests;

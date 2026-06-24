@@ -1,5 +1,4 @@
-﻿using ProgressApp.Core.Exceptions;
-using ProgressApp.Core.Interfaces.IService;
+﻿using ProgressApp.Domain.Exceptions;
 using ProgressApp.WpfUI.Localization.Managers;
 using System.IO;
 using System.Windows;
@@ -88,7 +87,7 @@ namespace ProgressApp.WpfUI.Services.Message
                 Title = title,
                 CloseButtonText = GetLocalizedText("Btn_Ok"),
                 MaxWidth = 500,
-                Owner = Application.Current.MainWindow,
+                Owner = System.Windows.Application.Current.MainWindow,
                 Content = new StackPanel
                 {
                     Orientation = Orientation.Horizontal,
@@ -99,7 +98,7 @@ namespace ProgressApp.WpfUI.Services.Message
                             Symbol = icon,
                             FontSize = 24,
                             Margin = new Thickness(0, 0, 15, 0),
-                            Foreground = Application.Current.Resources[brushKey] as Brush ?? Brushes.Gray
+                            Foreground = System.Windows.Application.Current.Resources[brushKey] as Brush ?? Brushes.Gray
                         },
                         new Wpf.Ui.Controls.TextBlock
                         {

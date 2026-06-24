@@ -1,7 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ProgressApp.Core.Exceptions;
-using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Domain.Exceptions;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.WpfUI.Services;
 using Serilog;
 
 namespace ProgressApp.WpfUI.ViewModels.Login

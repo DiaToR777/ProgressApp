@@ -1,9 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using CommunityToolkit.Mvvm.ComponentModel;
-using ProgressApp.Core.Exceptions;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Journal;
+using ProgressApp.Domain.Exceptions;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Journal;
+using ProgressApp.WpfUI.Services;
 using Serilog;
 
 namespace ProgressApp.WpfUI.ViewModels.Analytics.Table

@@ -1,10 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ProgressApp.Core.Configuration;
-using ProgressApp.Core.Data;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Enums;
-using ProgressApp.Core.Services;
-using ProgressApp.Core.Services.Auth;   
 
 using ProgressApp.WpfUI.Localization.Managers;
 using ProgressApp.WpfUI.Services.Message;
@@ -20,9 +14,19 @@ using ProgressApp.WpfUI.ViewModels.Analytics.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
 
 using ProgressApp.WpfUI.Views;
+
 using Serilog;
 using System.Windows;
 using ProgressApp.WpfUI.LogConfig;
+using ProgressApp.WpfUI.Services;
+
+using ProgressApp.Infrastructure.Configuration;
+using ProgressApp.Infrastructure.Data;
+
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Application.Services;
+using ProgressApp.Domain.Interfaces.IRepository;
+using ProgressApp.Infrastructure.Repositories;
 
 namespace ProgressApp.WpfUI
 {
@@ -30,7 +34,7 @@ namespace ProgressApp.WpfUI
     /// Interaction logic for App.xaml
     /// </summary>
     /// 
-    public partial class App : Application
+    public partial class App : System.Windows.Application
     {
         private ServiceProvider _serviceProvider;
 
@@ -53,6 +57,13 @@ namespace ProgressApp.WpfUI
 
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
             services.AddSingleton<IAppThemeService, ThemeWrapper>();
+
+
+            services.AddSingleton<IDataExchangeRepository, DataExchangeRepository>();
+            services.AddSingleton<IAnalyticsRepository, AnalyticsRepository>();
+            services.AddSingleton<ISettingsRepository, SettingsRepository>();
+            services.AddSingleton<IJournalRepository, JournalRepository>();
+            services.AddSingleton<IAuthRepository, AuthRepository>();
 
             services.AddSingleton<ISettingsService, SettingsService>();
             services.AddSingleton<IJournalService, JournalService>();

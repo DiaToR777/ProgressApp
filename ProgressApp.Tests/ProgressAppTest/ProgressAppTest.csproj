@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\ProgressApp.Core\ProgressApp.Core.csproj" />
     <ProjectReference Include="..\..\ProgressApp.UI\ProgressApp.WpfUI.csproj" />
   </ItemGroup>
 

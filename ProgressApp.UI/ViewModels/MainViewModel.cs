@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Enums;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Enums;
 using ProgressApp.WpfUI.ViewModels.Analytics;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;

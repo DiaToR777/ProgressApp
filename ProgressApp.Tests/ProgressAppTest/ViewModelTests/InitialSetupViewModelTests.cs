@@ -4,6 +4,7 @@ using Moq;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
 using ProgressApp.Core.Models.Config;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 
 namespace ProgressAppTest.ViewModelTests;

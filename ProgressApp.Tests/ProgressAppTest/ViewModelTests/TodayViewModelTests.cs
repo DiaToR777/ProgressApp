@@ -3,6 +3,7 @@ using FluentAssertions;
 using ProgressApp.Core.Models.Journal;
 using ProgressApp.WpfUI.ViewModels.Today;
 using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.WpfUI.Services;
 
 namespace ProgressAppTest.ViewModelTests;
 
