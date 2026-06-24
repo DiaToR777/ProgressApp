@@ -17,6 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ProgressApp.Application\ProgressApp.Application.csproj" />
+    <ProjectReference Include="..\..\ProgressApp.Domain\ProgressApp.Domain.csproj" />
+    <ProjectReference Include="..\..\ProgressApp.Infrastructure\ProgressApp.Infrastructure.csproj" />
     <ProjectReference Include="..\..\ProgressApp.UI\ProgressApp.WpfUI.csproj" />
   </ItemGroup>
 

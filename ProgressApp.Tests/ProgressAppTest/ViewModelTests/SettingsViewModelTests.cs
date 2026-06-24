@@ -1,10 +1,12 @@
 ﻿using FluentAssertions;
 using Moq;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Config;
-using ProgressApp.Core.Models.Enums;
-using ProgressApp.Core.Models.Localization;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Enums;
+using ProgressApp.Infrastructure.Configuration;
+using ProgressApp.WpfUI.Localization;
+using ProgressApp.WpfUI.Localization.Managers;
 using ProgressApp.WpfUI.Services;
+using ProgressApp.WpfUI.Themes;
 using ProgressApp.WpfUI.ViewModels.Settings;
 
 namespace ProgressAppTest.ViewModelTests;
