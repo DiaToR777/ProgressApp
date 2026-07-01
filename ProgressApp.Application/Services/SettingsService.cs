@@ -21,7 +21,6 @@ namespace ProgressApp.Application.Services
             {
                 return await _settingsRepository.GetGoalAsync();
             }
-
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to load setting for key: {Key}", SettingsKeys.Goal);

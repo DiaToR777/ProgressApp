@@ -22,7 +22,6 @@ namespace ProgressApp.Infrastructure.Repositories
                 .FirstOrDefaultAsync(e => e.Date.Date == today);
         }
 
-
         public async Task<JournalEntry?> GetTodayAsync()
         {
             using var scope = _scopeFactory.CreateScope();
@@ -35,12 +34,6 @@ namespace ProgressApp.Infrastructure.Repositories
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-
-            //if (string.IsNullOrWhiteSpace(description))
-            //{
-            //    Log.Warning("Attempted to save today's entry with empty description.");
-            //    throw new AppException("Msg_DescriptionEmpty");
-            //}
 
             var entry = await GetTodayInternalAsync(context);
             bool isNew = entry == null;
@@ -57,14 +50,8 @@ namespace ProgressApp.Infrastructure.Repositories
 
             entry.Description = description;
             entry.Result = result;
-
-            //if (isNew)
-            //    Log.Information("Creating new entry: Result: {Result}", result);
-            //else
-            //    Log.Information("Updating entry: Result:{Result}", result);
-
+            
             await context.SaveChangesAsync();
-
         }
         public async Task<List<JournalEntry>> GetAllEntriesAsync()
         {

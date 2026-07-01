@@ -8,7 +8,6 @@ namespace ProgressApp.Infrastructure.Repositories
 {
     public class AuthRepository : IAuthRepository
     {
-
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IDbState _dbState;
 
