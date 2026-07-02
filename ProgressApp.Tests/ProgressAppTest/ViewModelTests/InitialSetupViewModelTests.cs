@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using FluentAssertions;
 using Moq;
-using ProgressApp.Core.Exceptions;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Config;
+using ProgressApp.Domain.Exceptions;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Infrastructure.Configuration;
+using ProgressApp.WpfUI.Localization.Managers;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 
 namespace ProgressAppTest.ViewModelTests;

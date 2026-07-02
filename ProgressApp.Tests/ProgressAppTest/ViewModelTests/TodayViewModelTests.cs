@@ -1,8 +1,9 @@
 ﻿using Moq;
 using FluentAssertions;
-using ProgressApp.Core.Models.Journal;
+using ProgressApp.Domain.Models.Journal;
 using ProgressApp.WpfUI.ViewModels.Today;
-using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.WpfUI.Services;
 
 namespace ProgressAppTest.ViewModelTests;
 
