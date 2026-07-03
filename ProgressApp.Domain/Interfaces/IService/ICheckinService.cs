@@ -2,10 +2,10 @@
 
 namespace ProgressApp.Domain.Interfaces.IService;
 
-public interface IJournalService
+public interface ICheckinService
 {
-    Task<JournalEntry?> GetTodayAsync();
+    Task<DailyCheckin?> GetTodayAsync();
     Task SaveTodayAsync(string description, DayResult result);
-    Task<List<JournalEntry>> GetAllEntriesAsync();
+    Task<List<DailyCheckin>> GetAllEntriesAsync();
 
 }

@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-
 using ProgressApp.WpfUI.Localization.Managers;
 using ProgressApp.WpfUI.Services.Message;
 using ProgressApp.WpfUI.Themes;
-
 using ProgressApp.WpfUI.ViewModels;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
@@ -12,17 +10,13 @@ using ProgressApp.WpfUI.ViewModels.Analytics;
 using ProgressApp.WpfUI.ViewModels.Analytics.Heatmap;
 using ProgressApp.WpfUI.ViewModels.Analytics.Table;
 using ProgressApp.WpfUI.ViewModels.Today;
-
 using ProgressApp.WpfUI.Views;
-
 using Serilog;
 using System.Windows;
 using ProgressApp.WpfUI.LogConfig;
 using ProgressApp.WpfUI.Services;
-
 using ProgressApp.Infrastructure.Configuration;
 using ProgressApp.Infrastructure.Data;
-
 using ProgressApp.Domain.Interfaces.IService;
 using ProgressApp.Application.Services;
 using ProgressApp.Domain.Interfaces.IRepository;
@@ -61,12 +55,12 @@ namespace ProgressApp.WpfUI
 
             services.AddSingleton<IDataExchangeRepository, DataExchangeRepository>();
             services.AddSingleton<IAnalyticsRepository, AnalyticsRepository>();
-            services.AddSingleton<ISettingsRepository, SettingsRepository>();
-            services.AddSingleton<IJournalRepository, JournalRepository>();
+            services.AddSingleton<ICheckinRepository, CheckinRepository>();
             services.AddSingleton<IAuthRepository, AuthRepository>();
+            services.AddSingleton<IGoalRepository, GoalRepository>();
+            services.AddSingleton<IUserRepository, UserRepository>();
 
-            services.AddSingleton<ISettingsService, SettingsService>();
-            services.AddSingleton<IJournalService, JournalService>();
+            services.AddSingleton<IGoalService, GoalService>();
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IAppConfigService, AppConfigService>();
@@ -85,6 +79,7 @@ namespace ProgressApp.WpfUI
 
             _serviceProvider = services.BuildServiceProvider();
         }
+
         protected async override void OnStartup(StartupEventArgs e)
         {
             SQLitePCL.Batteries_V2.Init();
@@ -111,7 +106,8 @@ namespace ProgressApp.WpfUI
             catch (Exception ex)
             {
                 Log.Fatal(ex, "Critical error during application startup!");
-                MessageBox.Show("Fatal error during startup. Check logs for details.", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Fatal error during startup. Check logs for details.", "Critical Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
                 Shutdown();
             }
         }
@@ -124,5 +120,4 @@ namespace ProgressApp.WpfUI
             base.OnExit(e);
         }
     }
-
 }

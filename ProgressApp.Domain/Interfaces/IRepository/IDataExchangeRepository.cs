@@ -2,9 +2,9 @@
 
 namespace ProgressApp.Domain.Interfaces.IRepository;
 
-public interface IDataExchangeRepository
+public interface IDataExchangeRepository //todo
 {
-    Task<List<JournalEntry>> GetAllEntriesAsync();
+    Task<List<DailyCheckin>> GetAllEntriesAsync(); 
     Task<string?> GetGoalSettingValueAsync();
-    Task ReplaceDataAsync(List<JournalEntry> entries, string? goalValue);
+    Task ReplaceDataAsync(List<DailyCheckin> entries, string? goalValue);
 }

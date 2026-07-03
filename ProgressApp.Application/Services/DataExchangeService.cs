@@ -12,6 +12,7 @@ namespace ProgressApp.Application.Services
 {
     public class DataExchangeService : IDataExchangeService
     {
+        //TODO new goals and checkins integration
         private readonly CsvConfiguration _csvConfig;
         private readonly IDataExchangeRepository _dataExchangeRepository;
 
@@ -39,7 +40,8 @@ namespace ProgressApp.Application.Services
                 var goal = await _dataExchangeRepository.GetGoalSettingValueAsync();
                 if (string.IsNullOrEmpty(goal))
                 {
-                    Log.Warning("Export: Goal setting is missing or empty in the database. It will be exported as empty.");
+                    Log.Warning(
+                        "Export: Goal setting is missing or empty in the database. It will be exported as empty.");
                     throw new AppException("Msg_NoGoalToExportError");
                 }
 
@@ -72,21 +74,25 @@ namespace ProgressApp.Application.Services
                 Log.Warning("Import: No journal entries found in CSV file.");
                 throw new AppException("Msg_EntriesIsEmptyImportError");
             }
+
             if (string.IsNullOrEmpty(goalValue))
             {
                 Log.Warning("Import: Goal setting not found in CSV. It will be skipped.");
                 throw new AppException("Msg_GoalIsEmptyImportError");
             }
+
             await SaveImportedDataAsync(entries, goalValue);
             return entries.Count;
         }
 
-        private async Task<(IEnumerable<string> entries, IEnumerable<string> settings)> PrepareSourceDataAsync(string filePath)
+        private async Task<(IEnumerable<string> entries, IEnumerable<string> settings)> PrepareSourceDataAsync(
+            string filePath)
         {
             if (!File.Exists(filePath)) throw new AppException("Msg_NoFIleError");
 
             var allLines = await File.ReadAllLinesAsync(filePath);
-            if (allLines.All(l => string.IsNullOrWhiteSpace(l)) || allLines.Length == 0) throw new AppException("Msg_FileIsEmpty");
+            if (allLines.All(l => string.IsNullOrWhiteSpace(l)) || allLines.Length == 0)
+                throw new AppException("Msg_FileIsEmpty");
 
             int separatorIndex = Array.FindIndex(allLines, l => l.StartsWith("---Settings---"));
 
@@ -96,9 +102,9 @@ namespace ProgressApp.Application.Services
             return (entryLines, settingsLines);
         }
 
-        private List<JournalEntry> ParseEntries(IEnumerable<string> entryLines)
+        private List<DailyCheckin> ParseEntries(IEnumerable<string> entryLines)
         {
-            var entries = new List<JournalEntry>();
+            var entries = new List<DailyCheckin>();
             var csvContent = string.Join(Environment.NewLine, entryLines);
 
             using var stringReader = new StringReader(csvContent);
@@ -106,12 +112,13 @@ namespace ProgressApp.Application.Services
 
             try
             {
-                foreach (var record in csv.GetRecords<JournalEntry>())
+                foreach (var record in csv.GetRecords<DailyCheckin>())
                 {
                     if (string.IsNullOrWhiteSpace(record.Description))
-                        throw new AppException("Msg_EmptyDescriptionImportError", isCritical: false, csv.Context.Parser.Row);
+                        throw new AppException("Msg_EmptyDescriptionImportError", isCritical: false,
+                            csv.Context.Parser.Row);
 
-                    record.Id = 0;
+                    // record.Id = 0;
                     entries.Add(record);
                 }
             }
@@ -120,6 +127,7 @@ namespace ProgressApp.Application.Services
                 Log.Warning(ex, "CSV parsing error");
                 throw new AppException("Msg_ImportCsvError", isCritical: false, ex);
             }
+
             return entries;
         }
 
@@ -131,7 +139,7 @@ namespace ProgressApp.Application.Services
                 .Trim('"');
         }
 
-        private async Task SaveImportedDataAsync(List<JournalEntry> entries, string? goalValue)
+        private async Task SaveImportedDataAsync(List<DailyCheckin> entries, string? goalValue)
         {
             try
             {
@@ -150,6 +158,5 @@ namespace ProgressApp.Application.Services
                 throw new AppException("Msg_DbSaveWhileImportError", isCritical: true, ex);
             }
         }
-
     }
 }

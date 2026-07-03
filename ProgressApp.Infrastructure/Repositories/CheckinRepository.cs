@@ -6,23 +6,23 @@ using ProgressApp.Infrastructure.Data;
 
 namespace ProgressApp.Infrastructure.Repositories
 {
-    public class JournalRepository : IJournalRepository
+    public class CheckinRepository : ICheckinRepository
     {
         private readonly IServiceScopeFactory _scopeFactory;
 
-        public JournalRepository(IServiceScopeFactory scopeFactory)
+        public CheckinRepository(IServiceScopeFactory scopeFactory)
         {
             _scopeFactory = scopeFactory;
         }
 
-        private async Task<JournalEntry?> GetTodayInternalAsync(ProgressDbContext context)
+        private async Task<DailyCheckin?> GetTodayInternalAsync(ProgressDbContext context)
         {
             var today = DateTime.Today;
-            return await context.Entries
+            return await context.Checkins
                 .FirstOrDefaultAsync(e => e.Date.Date == today);
         }
 
-        public async Task<JournalEntry?> GetTodayAsync()
+        public async Task<DailyCheckin?> GetTodayAsync()
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
@@ -30,35 +30,30 @@ namespace ProgressApp.Infrastructure.Repositories
             return await GetTodayInternalAsync(context);
 
         }
-        public async Task SaveTodayAsync(string description, DayResult result)
+        public async Task SaveTodayAsync(DailyCheckin checkin)
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
             var entry = await GetTodayInternalAsync(context);
-            bool isNew = entry == null;
-
-            if (isNew)
+            
+            if (entry == null)
+                await context.Checkins.AddAsync(checkin);
+            else
             {
-                entry = new JournalEntry
-                {
-                    Date = DateTime.Today,
-                    CreatedAt = DateTime.Now
-                };
-                await context.Entries.AddAsync(entry);
+                entry.Description = checkin.Description;
+                entry.Result = checkin.Result;
+                entry.MilestoneId = checkin.MilestoneId;
             }
 
-            entry.Description = description;
-            entry.Result = result;
-            
             await context.SaveChangesAsync();
         }
-        public async Task<List<JournalEntry>> GetAllEntriesAsync()
+        public async Task<List<DailyCheckin>> GetAllEntriesAsync()
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            var entries = await context.Entries
+            var entries = await context.Checkins
                         .AsNoTracking()
                         .OrderByDescending(e => e.Date)
                         .ToListAsync();

@@ -22,9 +22,16 @@ namespace ProgressApp.Infrastructure.Data
         public DbSet<ActionLog> ActionLogs { get; set; } = null!;
         public DbSet<DailyCheckin> Checkins { get; set; } = null!;
         public DbSet<AppSettings> Settings { get; set; } = null!;
+        private DbSet<JournalEntry> JournalEntries { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<JournalEntry>(entity =>
+            {
+                entity.HasIndex(e => e.Date).IsUnique().HasDatabaseName("IX_Entries_Date");
+                entity.Property(e => e.Description).HasMaxLength(1500);
+            });
+            
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(u => u.Username).HasMaxLength(50);

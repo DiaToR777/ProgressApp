@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Domain.Interfaces.IRepository;
 using ProgressApp.Domain.Models.Journal;
-using ProgressApp.Domain.Models.Settings;
 using ProgressApp.Infrastructure.Data;
 
 namespace ProgressApp.Infrastructure.Repositories
@@ -16,12 +15,12 @@ namespace ProgressApp.Infrastructure.Repositories
             _scopeFactory = scopeFactory;
         }
 
-        public async Task<List<JournalEntry>> GetAllEntriesAsync()
+        public async Task<List<DailyCheckin>> GetAllEntriesAsync()
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            return await context.Entries.AsNoTracking().ToListAsync();
+            return await context.Checkins.AsNoTracking().ToListAsync();
         }
 
         public async Task<string?> GetGoalSettingValueAsync()
@@ -29,15 +28,16 @@ namespace ProgressApp.Infrastructure.Repositories
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            var goal = await context.Settings
-                .AsNoTracking()
-                .FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);
-            return goal?.Value;
+            // var goal = await context.Settings
+            //     .AsNoTracking()
+            //     .FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);
+            // return goal?.Value;
+            return "";
         }
 
-        public async Task ReplaceDataAsync(List<JournalEntry> entries, string? goalValue)
+        // //todo
+        public async Task ReplaceDataAsync(List<DailyCheckin> entries, string? goalValue)
         {
-
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
@@ -46,17 +46,17 @@ namespace ProgressApp.Infrastructure.Repositories
             {
                 entries.ForEach(e => e.Date = e.Date.Date);
 
-                await context.Entries.ExecuteDeleteAsync();
-                await context.Entries.AddRangeAsync(entries);
+                await context.Checkins.ExecuteDeleteAsync();
+                await context.Checkins.AddRangeAsync(entries);
 
-                if (goalValue != null)
-                {
-                    var setting = await context.Settings.FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);
-                    if (setting != null)
-                        setting.Value = goalValue;
-                    else
-                        context.Settings.Add(new AppSettings { Key = SettingsKeys.Goal, Value = goalValue });
-                }
+                // if (goalValue != null)
+                // {
+                //     var setting = await context.Settings.FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);
+                //     if (setting != null)
+                //         setting.Value = goalValue;
+                //     // else
+                //     //     context.Settings.Add(new AppSettings { Key = SettingsKeys.Goal, Value = goalValue });
+                // }
 
                 await context.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -64,8 +64,9 @@ namespace ProgressApp.Infrastructure.Repositories
             catch (Exception)
             {
                 await transaction.RollbackAsync();
-                throw; 
+                throw;
             }
         }
+        // //todo
     }
 }
