@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProgressApp.Domain.Exceptions;
 using ProgressApp.Domain.Interfaces.IService;
@@ -12,8 +13,10 @@ namespace ProgressApp.WpfUI.ViewModels.Today
     public partial class TodayViewModel : ObservableObject
     {
         public Task Initialization { get; }
+        
+        public ObservableCollection<ActionCheckboxViewModel> ActiveActions { get; } = new();
 
-        private readonly IJournalService _journalService;
+        private readonly ICheckinService _checkinService;
         private readonly IMessageService _messageService;
         private readonly IAnalyticsService _analyticsService;
 
@@ -36,9 +39,9 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         [ObservableProperty]
         private int _currentStreak;
 
-        public TodayViewModel(IJournalService journalService, IMessageService messageService, IAnalyticsService analyticsService)
+        public TodayViewModel(ICheckinService checkinService, IMessageService messageService, IAnalyticsService analyticsService)
         {
-            _journalService = journalService;
+            _checkinService = checkinService;
             _messageService = messageService;
             _analyticsService = analyticsService;
 
@@ -55,7 +58,8 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         {
             try
             {
-                await _journalService.SaveTodayAsync(Description, SelectedResult);
+                var completions = ActiveActions.ToDictionary(a => a.ActionId, a => a.IsCompleted);
+                await _checkinService.SaveTodayAsync(Description, SelectedResult, completions);
 
                 CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
 
@@ -77,8 +81,21 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             {
                 Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
 
-                var entry = await _journalService.GetTodayAsync();
+                var entry = await _checkinService.GetTodayAsync();
+                var actions = await _checkinService.GetActiveActionsAsync();
 
+                ActiveActions.Clear();
+                foreach (var action in actions)
+                {
+                    var vm = new ActionCheckboxViewModel(action);
+
+                    var existingLog = entry?.ActionLogs.FirstOrDefault(l => l.GoalActionId == action.Id);
+                    if (existingLog != null)
+                        vm.IsCompleted = existingLog.IsCompleted; // восстанавливаем состояние чекбокса
+
+                    ActiveActions.Add(vm);
+                }
+                
                 CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
 
                 if (entry != null)

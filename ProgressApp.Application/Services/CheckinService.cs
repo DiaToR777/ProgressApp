@@ -1,6 +1,7 @@
 ﻿using ProgressApp.Domain.Exceptions;
 using ProgressApp.Domain.Interfaces.IRepository;
 using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Goals;
 using ProgressApp.Domain.Models.Journal;
 using Serilog;
 
@@ -31,8 +32,28 @@ namespace ProgressApp.Application.Services
                 throw new AppException("Msg_ErrorLoadingData", isCritical: true);
             }
         }
+        
+        public async Task<List<GoalAction>> GetActiveActionsAsync()
+        {
+            try
+            {
+                var user = await _userRepository.GetUserAsync();
+                if (user == null) return new List<GoalAction>();
 
-        public async Task SaveTodayAsync(string description, DayResult result)
+                var goal = await _goalRepository.GetActiveGoalAsync(user.Id);
+                if (goal == null) return new List<GoalAction>();
+
+                var milestone = await _goalRepository.GetActiveMilestoneAsync(goal.Id);
+                return milestone?.Actions ?? new List<GoalAction>();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to load active actions.");
+                throw new AppException("Msg_ErrorLoadingData", isCritical: true);
+            }
+        }
+
+        public async Task SaveTodayAsync(string description, DayResult result, Dictionary<Guid, bool> actionCompletions)
         {
             if (string.IsNullOrWhiteSpace(description))
             {
@@ -60,6 +81,18 @@ namespace ProgressApp.Application.Services
                     Result = result,
                     MilestoneId = milestone?.Id
                 };
+
+                if (milestone != null)
+                {
+                    foreach (var action in milestone.Actions)
+                    {
+                        checkin.ActionLogs.Add(new ActionLog
+                        {
+                            GoalActionId = action.Id,
+                            IsCompleted = actionCompletions.GetValueOrDefault(action.Id, false)
+                        });
+                    }
+                }
 
                 await _checkinRepository.SaveTodayAsync(checkin);
 

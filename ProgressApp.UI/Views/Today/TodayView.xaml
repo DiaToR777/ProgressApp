@@ -100,6 +100,15 @@
                    Command="{Binding SaveCommand}"
                    HorizontalAlignment="Left"
                    TabIndex="2"/>
+            
+            <ItemsControl ItemsSource="{Binding ActiveActions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <CheckBox Content="{Binding Title}" IsChecked="{Binding IsCompleted}" Margin="0,4"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+            
         </StackPanel>
     </Grid>
 </UserControl>
