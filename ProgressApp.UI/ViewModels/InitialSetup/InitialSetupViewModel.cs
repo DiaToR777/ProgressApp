@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProgressApp.Domain.Exceptions;
 using ProgressApp.Domain.Interfaces.IService;
@@ -14,7 +15,7 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 {
     public partial class InitialSetupViewModel : ObservableObject
     {
-        private readonly ISettingsService _settingsService;
+        private readonly IOnboardingService _onboardingService;
         private readonly IMessageService _messageService;
         private readonly ILocalizationService _localizationService;
         private readonly IAuthService _authService;
@@ -22,28 +23,29 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        public ObservableCollection<ActionInputViewModel> Actions { get; } = new();
+
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private string _username = string.Empty;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private string _goal = string.Empty;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        [ObservableProperty] private string _goalDescription = string.Empty;
+
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        private int _milestoneDays = 40;
+
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private string _password = string.Empty;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private string _confirmPassword = string.Empty;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private bool _isBusy;
 
-        [ObservableProperty]
-        private LanguageModel _selectedLanguage;
+        [ObservableProperty] private LanguageModel _selectedLanguage;
 
         partial void OnSelectedLanguageChanged(LanguageModel value)
         {
@@ -54,22 +56,34 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             }
         }
 
-        public Action? Completed { get; set; }
+        public Action? Completed { get; set; } //TODO Event
 
         public InitialSetupViewModel(
-            ISettingsService settings,
+            IOnboardingService onboardingService,
             IAppConfigService appConfigService,
             ILocalizationService localizationService,
             IMessageService messageService,
             IAuthService authService)
         {
-            _settingsService = settings;
+            _onboardingService = onboardingService;
             _appConfigService = appConfigService;
             _localizationService = localizationService;
             _messageService = messageService;
             _authService = authService;
 
             _selectedLanguage = LanguageConfig.AvailableLanguages.First();
+        }
+
+        [RelayCommand]
+        private void AddAction()
+        {
+            Actions.Add(new ActionInputViewModel());
+        }
+
+        [RelayCommand]
+        private void RemoveAction(ActionInputViewModel action)
+        {
+            Actions.Remove(action);
         }
 
         [RelayCommand(CanExecute = nameof(CanFinish), AllowConcurrentExecutions = false)]
@@ -84,14 +98,24 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
                 Log.Information("InitialSetup: Registration success");
 
-                await _settingsService.SaveGoalAsync(Goal);
+                var actionsData = Actions
+                    .Where(a => !string.IsNullOrWhiteSpace(a.Title))
+                    .Select(a => (a.Title, a.TargetCountPerWeek))
+                    .ToList();
+
+                await _onboardingService.CompleteOnboardingAsync(
+                    Username,
+                    Goal,
+                    string.IsNullOrWhiteSpace(GoalDescription) ? null : GoalDescription,
+                    MilestoneDays,
+                    actionsData);
 
                 var config = new AppConfig
                 {
                     Language = SelectedLanguage.CultureCode,
-                    Username = Username,
                     Theme = AppTheme.Light.ToString()
                 };
+                
                 _appConfigService.Save(config);
 
                 Log.Information("InitialSetupVM: Setup saved. Invoking completion.");
@@ -99,7 +123,6 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
             }
             catch (AppException ex)
             {
-
                 Log.Error(ex, "InitialSetup: Critical error during setup finish");
                 await _messageService.ShowErrorAsync(ex);
             }
@@ -115,6 +138,7 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
                    !string.IsNullOrWhiteSpace(Username) &&
                    !string.IsNullOrWhiteSpace(Goal) &&
                    !string.IsNullOrWhiteSpace(Password) &&
+                   MilestoneDays > 0 &&
                    Password == ConfirmPassword;
         }
     }

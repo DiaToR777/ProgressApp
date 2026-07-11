@@ -45,13 +45,12 @@ namespace ProgressApp.WpfUI
 
             var dbPath = AppPaths.DbPath;
 
+            services.AddSingleton<IDbState>(new DbState(dbPath));
             services.AddDbContext<ProgressDbContext>();
 
-            services.AddSingleton<IDbState>(new DbState(dbPath));
 
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
             services.AddSingleton<IAppThemeService, ThemeWrapper>();
-
 
             services.AddSingleton<IDataExchangeRepository, DataExchangeRepository>();
             services.AddSingleton<IAnalyticsRepository, AnalyticsRepository>();
@@ -59,6 +58,7 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<IAuthRepository, AuthRepository>();
             services.AddSingleton<IGoalRepository, GoalRepository>();
             services.AddSingleton<IUserRepository, UserRepository>();
+            services.AddSingleton<IOnboardingService, OnboardingService>();
 
             services.AddSingleton<IGoalService, GoalService>();
             services.AddSingleton<IMessageService, MessageService>();
@@ -66,6 +66,7 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<IAppConfigService, AppConfigService>();
             services.AddSingleton<IDataExchangeService, DataExchangeService>();
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
+            services.AddSingleton<ICheckinService, CheckinService>();
 
             services.AddSingleton<MainViewModel>();
 

@@ -391,4 +391,22 @@ Records imported: {0}</value>
   <data name="Subtitle_EmptyTable" xml:space="preserve">
     <value>It looks a bit empty here. Start by adding your first journal entry to track your progress.</value>
   </data>
+  <data name="Title_GoalDescription" xml:space="preserve">
+    <value>Description of the goal (optional)</value>
+  </data>
+  <data name="Title_MilestoneDuration" xml:space="preserve">
+    <value>Milestone duration (days)</value>
+  </data>
+  <data name="Title_ActionToReachGoal" xml:space="preserve">
+    <value>Action to reach the goal</value>
+  </data>
+  <data name="Placeholder_ActionExample" xml:space="preserve">
+    <value>For example: learning</value>
+  </data>
+  <data name="Title_x/wk" xml:space="preserve">
+    <value>x/wk</value>
+  </data>
+  <data name="Button_AddAction" xml:space="preserve">
+    <value>+ Add Action</value>
+  </data>
 </root>

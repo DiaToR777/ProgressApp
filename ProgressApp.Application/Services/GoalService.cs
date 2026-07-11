@@ -9,21 +9,25 @@ namespace ProgressApp.Application.Services;
 public class GoalService : IGoalService
 {
     private readonly IGoalRepository _goalRepository;
+    private readonly IUserRepository _userRepository;
 
-    public GoalService(IGoalRepository goalRepository)
+    public GoalService(IGoalRepository goalRepository, IUserRepository userRepository)
     {
-        _goalRepository =  goalRepository;
+        _userRepository = userRepository;
+        _goalRepository = goalRepository;
     }
 
-public async Task<Goal?> GetActiveGoalAsync(Guid userId)
+    public async Task<Goal?> GetActiveGoalAsync()
     {
         try
         {
-            return await _goalRepository.GetActiveGoalAsync(userId);
+            var user = await _userRepository.GetUserAsync();
+            if (user == null) return null; //todo
+            return await _goalRepository.GetActiveGoalAsync(user.Id);
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Failed to load active goal for user {UserId}", userId);
+            // Log.Error(ex, "Failed to load active goal for user {UserId}",);
             throw new AppException("Msg_ErrorLoadingGoal", isCritical: true);
         }
     }
@@ -62,6 +66,7 @@ public async Task<Goal?> GetActiveGoalAsync(Guid userId)
             throw new AppException("Msg_SaveGoalError", isCritical: true);
         }
     }
+
     public Task UpdateGoalAsync(Goal goal)
     {
         throw new NotImplementedException();

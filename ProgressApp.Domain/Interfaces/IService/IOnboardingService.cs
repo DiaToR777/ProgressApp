@@ -4,6 +4,11 @@ namespace ProgressApp.Domain.Interfaces.IService;
 
 public interface IOnboardingService
 {
-    Task<Guid> CompleteOnboardingAsync(string username, string goalTitle, int milestoneDays);
+    Task<Guid> CompleteOnboardingAsync(
+        string username,
+        string goalTitle,
+        string? goalDescription,
+        int milestoneDays,
+        List<(string Title, int TargetCountPerWeek)> actions);
     
 }

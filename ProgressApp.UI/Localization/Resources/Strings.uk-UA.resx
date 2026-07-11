@@ -391,4 +391,25 @@
   <data name="Subtitle_EmptyTable" xml:space="preserve">
     <value>Ви ще не додали жодного запису. Створіть перший запис, щоб почати відстежувати свій прогрес.</value>
   </data>
+  <data name="Title_MilestoneDuration" xml:space="preserve">
+    <value>Тривалість рубежу (дні)</value>
+  </data>
+  <data name="Title_ActionToReachGoal" xml:space="preserve">
+    <value>Дія для досягнення цілі (не обов'язково)</value>
+  </data>
+  <data name="Pleceholder_ActionExample" xml:space="preserve">
+    <value>Наприклад: навчання</value>
+  </data>
+  <data name="Title_x/wk" xml:space="preserve">
+    <value>раз/нед</value>
+  </data>
+  <data name="Button_AddAction" xml:space="preserve">
+    <value>+ Додати дію</value>
+  </data>
+  <data name="Placeholder_ActionExample" xml:space="preserve">
+    <value>Наприклад: навчання</value>
+  </data>
+  <data name="Title_GoalDescription" xml:space="preserve">
+    <value>Опис цілі (необов'язково)</value>
+  </data>
 </root>
