@@ -727,6 +727,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actions of the day.
+        /// </summary>
+        public static string Title_ActionOfDay {
+            get {
+                return ResourceManager.GetString("Title_ActionOfDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Action to reach the goal.
         /// </summary>
         public static string Title_ActionToReachGoal {

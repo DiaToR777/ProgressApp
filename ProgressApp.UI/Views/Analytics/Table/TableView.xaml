@@ -12,6 +12,7 @@
 
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
+        <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
     </UserControl.Resources>
 
     <Grid Margin="10"
@@ -68,6 +69,21 @@
                         </ui:TextBlock>
                     </StackPanel>
                 </ui:Card>
+
+                <Expander Header="{Binding Source={StaticResource Langs}, Path=[Title_ActionOfDay]}"
+                          Margin="0,0,0,15"
+                          Visibility="{Binding HasActionLogs, Converter={StaticResource BoolToVis}}" >
+                    <ItemsControl ItemsSource="{Binding SelectedEntry.ActionLogs}" Margin="10,8,0,0">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding IsCompleted}"
+                                          IsEnabled="False"
+                                          Content="{Binding GoalAction.Title}"
+                                          Margin="0,3"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Expander>
 
                 <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_Description]}" 
                        Margin="0,5"/>

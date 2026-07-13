@@ -189,7 +189,7 @@ namespace ProgressApp.Application.Services
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to calculate milestone progress.");
-                throw new AppException("Msg_ErrorLoadingGoalProgress", isCritical: true); //TODO
+                throw new AppException("Msg_ErrorLoadingGoalProgress", isCritical: true); 
             }
         }
 

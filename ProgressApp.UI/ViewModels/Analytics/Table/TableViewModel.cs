@@ -11,14 +11,20 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
 {
     public partial class TableViewModel : ObservableObject
     {
-        private readonly IJournalService _service;
+        private readonly ICheckinService _service;
         private readonly IMessageService _messageService;
         public Task Initialization { get; }
 
-        public ObservableCollection<JournalEntry> Entries { get; } = new();
+        
+        public ObservableCollection<DailyCheckin> Entries { get; } = new();
+        public bool HasActionLogs => SelectedEntry?.ActionLogs.Count > 0;
+        partial void OnSelectedEntryChanged(DailyCheckin? value)
+        {
+            OnPropertyChanged(nameof(HasActionLogs));
+        }
 
         [ObservableProperty]
-        private JournalEntry? _selectedEntry;
+        private DailyCheckin? _selectedEntry;
 
         [ObservableProperty]
         private bool _showTable;
@@ -29,7 +35,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
         [ObservableProperty]
         private bool _isBusy;
 
-        public TableViewModel(IJournalService service, IMessageService messageService)
+        public TableViewModel(ICheckinService service, IMessageService messageService)
         {
             _service = service;
             _messageService = messageService;

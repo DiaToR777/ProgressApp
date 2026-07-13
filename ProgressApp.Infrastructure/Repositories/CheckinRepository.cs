@@ -71,12 +71,12 @@ namespace ProgressApp.Infrastructure.Repositories
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            var entries = await context.Checkins
-                        .AsNoTracking()
-                        .OrderByDescending(e => e.Date)
-                        .ToListAsync();
-
-            return entries;
+            return await context.Checkins
+                .AsNoTracking()
+                .Include(c => c.ActionLogs)
+                .ThenInclude(l => l.GoalAction)
+                .OrderByDescending(e => e.Date)
+                .ToListAsync();
         }
     }
 }

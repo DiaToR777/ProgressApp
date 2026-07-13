@@ -421,4 +421,7 @@
   <data name="Msg_UserNotFound" xml:space="preserve">
     <value>Користувача не знайдено. Спробуйте перезапустити додаток. Дивіться логи для детальної інформації</value>
   </data>
+  <data name="Title_ActionOfDay" xml:space="preserve">
+    <value>Дії цього дня</value>
+  </data>
 </root>

@@ -421,4 +421,7 @@ Records imported: {0}</value>
   <data name="Msg_UserNotFound" xml:space="preserve">
     <value>The user was not found. Please try restarting the app.. Check logs for more details</value>
   </data>
+  <data name="Title_ActionOfDay" xml:space="preserve">
+    <value>Actions of the day</value>
+  </data>
 </root>
