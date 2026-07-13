@@ -22,12 +22,12 @@ public class GoalService : IGoalService
         try
         {
             var user = await _userRepository.GetUserAsync();
-            if (user == null) return null; //todo
+            if (user == null) return null;
             return await _goalRepository.GetActiveGoalAsync(user.Id);
         }
         catch (Exception ex)
         {
-            // Log.Error(ex, "Failed to load active goal for user {UserId}",);
+            Log.Error(ex, "Failed to load active goal for user");
             throw new AppException("Msg_ErrorLoadingGoal", isCritical: true);
         }
     }

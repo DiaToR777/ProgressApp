@@ -9,5 +9,5 @@ public interface ICheckinService
     Task<List<GoalAction>> GetActiveActionsAsync();
     Task SaveTodayAsync(string description, DayResult result, Dictionary<Guid, bool> actionCompletions);
     Task<List<DailyCheckin>> GetAllEntriesAsync();
-
+    Task<MilestoneProgress?> GetActiveMilestoneProgressAsync();
 }

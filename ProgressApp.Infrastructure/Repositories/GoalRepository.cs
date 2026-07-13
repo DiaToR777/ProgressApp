@@ -15,6 +15,20 @@ public class GoalRepository :  IGoalRepository
         _scopeFactory = scopeFactory;
     }
 
+    public async Task<Milestone?> GetActiveMilestoneWithDetailsAsync(Guid goalId)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
+        return await context.Milestones
+            .AsNoTracking()
+            .Include(m => m.Actions)
+            .Include(m => m.Checkins)
+            .ThenInclude(c => c.ActionLogs)
+            .Where(m => m.GoalId == goalId && m.Status == MilestoneStatus.Active)
+            .FirstOrDefaultAsync();
+    }
+
     public async Task<Goal?> GetActiveGoalAsync(Guid userId)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -56,8 +70,10 @@ public class GoalRepository :  IGoalRepository
         return await context.Milestones
             .AsNoTracking()
             .Include(m => m.Actions)
+            .Include(m => m.Checkins)
+            .ThenInclude(c => c.ActionLogs)
             .Where(m => m.GoalId == goalId && m.Status == MilestoneStatus.Active)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(); 
     }
 
     public async Task<Milestone> CreateMilestoneAsync(Milestone milestone)

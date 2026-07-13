@@ -285,11 +285,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to load active actions. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingActions {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingActions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Data loading error. Check log file.
         /// </summary>
         public static string Msg_ErrorLoadingData {
             get {
                 return ResourceManager.GetString("Msg_ErrorLoadingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to calculate goal progress. Check logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingGoalProgress {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingGoalProgress", resourceCulture);
             }
         }
         
@@ -538,6 +556,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The user was not found. Please try restarting the app.. Check logs for more details.
+        /// </summary>
+        public static string Msg_UserNotFound {
+            get {
+                return ResourceManager.GetString("Msg_UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Analytics.
         /// </summary>
         public static string NavBtn_Analytics {
@@ -624,6 +651,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Placeholder_WhatYouAchive {
             get {
                 return ResourceManager.GetString("Placeholder_WhatYouAchive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For example: learning.
+        /// </summary>
+        public static string Pleceholder_ActionExample {
+            get {
+                return ResourceManager.GetString("Pleceholder_ActionExample", resourceCulture);
             }
         }
         

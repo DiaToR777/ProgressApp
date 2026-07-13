@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProgressApp.Domain.Exceptions;
 using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Goals;
 using ProgressApp.Domain.Models.Journal;
 using ProgressApp.WpfUI.Localization.Helpers;
 using ProgressApp.WpfUI.Services;
@@ -22,7 +23,10 @@ namespace ProgressApp.WpfUI.ViewModels.Today
 
         public DateOnly CurrentDate { get; } = DateOnly.FromDateTime(DateTime.Now);
         public IEnumerable<LocalizedEnum<DayResult>> AllResult { get; }
-
+        
+        [ObservableProperty]
+        private MilestoneProgress? _milestoneProgress;
+        
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         private string _description = string.Empty;
@@ -49,7 +53,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                             .Cast<DayResult>()
                             .Select(r => new LocalizedEnum<DayResult>(r))
                             .ToList();
-
+            
             Initialization = InitializeAsync();
         }
 
@@ -62,7 +66,8 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 await _checkinService.SaveTodayAsync(Description, SelectedResult, completions);
 
                 CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
-
+                MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
+                
                 await _messageService.ShowInfoAsync("Msg_RecordSaved");
                 Log.Debug("TodayViewModel: Entry saved successfully");
             }
@@ -82,8 +87,8 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
 
                 var entry = await _checkinService.GetTodayAsync();
+                MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
                 var actions = await _checkinService.GetActiveActionsAsync();
-
                 ActiveActions.Clear();
                 foreach (var action in actions)
                 {

@@ -409,4 +409,16 @@ Records imported: {0}</value>
   <data name="Button_AddAction" xml:space="preserve">
     <value>+ Add Action</value>
   </data>
+  <data name="Msg_ErrorLoadingActions" xml:space="preserve">
+    <value>Failed to load active actions. Check logs</value>
+  </data>
+  <data name="Pleceholder_ActionExample" xml:space="preserve">
+    <value>For example: learning</value>
+  </data>
+  <data name="Msg_ErrorLoadingGoalProgress" xml:space="preserve">
+    <value>Failed to calculate goal progress. Check logs</value>
+  </data>
+  <data name="Msg_UserNotFound" xml:space="preserve">
+    <value>The user was not found. Please try restarting the app.. Check logs for more details</value>
+  </data>
 </root>

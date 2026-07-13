@@ -9,106 +9,121 @@
              Focusable="False">
 
     <UserControl.Resources>
-        <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter"/>
+        <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
     </UserControl.Resources>
 
     <Grid KeyboardNavigation.TabNavigation="Cycle">
-        <StackPanel Margin="20"
-                helpers:LanguageHelper.UpdateLanguage="{Binding Source={StaticResource Langs}, Path=CurrentCulture}" 
-                KeyboardNavigation.TabNavigation="Cycle">
+        <Grid KeyboardNavigation.TabNavigation="Cycle">
+    <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="*"/>
+    </Grid.RowDefinitions>
 
-            <Grid Margin="0,0,0,15">
-                <StackPanel Orientation="Horizontal">
-                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Today]}"
-                              FontWeight="Bold"
-                              FontSize="28" />
-                    <ui:TextBlock Text="{Binding CurrentDate, StringFormat=dd MMMM yyyy}"
-                              Margin="15,10,0,0"
-                              Appearance="Secondary"
-                              FontSize="14" />
-                </StackPanel>
+    <StackPanel Grid.Row="0" Margin="20,20,20,10" helpers:LanguageHelper.UpdateLanguage="{Binding Source={StaticResource Langs}, Path=CurrentCulture}">
+        
+        <Grid Margin="0,0,0,15">
+            <StackPanel Orientation="Horizontal">
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Today]}" FontWeight="Bold" FontSize="28" />
+                <ui:TextBlock Text="{Binding CurrentDate, StringFormat=dd MMMM yyyy}" Margin="15,10,0,0" Appearance="Secondary" FontSize="14" />
+            </StackPanel>
+        </Grid>
+
+        <ui:Card Padding="12,8" HorizontalAlignment="Left" Margin="0,0,0,20">
+            <StackPanel Orientation="Horizontal">
+                <ui:SymbolIcon Symbol="Flash24" Margin="0,0,8,0">
+                    <ui:SymbolIcon.Style>
+                        <Style TargetType="ui:SymbolIcon">
+                            <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentStreak, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
+                                    <Setter Property="Foreground" Value="#FF4500" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ui:SymbolIcon.Style>
+                </ui:SymbolIcon>
+                <ui:TextBlock Text="{Binding CurrentStreak}" FontWeight="Bold" FontSize="18" VerticalAlignment="Center" />
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_daysStreak]}" Appearance="Secondary" FontSize="13" VerticalAlignment="Center" Margin="5,0,0,0" />
+            </StackPanel>
+        </ui:Card>
+
+        <StackPanel Margin="0,0,0,10">
+            <ui:TextBlock Appearance="Secondary" FontSize="12">
+                <Run Text="{Binding MilestoneProgress.DaysElapsed, Mode=OneWay}" />
+                <Run Text="/" />
+                <Run Text="{Binding MilestoneProgress.TargetDays, Mode=OneWay}" />
+                <Run Text="дней" />
+            </ui:TextBlock>
+            <ProgressBar Value="{Binding MilestoneProgress.DaysCompletionPercent}" Maximum="100" Height="6" Margin="0,4,0,12" />
+
+            <ui:TextBlock Text="Стабильность выполнения" Appearance="Secondary" FontSize="12" />
+            <ProgressBar Value="{Binding MilestoneProgress.ConsistencyPercent}" Maximum="100" Height="6" Margin="0,4,0,0" />
+            <ui:TextBlock Text="{Binding MilestoneProgress.ConsistencyPercent, StringFormat={}{0}%}" FontSize="12" Appearance="Secondary" HorizontalAlignment="Right" />
+        </StackPanel>
+        
+    </StackPanel>
+
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="20,0,20,20">
+        <StackPanel>
+
+            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DayDescription]}" Margin="0,0,0,0" />
+            
+            <Grid Margin="0,0,0,20">
+                <ui:TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                            PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatYouAchive]}"
+                            AcceptsReturn="True"
+                            TextWrapping="Wrap"
+                            VerticalContentAlignment="Top"
+                            Padding="10,10,10,28" 
+                            ClearButtonEnabled="True"
+                            MinHeight="120"
+                            MaxLength="1500"
+                            TabIndex="0" />
 
                 <ui:TextBlock HorizontalAlignment="Right" 
-                          VerticalAlignment="Bottom"
-                          Appearance="Tertiary"
-                          FontSize="12">
-                    <Run Text="{Binding Description.Length, Mode=OneWay}"/>
-                    <Run Text="/1500"/>
+                              VerticalAlignment="Bottom"
+                              Margin="0,0,15,10"
+                              Appearance="Tertiary"
+                              FontSize="11"
+                              IsHitTestVisible="False"> 
+                    <Run Text="{Binding Description.Length, Mode=OneWay}" />
+                    <Run Text="/1500" />
                 </ui:TextBlock>
             </Grid>
 
-            <ui:Card Padding="12,8" HorizontalAlignment="Left" Margin="0,0,0,20">
-                <StackPanel Orientation="Horizontal">
-                    <ui:SymbolIcon Symbol="Flash24" Margin="0,0,8,0">
-                        <ui:SymbolIcon.Style>
-                            <Style TargetType="ui:SymbolIcon">
-                                <Setter Property="Foreground" Value="{DynamicResource TextFillColorTertiaryBrush}"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding CurrentStreak, Converter={StaticResource GreaterThanZeroConverter}}" Value="True">
-                                        <Setter Property="Foreground" Value="#FF4500"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ui:SymbolIcon.Style>
-                    </ui:SymbolIcon>
-
-                    <ui:TextBlock Text="{Binding CurrentStreak}" 
-                              FontWeight="Bold" 
-                              FontSize="18"
-                              VerticalAlignment="Center"/>
-
-                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_daysStreak]}" 
-                              Appearance="Secondary"
-                              FontSize="13" 
-                              VerticalAlignment="Center" 
-                              Margin="5,0,0,0"/>
-                </StackPanel>
-            </ui:Card>
-
-            <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_DayDescription]}" Margin="0,0,0,5"/>
-
-            <ScrollViewer Height="150" VerticalScrollBarVisibility="Visible">
-                <ui:TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatYouAchive]}"
-                    AcceptsReturn="True"
-                    TextWrapping="Wrap"
-                    VerticalContentAlignment="Top"
-                    ClearButtonEnabled="True"
-                    MaxLength="1500"
-                    Margin="0,0,0,20"
-                    TabIndex="0"/>
-            </ScrollViewer>
-            
             <Label Content="{Binding Source={StaticResource Langs}, Path=[DataGrid_Result]}" Margin="0,0,0,5" />
-            <ComboBox ItemsSource="{Binding AllResult}" 
-                     SelectedValue="{Binding SelectedResult}"
-                     SelectedValuePath="Value"
-                     HorizontalAlignment="Stretch"
-                     Margin="0,0,0,20"
-                     TabIndex="1">
+            <ComboBox ItemsSource="{Binding AllResult}"
+                      SelectedValue="{Binding SelectedResult}"
+                      SelectedValuePath="Value"
+                      HorizontalAlignment="Stretch"
+                      Margin="0,0,0,20"
+                      TabIndex="1">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding DisplayName}"/>
+                        <TextBlock Text="{Binding DisplayName}" />
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
-            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_SaveDay]}"
-                   Appearance="Primary"
-                   Icon="{ui:SymbolIcon Symbol=Save24}"
-                   Padding="30,8"
-                   Command="{Binding SaveCommand}"
-                   HorizontalAlignment="Left"
-                   TabIndex="2"/>
-            
-            <ItemsControl ItemsSource="{Binding ActiveActions}">
+            <Label Content="Действия на сегодня:" Margin="0,0,0,5" FontWeight="SemiBold"/>
+            <ItemsControl ItemsSource="{Binding ActiveActions}" Margin="0,0,0,20">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <CheckBox Content="{Binding Title}" IsChecked="{Binding IsCompleted}" Margin="0,4"/>
+                        <CheckBox Content="{Binding Title}" IsChecked="{Binding IsCompleted}" Margin="0,6" FontSize="14"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+
+            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_SaveDay]}"
+                       Appearance="Primary"
+                       Icon="{ui:SymbolIcon Symbol=Save24}"
+                       Padding="30,8"
+                       Command="{Binding SaveCommand}"
+                       HorizontalAlignment="Left"
+                       TabIndex="2" />
             
         </StackPanel>
+    </ScrollViewer>
+</Grid>
     </Grid>
 </UserControl>

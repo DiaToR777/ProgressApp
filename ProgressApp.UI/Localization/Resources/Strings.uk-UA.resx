@@ -412,4 +412,13 @@
   <data name="Title_GoalDescription" xml:space="preserve">
     <value>Опис цілі (необов'язково)</value>
   </data>
+  <data name="Msg_ErrorLoadingActions" xml:space="preserve">
+    <value>Не вдалося завантажити активні дії. Перевірте логи</value>
+  </data>
+  <data name="Msg_ErrorLoadingGoalProgress" xml:space="preserve">
+    <value>Не вдалося розрахувати прогресс по цілі. Перевірте логи</value>
+  </data>
+  <data name="Msg_UserNotFound" xml:space="preserve">
+    <value>Користувача не знайдено. Спробуйте перезапустити додаток. Дивіться логи для детальної інформації</value>
+  </data>
 </root>
