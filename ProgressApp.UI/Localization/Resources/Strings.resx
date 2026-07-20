@@ -424,4 +424,13 @@ Records imported: {0}</value>
   <data name="Title_ActionOfDay" xml:space="preserve">
     <value>Actions of the day</value>
   </data>
+  <data name="Title_TodayAction" xml:space="preserve">
+    <value>Actions for today:</value>
+  </data>
+  <data name="Title_ExecutionStability" xml:space="preserve">
+    <value>Execution stability</value>
+  </data>
+  <data name="Title_days" xml:space="preserve">
+    <value>Days</value>
+  </data>
 </root>

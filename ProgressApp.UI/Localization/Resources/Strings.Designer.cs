@@ -799,6 +799,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Days.
+        /// </summary>
+        public static string Title_days {
+            get {
+                return ResourceManager.GetString("Title_days", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to day(s) streak.
         /// </summary>
         public static string Title_daysStreak {
@@ -831,6 +840,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_Error {
             get {
                 return ResourceManager.GetString("Title_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execution stability.
+        /// </summary>
+        public static string Title_ExecutionStability {
+            get {
+                return ResourceManager.GetString("Title_ExecutionStability", resourceCulture);
             }
         }
         
@@ -939,6 +957,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_Today {
             get {
                 return ResourceManager.GetString("Title_Today", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions for today:.
+        /// </summary>
+        public static string Title_TodayAction {
+            get {
+                return ResourceManager.GetString("Title_TodayAction", resourceCulture);
             }
         }
         

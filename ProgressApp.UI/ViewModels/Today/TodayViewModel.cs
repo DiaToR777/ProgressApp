@@ -14,9 +14,10 @@ namespace ProgressApp.WpfUI.ViewModels.Today
     public partial class TodayViewModel : ObservableObject
     {
         public Task Initialization { get; }
-        
         public ObservableCollection<ActionCheckboxViewModel> ActiveActions { get; } = new();
 
+        public bool HasActiveActions => ActiveActions.Count > 0;
+        
         private readonly ICheckinService _checkinService;
         private readonly IMessageService _messageService;
         private readonly IAnalyticsService _analyticsService;
@@ -67,7 +68,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
 
                 CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
                 MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
-                
+
                 await _messageService.ShowInfoAsync("Msg_RecordSaved");
                 Log.Debug("TodayViewModel: Entry saved successfully");
             }

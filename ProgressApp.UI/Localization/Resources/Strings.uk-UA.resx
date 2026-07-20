@@ -424,4 +424,13 @@
   <data name="Title_ActionOfDay" xml:space="preserve">
     <value>Дії цього дня</value>
   </data>
+  <data name="Title_ExecutionStability" xml:space="preserve">
+    <value>Стабільність виконання</value>
+  </data>
+  <data name="Title_days" xml:space="preserve">
+    <value>Днів</value>
+  </data>
+  <data name="Title_TodayAction" xml:space="preserve">
+    <value>Дії на сьогодні:</value>
+  </data>
 </root>
