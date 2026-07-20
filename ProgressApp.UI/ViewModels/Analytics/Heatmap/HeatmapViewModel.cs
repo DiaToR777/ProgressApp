@@ -21,6 +21,13 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
         private DateOnly? _firstEntryDate;
         private DateTime _currentDate = DateTime.Today;
 
+        public bool HasActionLogs => SelectedCell?.ActionLogs.Count > 0;
+
+        partial void OnSelectedCellChanged(DayCell? value)
+        {
+            OnPropertyChanged(nameof(HasActionLogs));
+        }
+        
         public string[] DayLabels => CultureHelper.GetAbbreviatedDayNames();
         public ObservableCollection<List<DayCell>> Weeks { get; } = new();
         public IEnumerable<LocalizedEnum<HeatmapRange>> Ranges { get; }
@@ -87,7 +94,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
         {
             await GetFirstEntryDate();
             await LoadAsync(SelectedRange);
-            RefreshUI();
+            RefreshUi();
         }
 
         [RelayCommand]
@@ -112,7 +119,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 HeatmapRange.AllTime => _currentDate.AddYears(-1),
                 _ => _currentDate
             };
-            RefreshUI();
+            RefreshUi();
             await LoadAsync(SelectedRange);
         }
 
@@ -126,11 +133,11 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 HeatmapRange.AllTime => _currentDate.AddYears(1),
                 _ => _currentDate
             };
-            RefreshUI();
+            RefreshUi();
             await LoadAsync(SelectedRange);
         }
 
-        private void RefreshUI()
+        private void RefreshUi()
         {
             OnPropertyChanged(nameof(PeriodTitle));
             OnPropertyChanged(nameof(ShowNavigation));
@@ -163,7 +170,7 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
                 }
 
                 var (from, to) = range == HeatmapRange.Week ? GetCurrentWeek() : GetCurrentMonthAligned();
-                var allCells = await _analyticsService.GetHeatmapCells(from, to) ?? new List<DayCell>();
+                var allCells = await _analyticsService.GetHeatmapCellsAsync(from, to) ?? new List<DayCell>();
 
                 var lookup = allCells.ToDictionary(c => c.Date.Date);
 
@@ -191,10 +198,18 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Heatmap
 
         private async Task LoadYearAsync(int year)
         {
-            var cells = await Task.Run(() => _analyticsService.GetHeatmapCells(new DateTime(year, 1, 1), new DateTime(year, 12, 31))) 
-                ?? new List<DayCell>();
+            var yearStart = new DateTime(year, 1, 1);
+            var yearEnd = new DateTime(year, 12, 31);
+
+            var alignedStart = yearStart.AddDays(-(((int)yearStart.DayOfWeek + 6) % 7));
+            var alignedEnd = yearEnd.AddDays(6 - ((int)yearEnd.DayOfWeek + 6) % 7);
+
+            var cells = await _analyticsService.GetHeatmapCellsAsync(alignedStart, alignedEnd) 
+                        ?? new List<DayCell>();
+
             Weeks.Clear();
             SelectedCell = null;
+
             foreach (var chunk in cells.Chunk(7))
                 Weeks.Add(chunk.ToList());
         }

@@ -8,5 +8,7 @@ namespace ProgressApp.Domain.Models.Heatmap
         public DateTime Date { get; init; }
         public string? Description { get; init; }
         public DayResult? Result { get; init; }
+        public double? Score { get; set; } 
+        public List<ActionLogInfo> ActionLogs { get; set; } = new();
     }
 }

@@ -14,7 +14,7 @@ namespace ProgressApp.Infrastructure.Repositories
         {
             _scopeFactory = scopeFactory;
         }
-        //todo actions streak
+
         public async Task<List<DailyCheckin>> GetEntriesByDateRangeAsync(DateTime from, DateTime to)
         {
             using var scope = _scopeFactory.CreateScope();
@@ -22,10 +22,13 @@ namespace ProgressApp.Infrastructure.Repositories
 
             return await context.Checkins
                 .AsNoTracking()
+                .Include(c => c.ActionLogs)
+                .ThenInclude(l => l.GoalAction)
                 .Where(e => e.Date >= from && e.Date <= to)
                 .OrderBy(e => e.Date)
                 .ToListAsync();
         }
+
         public async Task<List<DailyCheckin>> GetEntriesForStreakAsync()
         {
             using var scope = _scopeFactory.CreateScope();
