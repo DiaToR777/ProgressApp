@@ -15,6 +15,56 @@ public class GoalRepository :  IGoalRepository
         _scopeFactory = scopeFactory;
     }
 
+    public async Task<GoalAction> AddActionAsync(GoalAction action)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+        await context.GoalActions.AddAsync(action);
+        await context.SaveChangesAsync();
+        return action;
+    }
+    
+    public async Task<GoalAction?> GetActionByIdAsync(Guid actionId)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+        return await context.GoalActions.FirstOrDefaultAsync(a => a.Id == actionId);
+    }
+    
+    public async Task UpdateActionAsync(GoalAction action)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+        context.GoalActions.Update(action);
+        await context.SaveChangesAsync();
+    }
+    
+    public async Task RemoveActionAsync(Guid actionId)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
+        using var transaction = await context.Database.BeginTransactionAsync();
+        try
+        {
+            await context.ActionLogs.Where(l => l.GoalActionId == actionId).ExecuteDeleteAsync();
+            await context.GoalActions.Where(a => a.Id == actionId).ExecuteDeleteAsync();
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+    
+    public async Task<Goal?> GetGoalByIdAsync(Guid goalId)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+        return await context.Goals.FirstOrDefaultAsync(g => g.Id == goalId);
+    }
+    
     public async Task<Milestone?> GetActiveMilestoneWithDetailsAsync(Guid goalId)
     {
         using var scope = _scopeFactory.CreateScope();
