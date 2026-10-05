@@ -21,6 +21,7 @@ using ProgressApp.Domain.Interfaces.IService;
 using ProgressApp.Application.Services;
 using ProgressApp.Domain.Interfaces.IRepository;
 using ProgressApp.Infrastructure.Repositories;
+using ProgressApp.WpfUI.ViewModels.Goal;
 
 namespace ProgressApp.WpfUI
 {
@@ -77,6 +78,7 @@ namespace ProgressApp.WpfUI
             services.AddTransient<TodayViewModel>();
             services.AddTransient<HeatmapViewModel>();
             services.AddTransient<SettingsViewModel>();
+            services.AddTransient<GoalViewModel>();
 
             _serviceProvider = services.BuildServiceProvider();
         }
