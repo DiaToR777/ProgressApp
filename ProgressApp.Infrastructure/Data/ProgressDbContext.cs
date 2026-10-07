@@ -28,10 +28,10 @@ namespace ProgressApp.Infrastructure.Data
         {
             modelBuilder.Entity<JournalEntry>(entity =>
             {
+                entity.ToTable("Entries"); 
                 entity.HasIndex(e => e.Date).IsUnique().HasDatabaseName("IX_Entries_Date");
                 entity.Property(e => e.Description).HasMaxLength(1500);
-            });
-            
+            });            
             modelBuilder.Entity<User>(entity =>
             {
                 entity.Property(u => u.Username).HasMaxLength(50);
