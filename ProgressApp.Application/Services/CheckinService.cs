@@ -122,7 +122,7 @@ namespace ProgressApp.Application.Services
             }
         }
 
-        public async Task<MilestoneProgress?> GetActiveMilestoneProgressAsync()
+        public async Task<MilestoneProgress?> GetActiveMilestoneProgressAsync() //TODO to analyticsService
         {
             try
             {
@@ -136,69 +136,32 @@ namespace ProgressApp.Application.Services
                 if (milestone == null) return null;
 
                 var today = DateTime.Today;
-                var totalDaysInMilestone = milestone.TargetDays;
                 var daysElapsed = (today.Date - milestone.StartDate.Date).Days + 1;
-                daysElapsed = Math.Clamp(daysElapsed, 0, totalDaysInMilestone);
+                daysElapsed = Math.Clamp(daysElapsed, 0, milestone.TargetDays);
 
-                var daysCompletionPercent = totalDaysInMilestone > 0
-                    ? Math.Round((double)daysElapsed / totalDaysInMilestone * 100, 1)
+                var daysCompletionPercent = milestone.TargetDays > 0
+                    ? Math.Round((double)daysElapsed / milestone.TargetDays * 100, 1)
                     : 0;
 
                 double totalScore = 0;
-                int scoredDays = 0;
+                var allCheckins = milestone.Checkins.ToList();
+                var checkinsByDate = allCheckins.ToDictionary(c => c.Date.Date);
 
-                if (milestone.Actions.Count > 0)
+                for (var date = milestone.StartDate.Date;
+                     date <= today.Date && date < milestone.StartDate.Date.AddDays(milestone.TargetDays);
+                     date = date.AddDays(1))
                 {
-                    var lastDayToCalculate = today.Date < milestone.StartDate.AddDays(totalDaysInMilestone).Date
-                        ? today.Date
-                        : milestone.StartDate.AddDays(totalDaysInMilestone - 1).Date;
-
-                    var checkinDict = milestone.Checkins.ToDictionary(c => c.Date.Date);
-
-                    for (var date = milestone.StartDate.Date; date <= lastDayToCalculate; date = date.AddDays(1))
-                    {
-                        checkinDict.TryGetValue(date, out var checkin);
-    
-                        var score = CalculateDayScoreDynamic(date, checkin, milestone, checkinDict);
-                        totalScore += score;
-                        scoredDays++;
-                    }
-                }
-                else
-                {
-                    var checkinDict = milestone.Checkins.ToDictionary(c => c.Date.Date);
-                    var lastDayToCalculate = today.Date < milestone.StartDate.AddDays(totalDaysInMilestone).Date
-                        ? today.Date
-                        : milestone.StartDate.AddDays(totalDaysInMilestone - 1).Date;
-
-                    for (var date = milestone.StartDate.Date; date <= lastDayToCalculate; date = date.AddDays(1))
-                    {
-                        if (checkinDict.TryGetValue(date, out var checkin))
-                        {
-                            totalScore += checkin.Result switch
-                            {
-                                DayResult.Success => 1.0,
-                                DayResult.PartialSuccess => 0.5,
-                                DayResult.Relapse => 0.0,
-                                _ => 0.0
-                            };
-                        }
-                        else
-                        {
-                            totalScore += 0.0;
-                        }
-
-                        scoredDays++;
-                    }
+                    if (checkinsByDate.TryGetValue(date, out var checkin))
+                        totalScore += CalculateDayScore(checkin, milestone, allCheckins);
                 }
 
-                var consistencyPercent = scoredDays > 0
-                    ? Math.Round(totalScore / scoredDays * 100, 1)
+                var consistencyPercent = daysElapsed > 0
+                    ? Math.Round(totalScore / daysElapsed * 100, 1)
                     : 0;
 
                 return new MilestoneProgress
                 {
-                    TargetDays = totalDaysInMilestone,
+                    TargetDays = milestone.TargetDays,
                     DaysElapsed = daysElapsed,
                     DaysCompletionPercent = Math.Clamp(daysCompletionPercent, 0, 100),
                     ConsistencyPercent = Math.Clamp(consistencyPercent, 0, 100)
@@ -211,83 +174,53 @@ namespace ProgressApp.Application.Services
             }
         }
 
-        private double CalculateDayScoreDynamic(
-            DateTime currentDate,
-            DailyCheckin? currentCheckin,
-            Milestone milestone,
-            Dictionary<DateTime, DailyCheckin> checkinDict) 
+        private double CalculateDayScore(DailyCheckin checkin, Milestone milestone, List<DailyCheckin> allCheckins)
         {
-            var actions = milestone.Actions;
-            if (actions.Count == 0) return 0;
-
-            double earnedScore = 0;
-            double expectedScore = 0;
-
-            for (int i = 0; i < actions.Count; i++)
+            if (checkin.ActionLogs.Count == 0)
             {
-                var action = actions[i];
-
-                if (action.TargetCountPerWeek >= 7)
+                return checkin.Result switch
                 {
-                    expectedScore += 1.0;
-                    if (currentCheckin != null)
-                    {
-                        var logs = currentCheckin.ActionLogs;
-                        for (int j = 0; j < logs.Count; j++)
-                        {
-                            if (logs[j].GoalActionId == action.Id && logs[j].IsCompleted)
-                            {
-                                earnedScore += 1.0;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else
+                    DayResult.Success => 1.0,
+                    DayResult.PartialSuccess => 0.5,
+                    DayResult.Relapse => 0.0,
+                    _ => 0.0
+                };
+            }
+
+            var loggedActionIds = checkin.ActionLogs.Select(l => l.GoalActionId).ToHashSet();
+            var dayActions = milestone.Actions.Where(a => loggedActionIds.Contains(a.Id)).ToList();
+
+            if (dayActions.Count == 0) return 1.0;
+
+            var dailyActions = dayActions.Where(a => a.TargetCountPerWeek >= 7).ToList();
+            var weeklyActions = dayActions.Where(a => a.TargetCountPerWeek < 7).ToList();
+
+            var dueActionsCount = dailyActions.Count;
+            var earnedScore = (double)checkin.ActionLogs
+                .Count(l => l.IsCompleted && dailyActions.Any(a => a.Id == l.GoalActionId));
+
+            var isWeekEnd = checkin.Date.DayOfWeek == DayOfWeek.Sunday
+                            || checkin.Date.Date == milestone.StartDate.AddDays(milestone.TargetDays - 1).Date;
+
+            if (isWeekEnd && weeklyActions.Count > 0)
+            {
+                var weekStart = checkin.Date.AddDays(-6);
+
+                foreach (var action in weeklyActions)
                 {
-                    // 2. Еженедельная задача (плавный расчет)
-                    expectedScore += 1.0;
+                    dueActionsCount++;
 
-                    // Вычисляем границы текущей недели без сложных формул
-                    int daysSinceStart = (currentDate.Date - milestone.StartDate.Date).Days;
-                    int daysPassedInThisWeek = (daysSinceStart % 7) + 1; // День текущей недели (1 до 7)
+                    var completedThisWeek = allCheckins
+                        .Where(c => c.Date.Date >= weekStart.Date && c.Date.Date <= checkin.Date.Date)
+                        .SelectMany(c => c.ActionLogs)
+                        .Count(l => l.GoalActionId == action.Id && l.IsCompleted);
 
-                    DateTime weekStart = currentDate.Date.AddDays(-(daysPassedInThisWeek - 1));
-
-                    // Считаем выполнения за текущую неделю БЕЗ LINQ (пробегаемся по словарю за 7 дней)
-                    int completedThisWeekSoFar = 0;
-                    for (int dayOffset = 0; dayOffset < daysPassedInThisWeek; dayOffset++)
-                    {
-                        DateTime dayToCheck = weekStart.AddDays(dayOffset);
-                        if (checkinDict.TryGetValue(dayToCheck, out var historicalCheckin))
-                        {
-                            var logs = historicalCheckin.ActionLogs;
-                            for (int j = 0; j < logs.Count; j++)
-                            {
-                                if (logs[j].GoalActionId == action.Id && logs[j].IsCompleted)
-                                {
-                                    completedThisWeekSoFar++;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-
-                    double proportionalTarget = (double)action.TargetCountPerWeek * daysPassedInThisWeek / 7.0;
-
-                    if (completedThisWeekSoFar >= action.TargetCountPerWeek)
-                    {
-                        earnedScore += 1.0;
-                    }
-                    else
-                    {
-                        double progressRatio = completedThisWeekSoFar / proportionalTarget;
-                        earnedScore += Math.Min(progressRatio, 1.0);
-                    }
+                    if (completedThisWeek >= action.TargetCountPerWeek)
+                        earnedScore += 1;
                 }
             }
 
-            return expectedScore > 0 ? Math.Clamp(earnedScore / expectedScore, 0.0, 1.0) : 0;
+            return dueActionsCount > 0 ? earnedScore / dueActionsCount : 1.0;
         }
     }
 }
