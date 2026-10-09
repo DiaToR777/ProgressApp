@@ -52,7 +52,6 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<ILocalizationService>(TranslationSource.Instance);
             services.AddSingleton<IAppThemeService, ThemeWrapper>();
 
-            services.AddSingleton<IDataExchangeRepository, DataExchangeRepository>();
             services.AddSingleton<IAnalyticsRepository, AnalyticsRepository>();
             services.AddSingleton<ICheckinRepository, CheckinRepository>();
             services.AddSingleton<IAuthRepository, AuthRepository>();
@@ -65,7 +64,6 @@ namespace ProgressApp.WpfUI
             services.AddSingleton<IMessageService, MessageService>();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<IAppConfigService, AppConfigService>();
-            services.AddSingleton<IDataExchangeService, DataExchangeService>();
             services.AddSingleton<IAnalyticsService, AnalyticsService>();
             services.AddSingleton<ICheckinService, CheckinService>();
             services.AddSingleton<IUserService, UserService>();
