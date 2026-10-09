@@ -17,18 +17,16 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
     {
         private readonly IMessageService _messageService;
         private readonly IAppConfigService _appConfigService;
-        private readonly IDataExchangeService _dataExchangeService;
         private readonly ILocalizationService _localizationService;
         private readonly IAppThemeService _themeService;
         private readonly IAuthService _authService;
-private readonly IUserService _userService;
-        
+        private readonly IUserService _userService;
+
         public Task Initialization { get; }
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
-        [ObservableProperty] 
-        private bool _isDbEncrypted;
+        [ObservableProperty] private bool _isDbEncrypted;
 
         [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsNotChangingPassword))]
         private bool _isChangingPassword;
@@ -60,13 +58,11 @@ private readonly IUserService _userService;
             IMessageService messageService,
             ILocalizationService localizationService,
             IAppThemeService themeService,
-            IDataExchangeService dataExchangeService,
-            IAuthService authService, 
+            IAuthService authService,
             IUserService userService)
         {
             _authService = authService;
             _userService = userService;
-            _dataExchangeService = dataExchangeService;
             _appConfigService = appConfigService;
             _messageService = messageService;
             _localizationService = localizationService;
@@ -111,7 +107,7 @@ private readonly IUserService _userService;
 
                 _localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
                 _themeService.SetTheme(SelectedTheme);
-                
+
                 await _messageService.ShowInfoAsync("Msg_SettingsSaved");
             }
             catch (AppException ex)
@@ -121,46 +117,8 @@ private readonly IUserService _userService;
             }
         }
 
-        private bool CanSaveSettings() => !string.IsNullOrWhiteSpace(Username) && Username.Length <= 50 && !Username.Any(char.IsWhiteSpace);
-
-        [RelayCommand]
-        private async Task ExportEntries()
-        {
-            try
-            {
-                var path = _messageService.SaveFileDialog($"Progress_Backup_{DateTime.Now:yyyyMMdd}",
-                    "CSV files (*.csv)|*.csv");
-                if (string.IsNullOrEmpty(path)) return;
-
-                await _dataExchangeService.ExportToCsvAsync(path);
-                await _messageService.ShowInfoAsync("Msg_SuccessExportInfo");
-            }
-            catch (AppException ex)
-            {
-                Log.Error(ex, "SettingsVM: Export failed");
-                await _messageService.ShowErrorAsync(ex);
-            }
-        }
-
-        [RelayCommand]
-        private async Task ImportEntries()
-        {
-            var path = _messageService.OpenFileDialog("CSV files (*.csv)|*.csv");
-            if (string.IsNullOrEmpty(path)) return;
-
-            if (!await _messageService.ShowConfirmationAsync("Msg_ImportConfirmation")) return;
-
-            try
-            {
-                var count = await _dataExchangeService.ImportFromCsvAsync(path);
-                await _messageService.ShowInfoAsync("Msg_SuccessImportInfo", count);
-            }
-            catch (AppException ex)
-            {
-                Log.Error(ex, "SettingsVM: Import failed");
-                await _messageService.ShowErrorAsync(ex);
-            }
-        }
+        private bool CanSaveSettings() => !string.IsNullOrWhiteSpace(Username) && Username.Length <= 50 &&
+                                          !Username.Any(char.IsWhiteSpace);
 
         [RelayCommand]
         private void TogglePasswordFields() => IsChangingPassword = !IsChangingPassword;
