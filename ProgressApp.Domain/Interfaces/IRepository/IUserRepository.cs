@@ -6,4 +6,5 @@ public interface IUserRepository
 {
     Task<User?> GetUserAsync(); 
     Task<User> CreateUserAsync(User user);
+    Task UpdateUserAsync(User user);
 }

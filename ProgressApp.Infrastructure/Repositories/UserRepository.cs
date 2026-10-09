@@ -17,6 +17,7 @@ public class UserRepository : IUserRepository
         var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
         return await context.Users.AsNoTracking().FirstOrDefaultAsync();
     }
+
     public async Task<User> CreateUserAsync(User user)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -26,4 +27,14 @@ public class UserRepository : IUserRepository
         await context.SaveChangesAsync();
         return user;
     }
+
+    public async Task UpdateUserAsync(User user)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+        
+        context.Users.Update(user);
+        await context.SaveChangesAsync();
+    }
+    
 }
