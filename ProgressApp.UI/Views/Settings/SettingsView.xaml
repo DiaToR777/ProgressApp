@@ -35,18 +35,7 @@
                                     PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterName]}" 
                                     Height="38" 
                                     Margin="0,0,0,15" MaxLength="35"/>
-
-                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" Margin="0,0,0,5" />
-
-                        <ScrollViewer Height="100" VerticalScrollBarVisibility="Visible">
-                            <ui:TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"
-                                    TextWrapping="Wrap" 
-                                    AcceptsReturn="True"
-                                    VerticalScrollBarVisibility="Auto"
-                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatIsGoal]}"
-                                    VerticalContentAlignment="Top" 
-                                    MaxLength="150"/>
-                        </ScrollViewer>
+                        
                     </StackPanel>
                 </ui:Card>
 

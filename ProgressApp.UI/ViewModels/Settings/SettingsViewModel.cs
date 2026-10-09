@@ -15,41 +15,36 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
 {
     public partial class SettingsViewModel : ObservableObject
     {
-        private readonly ISettingsService _settingsService;
         private readonly IMessageService _messageService;
         private readonly IAppConfigService _appConfigService;
         private readonly IDataExchangeService _dataExchangeService;
         private readonly ILocalizationService _localizationService;
         private readonly IAppThemeService _themeService;
         private readonly IAuthService _authService;
-
-
+private readonly IUserService _userService;
+        
         public Task Initialization { get; }
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
         public Array AllThemes => Enum.GetValues(typeof(AppTheme));
 
-        [ObservableProperty]
+        [ObservableProperty] 
         private bool _isDbEncrypted;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(IsNotChangingPassword))]
+        [ObservableProperty] [NotifyPropertyChangedFor(nameof(IsNotChangingPassword))]
         private bool _isChangingPassword;
 
         public bool IsNotChangingPassword => !IsChangingPassword;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ApplyNewPasswordCommand))]
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(ApplyNewPasswordCommand))]
         private string _newDbPassword = string.Empty;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ApplyNewPasswordCommand))]
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(ApplyNewPasswordCommand))]
         private string _confirmDbPassword = string.Empty;
 
-        [ObservableProperty]
+        [ObservableProperty] 
         private LanguageModel _selectedLanguage;
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SaveSettingsCommand))]
+        [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(SaveSettingsCommand))]
         private string _username = string.Empty;
 
         partial void OnUsernameChanged(string value)
@@ -57,31 +52,22 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             if (value?.Length > 50) Username = value.Substring(0, 50);
         }
 
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(SaveSettingsCommand))]
-        private string _goal = string.Empty;
-
-        partial void OnGoalChanged(string value)
-        {
-            if (value?.Length > 150) Goal = value.Substring(0, 150);
-        }
-
-        [ObservableProperty]
+        [ObservableProperty] 
         private AppTheme _selectedTheme;
 
         public SettingsViewModel(
-            ISettingsService settingsService,
             IAppConfigService appConfigService,
             IMessageService messageService,
             ILocalizationService localizationService,
             IAppThemeService themeService,
             IDataExchangeService dataExchangeService,
-            IAuthService authService)
+            IAuthService authService, 
+            IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
             _dataExchangeService = dataExchangeService;
             _appConfigService = appConfigService;
-            _settingsService = settingsService;
             _messageService = messageService;
             _localizationService = localizationService;
             _themeService = themeService;
@@ -95,11 +81,10 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             {
                 IsDbEncrypted = await _authService.GetDbStatusAsync() == DbStatus.Encrypted;
 
-                var goalTask = _settingsService.GetGoalAsync();
                 var config = _appConfigService.Load();
 
-                Username = config.Username;
-                Goal = await goalTask;
+                var user = await _userService.GetCurrentUserAsync();
+                Username = user?.Username ?? string.Empty;
                 SelectedTheme = Enum.Parse<AppTheme>(config.Theme);
                 SelectedLanguage = LanguageConfig.GetByCode(config.Language);
 
@@ -120,14 +105,13 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
                 var config = _appConfigService.Load();
                 config.Theme = SelectedTheme.ToString();
                 config.Language = SelectedLanguage.CultureCode;
-                config.Username = Username;
-
+                await _userService.UpdateUsernameAsync(Username);
                 _appConfigService.Save(config);
-                await _settingsService.SaveGoalAsync(Goal);
+
 
                 _localizationService.ChangeLanguage(SelectedLanguage.CultureCode);
                 _themeService.SetTheme(SelectedTheme);
-
+                
                 await _messageService.ShowInfoAsync("Msg_SettingsSaved");
             }
             catch (AppException ex)
@@ -137,14 +121,15 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             }
         }
 
-        private bool CanSaveSettings() => !string.IsNullOrWhiteSpace(Username) && !string.IsNullOrWhiteSpace(Goal);
+        private bool CanSaveSettings() => !string.IsNullOrWhiteSpace(Username) && Username.Length <= 50 && !Username.Any(char.IsWhiteSpace);
 
         [RelayCommand]
         private async Task ExportEntries()
         {
             try
             {
-                var path = _messageService.SaveFileDialog($"Progress_Backup_{DateTime.Now:yyyyMMdd}", "CSV files (*.csv)|*.csv");
+                var path = _messageService.SaveFileDialog($"Progress_Backup_{DateTime.Now:yyyyMMdd}",
+                    "CSV files (*.csv)|*.csv");
                 if (string.IsNullOrEmpty(path)) return;
 
                 await _dataExchangeService.ExportToCsvAsync(path);
@@ -195,7 +180,9 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
 
                 IsDbEncrypted = true;
 
-                await _messageService.ShowInfoAsync(wasEncrypted ? "Msg_PasswordChangedSuccess" : "Msg_PasswordSetSuccess");
+                await _messageService.ShowInfoAsync(wasEncrypted
+                    ? "Msg_PasswordChangedSuccess"
+                    : "Msg_PasswordSetSuccess");
 
                 NewDbPassword = ConfirmDbPassword = string.Empty;
                 IsChangingPassword = false;
@@ -207,7 +194,8 @@ namespace ProgressApp.WpfUI.ViewModels.Settings
             }
         }
 
-        private bool CanApplyNewPassword() => !string.IsNullOrWhiteSpace(NewDbPassword) && NewDbPassword == ConfirmDbPassword;
+        private bool CanApplyNewPassword() =>
+            !string.IsNullOrWhiteSpace(NewDbPassword) && NewDbPassword == ConfirmDbPassword;
 
         [RelayCommand(CanExecute = nameof(IsDbEncrypted))]
         private async Task RemovePassword()
