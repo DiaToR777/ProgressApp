@@ -31,11 +31,11 @@ public sealed class MainViewModelTests
         _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.Encrypted);
         var loginVm = new LoginViewModel(_authMock.Object, new Mock<IMessageService>().Object);
         _spMock.Setup(sp => sp.GetService(typeof(LoginViewModel))).Returns(loginVm);
-
+       
         var vm = new MainViewModel(_authMock.Object, _spMock.Object);
-
+      
         await vm.InitializeNavigationAsync();
-
+        
         vm.CurrentView.Should().BeOfType<LoginViewModel>();
         vm.IsNavigationVisible.Should().BeFalse();
     }
@@ -44,20 +44,19 @@ public sealed class MainViewModelTests
     public async Task Initialize_WhenDbNotCreated_ShouldShowSetup()
     {
         _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.NotCreated);
-
         var setupVm = new InitialSetupViewModel(
-            new Mock<ISettingsService>().Object,
+            new Mock<IOnboardingService>().Object,
             new Mock<IAppConfigService>().Object,
             new Mock<ILocalizationService>().Object,
             new Mock<IMessageService>().Object,
             new Mock<IAuthService>().Object);
-
+       
         _spMock.Setup(sp => sp.GetService(typeof(InitialSetupViewModel))).Returns(setupVm);
-
+        
         var vm = new MainViewModel(_authMock.Object, _spMock.Object);
-
+        
+        
         await vm.InitializeNavigationAsync();
-
         vm.CurrentView.Should().BeOfType<InitialSetupViewModel>();
         vm.IsNavigationVisible.Should().BeFalse();
     }
@@ -66,20 +65,19 @@ public sealed class MainViewModelTests
     public async Task ShowToday_ShouldSetNavigationVisible()
     {
         var todayVm = new Mock<TodayViewModel>(
-                new Mock<IJournalService>().Object,
-                new Mock<IMessageService>().Object,
-                new Mock<IAnalyticsService>().Object
-            ).Object;
-
+            new Mock<ICheckinService>().Object, 
+            new Mock<IMessageService>().Object,
+            new Mock<IAnalyticsService>().Object
+        ).Object;
+      
         _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.Unencrypted);
         _spMock.Setup(sp => sp.GetService(typeof(TodayViewModel))).Returns(todayVm);
-
+        
         var vm = new MainViewModel(_authMock.Object, _spMock.Object);
-
+        
         await vm.InitializeNavigationAsync();
-
+        
         vm.ShowTodayCommand.Execute(null);
-
         vm.IsNavigationVisible.Should().BeTrue();
         vm.CurrentView.Should().Be(todayVm);
     }
