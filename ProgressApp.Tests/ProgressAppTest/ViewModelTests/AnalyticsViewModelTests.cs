@@ -27,7 +27,7 @@ public sealed class AnalyticsViewModelTests
         var msgMock = new Mock<IMessageService>();
 
         anaMock.Setup(a => a.GetFirstEntryDateAsync()).ReturnsAsync(DateTime.Today);
-        anaMock.Setup(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+        anaMock.Setup(a => a.GetHeatmapCellsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                .ReturnsAsync(new List<DayCell>());
 
         var heatmapVm = new HeatmapViewModel(anaMock.Object, msgMock.Object);
