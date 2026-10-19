@@ -397,9 +397,6 @@
   <data name="Title_ActionToReachGoal" xml:space="preserve">
     <value>Дія для досягнення цілі (не обов'язково)</value>
   </data>
-  <data name="Pleceholder_ActionExample" xml:space="preserve">
-    <value>Наприклад: навчання</value>
-  </data>
   <data name="Title_x/wk" xml:space="preserve">
     <value>раз/нед</value>
   </data>
@@ -432,5 +429,32 @@
   </data>
   <data name="Title_TodayAction" xml:space="preserve">
     <value>Дії на сьогодні:</value>
+  </data>
+  <data name="Title_MyGoal" xml:space="preserve">
+    <value>Моя ціль</value>
+  </data>
+  <data name="Title_Actions" xml:space="preserve">
+    <value>Дії</value>
+  </data>
+  <data name="NavBtn_GoalView" xml:space="preserve">
+    <value>Ціль</value>
+  </data>
+  <data name="Btn_Save" xml:space="preserve">
+    <value>Зберегти</value>
+  </data>
+  <data name="Placeholder_ActionName" xml:space="preserve">
+    <value>Назва дії</value>
+  </data>
+  <data name="Title_/wk" xml:space="preserve">
+    <value>/нед</value>
+  </data>
+  <data name="Msg_ConfirmRemoveAction" xml:space="preserve">
+    <value>Видалити «{0}»? Ви впевнені?</value>
+  </data>
+  <data name="Msg_ErrorLoadingUser" xml:space="preserve">
+    <value>Не вдалося завантажити профіль користувача. Докладнішу інформацію дивіться у логах</value>
+  </data>
+  <data name="Msg_UsernameTooLong" xml:space="preserve">
+    <value>Ім'я користувача занадто довге (максимум 50 символів)</value>
   </data>
 </root>

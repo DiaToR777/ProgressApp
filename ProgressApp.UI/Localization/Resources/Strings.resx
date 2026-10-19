@@ -412,9 +412,6 @@ Records imported: {0}</value>
   <data name="Msg_ErrorLoadingActions" xml:space="preserve">
     <value>Failed to load active actions. Check logs</value>
   </data>
-  <data name="Pleceholder_ActionExample" xml:space="preserve">
-    <value>For example: learning</value>
-  </data>
   <data name="Msg_ErrorLoadingGoalProgress" xml:space="preserve">
     <value>Failed to calculate goal progress. Check logs</value>
   </data>
@@ -432,5 +429,32 @@ Records imported: {0}</value>
   </data>
   <data name="Title_days" xml:space="preserve">
     <value>Days</value>
+  </data>
+  <data name="Title_MyGoal" xml:space="preserve">
+    <value>My goal</value>
+  </data>
+  <data name="Title_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="NavBtn_GoalView" xml:space="preserve">
+    <value>Goal</value>
+  </data>
+  <data name="Btn_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Placeholder_ActionName" xml:space="preserve">
+    <value>Action name</value>
+  </data>
+  <data name="Title_/wk" xml:space="preserve">
+    <value>/wk</value>
+  </data>
+  <data name="Msg_ConfirmRemoveAction" xml:space="preserve">
+    <value>Delete «{0}»? Are you sure?</value>
+  </data>
+  <data name="Msg_ErrorLoadingUser" xml:space="preserve">
+    <value>The user profile could not be loaded. For more information, see the logs</value>
+  </data>
+  <data name="Msg_UsernameTooLong" xml:space="preserve">
+    <value>Username is too long (max 50 characters)</value>
   </data>
 </root>

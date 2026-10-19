@@ -161,6 +161,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
+        public static string Btn_Save {
+            get {
+                return ResourceManager.GetString("Btn_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
         public static string Btn_SaveDay {
             get {
                 return ResourceManager.GetString("Btn_SaveDay", resourceCulture);
@@ -227,6 +236,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_ChangePasswordFailedError {
             get {
                 return ResourceManager.GetString("Msg_ChangePasswordFailedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete «{0}»? Are you sure?.
+        /// </summary>
+        public static string Msg_ConfirmRemoveAction {
+            get {
+                return ResourceManager.GetString("Msg_ConfirmRemoveAction", resourceCulture);
             }
         }
         
@@ -335,6 +353,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_ErrorLoadingStreak {
             get {
                 return ResourceManager.GetString("Msg_ErrorLoadingStreak", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The user profile could not be loaded. For more information, see the logs.
+        /// </summary>
+        public static string Msg_ErrorLoadingUser {
+            get {
+                return ResourceManager.GetString("Msg_ErrorLoadingUser", resourceCulture);
             }
         }
         
@@ -556,6 +583,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Username is too long (max 50 characters).
+        /// </summary>
+        public static string Msg_UsernameTooLong {
+            get {
+                return ResourceManager.GetString("Msg_UsernameTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The user was not found. Please try restarting the app.. Check logs for more details.
         /// </summary>
         public static string Msg_UserNotFound {
@@ -570,6 +606,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string NavBtn_Analytics {
             get {
                 return ResourceManager.GetString("NavBtn_Analytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Goal.
+        /// </summary>
+        public static string NavBtn_GoalView {
+            get {
+                return ResourceManager.GetString("NavBtn_GoalView", resourceCulture);
             }
         }
         
@@ -597,6 +642,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Placeholder_ActionExample {
             get {
                 return ResourceManager.GetString("Placeholder_ActionExample", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Action name.
+        /// </summary>
+        public static string Placeholder_ActionName {
+            get {
+                return ResourceManager.GetString("Placeholder_ActionName", resourceCulture);
             }
         }
         
@@ -651,15 +705,6 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Placeholder_WhatYouAchive {
             get {
                 return ResourceManager.GetString("Placeholder_WhatYouAchive", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to For example: learning.
-        /// </summary>
-        public static string Pleceholder_ActionExample {
-            get {
-                return ResourceManager.GetString("Pleceholder_ActionExample", resourceCulture);
             }
         }
         
@@ -727,11 +772,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /wk.
+        /// </summary>
+        public static string Title__wk {
+            get {
+                return ResourceManager.GetString("Title_/wk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Actions of the day.
         /// </summary>
         public static string Title_ActionOfDay {
             get {
                 return ResourceManager.GetString("Title_ActionOfDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actions.
+        /// </summary>
+        public static string Title_Actions {
+            get {
+                return ResourceManager.GetString("Title_Actions", resourceCulture);
             }
         }
         
@@ -894,6 +957,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Title_MilestoneDuration {
             get {
                 return ResourceManager.GetString("Title_MilestoneDuration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My goal.
+        /// </summary>
+        public static string Title_MyGoal {
+            get {
+                return ResourceManager.GetString("Title_MyGoal", resourceCulture);
             }
         }
         
