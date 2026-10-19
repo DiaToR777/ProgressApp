@@ -1,5 +1,3 @@
-using ProgressApp.Domain.Models.User;
-
 namespace ProgressApp.Domain.Interfaces.IService;
 
 public interface IOnboardingService
