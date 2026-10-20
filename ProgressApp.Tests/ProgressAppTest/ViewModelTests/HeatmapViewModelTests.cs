@@ -23,7 +23,7 @@ public sealed class HeatmapViewModelTests
     [TestMethod]
     public async Task SelectedRange_Change_ShouldTriggerLoadAndChangeCellSize()
     {
-        _analyticsMock.Setup(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+        _analyticsMock.Setup(a => a.GetHeatmapCellsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                       .ReturnsAsync(new List<DayCell>());
 
         _analyticsMock.Setup(a => a.GetFirstEntryDateAsync())
@@ -38,14 +38,14 @@ public sealed class HeatmapViewModelTests
         vm.SelectedRange = HeatmapRange.AllTime;
 
         vm.CellSize.Should().Be(13);
-        _analyticsMock.Verify(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()), Times.AtLeastOnce());
+        _analyticsMock.Verify(a => a.GetHeatmapCellsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()), Times.AtLeastOnce());
     }
     [TestMethod]
     public async Task Navigation_ShouldBeDisabled_WhenNoFirstEntryDate()
     {
         _analyticsMock.Setup(a => a.GetFirstEntryDateAsync()).ReturnsAsync((DateTime?)null);
 
-        _analyticsMock.Setup(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+        _analyticsMock.Setup(a => a.GetHeatmapCellsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                       .ReturnsAsync(new List<DayCell>());
 
         var vm = new HeatmapViewModel(_analyticsMock.Object, _messageMock.Object);

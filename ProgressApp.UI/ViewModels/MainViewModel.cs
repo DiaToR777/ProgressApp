@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Domain.Interfaces.IService;
 using ProgressApp.Domain.Models.Enums;
 using ProgressApp.WpfUI.ViewModels.Analytics;
+using ProgressApp.WpfUI.ViewModels.Goal;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
@@ -60,6 +61,13 @@ namespace ProgressApp.WpfUI.ViewModels
         private void ShowToday()
         {
             CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
+            IsNavigationVisible = true;
+        }
+
+        [RelayCommand]
+        private void ShowGoal()
+        {
+            CurrentView = _serviceProvider.GetRequiredService<GoalViewModel>();
             IsNavigationVisible = true;
         }
 

@@ -15,9 +15,143 @@ namespace ProgressApp.Infrastructure.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.11");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.17");
 
-            modelBuilder.Entity("ProgressApp.Core.Models.Journal.JournalEntry", b =>
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.ActionLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DailyCheckinId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("GoalActionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GoalActionId");
+
+                    b.HasIndex("DailyCheckinId", "GoalActionId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ActionLogs_Checkin_Action");
+
+                    b.ToTable("ActionLogs");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.Goal", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Goals");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.GoalAction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MilestoneId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TargetCountPerWeek")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilestoneId");
+
+                    b.ToTable("GoalActions");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.Milestone", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("GoalId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("TargetDays")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GoalId");
+
+                    b.ToTable("Milestones");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Journal.DailyCheckin", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("MilestoneId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Result")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MilestoneId", "Date")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Checkins_Milestone_Date");
+
+                    b.ToTable("Checkins");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Journal.JournalEntry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -43,10 +177,10 @@ namespace ProgressApp.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Entries_Date");
 
-                    b.ToTable("Entries");
+                    b.ToTable("Entries", (string)null);
                 });
 
-            modelBuilder.Entity("ProgressApp.Core.Models.Settings.AppSettings", b =>
+            modelBuilder.Entity("ProgressApp.Domain.Models.Settings.AppSettings", b =>
                 {
                     b.Property<string>("Key")
                         .HasMaxLength(35)
@@ -60,6 +194,114 @@ namespace ProgressApp.Infrastructure.Migrations
                     b.HasKey("Key");
 
                     b.ToTable("Settings");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.User.User", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.ActionLog", b =>
+                {
+                    b.HasOne("ProgressApp.Domain.Models.Journal.DailyCheckin", "DailyCheckin")
+                        .WithMany("ActionLogs")
+                        .HasForeignKey("DailyCheckinId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ProgressApp.Domain.Models.Goals.GoalAction", "GoalAction")
+                        .WithMany("Logs")
+                        .HasForeignKey("GoalActionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DailyCheckin");
+
+                    b.Navigation("GoalAction");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.Goal", b =>
+                {
+                    b.HasOne("ProgressApp.Domain.Models.User.User", "User")
+                        .WithMany("Goals")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.GoalAction", b =>
+                {
+                    b.HasOne("ProgressApp.Domain.Models.Goals.Milestone", "Milestone")
+                        .WithMany("Actions")
+                        .HasForeignKey("MilestoneId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Milestone");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.Milestone", b =>
+                {
+                    b.HasOne("ProgressApp.Domain.Models.Goals.Goal", "Goal")
+                        .WithMany("Milestones")
+                        .HasForeignKey("GoalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Goal");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Journal.DailyCheckin", b =>
+                {
+                    b.HasOne("ProgressApp.Domain.Models.Goals.Milestone", "Milestone")
+                        .WithMany("Checkins")
+                        .HasForeignKey("MilestoneId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Milestone");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.Goal", b =>
+                {
+                    b.Navigation("Milestones");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.GoalAction", b =>
+                {
+                    b.Navigation("Logs");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Goals.Milestone", b =>
+                {
+                    b.Navigation("Actions");
+
+                    b.Navigation("Checkins");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.Journal.DailyCheckin", b =>
+                {
+                    b.Navigation("ActionLogs");
+                });
+
+            modelBuilder.Entity("ProgressApp.Domain.Models.User.User", b =>
+                {
+                    b.Navigation("Goals");
                 });
 #pragma warning restore 612, 618
         }

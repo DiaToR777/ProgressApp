@@ -11,24 +11,23 @@ using ProgressApp.WpfUI.ViewModels.InitialSetup;
 namespace ProgressAppTest.ViewModelTests;
 
 [TestClass]
-public sealed class InitialSetupViewModelTests
+public sealed class InitialSetupViewModelTests 
 {
-    private Mock<ISettingsService> _settingsService;
     private Mock<IMessageService> _messageService;
     private Mock<ILocalizationService> _localizationService;
     private Mock<IAuthService> _authService;
     private Mock<IAppConfigService> _appConfigService;
-
+    private Mock<IOnboardingService> _onboardingService;
+    
     [TestInitialize]
     public void TestInit()
     {
-        _settingsService = new Mock<ISettingsService>();
         _messageService = new Mock<IMessageService>();
         _localizationService = new Mock<ILocalizationService>();
         _authService = new Mock<IAuthService>();
-        _appConfigService = new Mock<IAppConfigService>()!;
+        _appConfigService = new Mock<IAppConfigService>();
+        _onboardingService = new  Mock<IOnboardingService>();
     }
-
     [TestMethod]
     public void Constructor_ShouldSetDefaultLanguage()
     {
@@ -36,7 +35,6 @@ public sealed class InitialSetupViewModelTests
         vm.SelectedLanguage.Should().NotBeNull();
         vm.SelectedLanguage.CultureCode.Should().Be("en-US"); //first language in config
     }
-
     [TestMethod]
     public void FinishCommand_CanExecute_ShouldReturnFalse_WhenPasswordsDoNotMatch()
     {
@@ -45,33 +43,29 @@ public sealed class InitialSetupViewModelTests
         vm.Goal = "test";
         vm.Password = "testpass";
         vm.ConfirmPassword = "differentpass";
-
         vm.FinishCommand.CanExecute(null).Should().BeFalse();
     }
-
     [TestMethod]
     public async Task FinishCommand_WhenValid_ShouldFlowCorrect()
     {
         var vm = CreateViewModel();
+        
         vm.Username = "test";
         vm.Goal = "test";
         vm.Password = "testpass";
         vm.ConfirmPassword = "testpass";
-
+        var actionList = new List<(string Title, int TargetCountPerWeek)>();
+                                  
+        
         bool completedCalled = false;
-
         vm.Completed = () => { completedCalled = true; };
-
         _authService.Setup(a => a.RegisterAsync(vm.Password)).ReturnsAsync(true);
-
         await ((IAsyncRelayCommand)vm.FinishCommand).ExecuteAsync(null);
-
         _authService.Verify(a => a.RegisterAsync("testpass"), Times.Once);
-        _settingsService.Verify(s => s.SaveGoalAsync("test"), Times.Once);
+        _onboardingService.Verify(o =>o.CompleteOnboardingAsync("test", "test" , null, 40, actionList), Times.Once);
         _appConfigService.Verify(c => c.Save(It.IsAny<AppConfig>()), Times.Once);
         completedCalled.Should().BeTrue();
     }
-
     [TestMethod]
     public async Task FinishCommand_WhenException_ShouldShowError()
     {
@@ -80,17 +74,13 @@ public sealed class InitialSetupViewModelTests
         vm.Goal = "test";
         vm.Password = "123";
         vm.ConfirmPassword = "123";
-
         var ex = new AppException("Registration Failed", isCritical: false, "Error");
         _authService.Setup(a => a.RegisterAsync(It.IsAny<string>())).ThrowsAsync(ex);
-
         await ((IAsyncRelayCommand)vm.FinishCommand).ExecuteAsync(null);
-
         _messageService.Verify(m => m.ShowErrorAsync(ex), Times.Once);
     }
-
     private InitialSetupViewModel CreateViewModel()
     {
-        return new InitialSetupViewModel(_settingsService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
+        return new InitialSetupViewModel(_onboardingService.Object, _appConfigService.Object, _localizationService.Object, _messageService.Object, _authService.Object);
     }
 }

@@ -391,4 +391,70 @@
   <data name="Subtitle_EmptyTable" xml:space="preserve">
     <value>Ви ще не додали жодного запису. Створіть перший запис, щоб почати відстежувати свій прогрес.</value>
   </data>
+  <data name="Title_MilestoneDuration" xml:space="preserve">
+    <value>Тривалість рубежу (дні)</value>
+  </data>
+  <data name="Title_ActionToReachGoal" xml:space="preserve">
+    <value>Дія для досягнення цілі (не обов'язково)</value>
+  </data>
+  <data name="Title_x/wk" xml:space="preserve">
+    <value>раз/нед</value>
+  </data>
+  <data name="Button_AddAction" xml:space="preserve">
+    <value>+ Додати дію</value>
+  </data>
+  <data name="Placeholder_ActionExample" xml:space="preserve">
+    <value>Наприклад: навчання</value>
+  </data>
+  <data name="Title_GoalDescription" xml:space="preserve">
+    <value>Опис цілі (необов'язково)</value>
+  </data>
+  <data name="Msg_ErrorLoadingActions" xml:space="preserve">
+    <value>Не вдалося завантажити активні дії. Перевірте логи</value>
+  </data>
+  <data name="Msg_ErrorLoadingGoalProgress" xml:space="preserve">
+    <value>Не вдалося розрахувати прогресс по цілі. Перевірте логи</value>
+  </data>
+  <data name="Msg_UserNotFound" xml:space="preserve">
+    <value>Користувача не знайдено. Спробуйте перезапустити додаток. Дивіться логи для детальної інформації</value>
+  </data>
+  <data name="Title_ActionOfDay" xml:space="preserve">
+    <value>Дії цього дня</value>
+  </data>
+  <data name="Title_ExecutionStability" xml:space="preserve">
+    <value>Стабільність виконання</value>
+  </data>
+  <data name="Title_days" xml:space="preserve">
+    <value>Днів</value>
+  </data>
+  <data name="Title_TodayAction" xml:space="preserve">
+    <value>Дії на сьогодні:</value>
+  </data>
+  <data name="Title_MyGoal" xml:space="preserve">
+    <value>Моя ціль</value>
+  </data>
+  <data name="Title_Actions" xml:space="preserve">
+    <value>Дії</value>
+  </data>
+  <data name="NavBtn_GoalView" xml:space="preserve">
+    <value>Ціль</value>
+  </data>
+  <data name="Btn_Save" xml:space="preserve">
+    <value>Зберегти</value>
+  </data>
+  <data name="Placeholder_ActionName" xml:space="preserve">
+    <value>Назва дії</value>
+  </data>
+  <data name="Title_/wk" xml:space="preserve">
+    <value>/нед</value>
+  </data>
+  <data name="Msg_ConfirmRemoveAction" xml:space="preserve">
+    <value>Видалити «{0}»? Ви впевнені?</value>
+  </data>
+  <data name="Msg_ErrorLoadingUser" xml:space="preserve">
+    <value>Не вдалося завантажити профіль користувача. Докладнішу інформацію дивіться у логах</value>
+  </data>
+  <data name="Msg_UsernameTooLong" xml:space="preserve">
+    <value>Ім'я користувача занадто довге (максимум 50 символів)</value>
+  </data>
 </root>

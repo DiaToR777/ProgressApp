@@ -14,23 +14,27 @@ namespace ProgressApp.Infrastructure.Repositories
         {
             _scopeFactory = scopeFactory;
         }
-        public async Task<List<JournalEntry>> GetEntriesByDateRangeAsync(DateTime from, DateTime to)
+
+        public async Task<List<DailyCheckin>> GetEntriesByDateRangeAsync(DateTime from, DateTime to)
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            return await context.Entries
+            return await context.Checkins
                 .AsNoTracking()
+                .Include(c => c.ActionLogs)
+                .ThenInclude(l => l.GoalAction)
                 .Where(e => e.Date >= from && e.Date <= to)
                 .OrderBy(e => e.Date)
                 .ToListAsync();
         }
-        public async Task<List<JournalEntry>> GetEntriesForStreakAsync()
+
+        public async Task<List<DailyCheckin>> GetEntriesForStreakAsync()
         {
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            return await context.Entries
+            return await context.Checkins
                 .AsNoTracking()
                 .OrderByDescending(e => e.Date)
                 .ToListAsync();
@@ -41,7 +45,7 @@ namespace ProgressApp.Infrastructure.Repositories
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-            var firstEntry = await context.Entries
+            var firstEntry = await context.Checkins
                 .AsNoTracking()
                 .OrderBy(e => e.Date)
                 .FirstOrDefaultAsync();

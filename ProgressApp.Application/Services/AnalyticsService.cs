@@ -32,7 +32,7 @@ namespace ProgressApp.Application.Services
             }
         }
 
-        public async Task<List<DayCell>> GetHeatmapCells(DateTime from, DateTime to)
+        public async Task<List<DayCell>> GetHeatmapCellsAsync(DateTime from, DateTime to)
         {
             try
             {
@@ -43,17 +43,35 @@ namespace ProgressApp.Application.Services
                 for (var date = from.Date; date <= to.Date; date = date.AddDays(1))
                 {
                     var entry = lookup.GetValueOrDefault(date);
+                    
+                    double? score = null;
+                    if (entry != null)
+                    {
+                        score = entry.ActionLogs.Count > 0
+                            ? (double)entry.ActionLogs.Count(l => l.IsCompleted) / entry.ActionLogs.Count
+                            : entry.Result switch
+                            {
+                                DayResult.Success => 1.0,
+                                DayResult.PartialSuccess => 0.5,
+                                DayResult.Relapse => 0.0,
+                                _ => (double?)null
+                            };
+                    }
+
                     cells.Add(new DayCell
                     {
                         Date = date,
                         Result = entry?.Result,
-                        Description = entry?.Description
+                        Description = entry?.Description,
+                        Score = score,
+                        ActionLogs = entry?.ActionLogs
+                            .Select(l => new ActionLogInfo { Title = l.GoalAction.Title, IsCompleted = l.IsCompleted })
+                            .ToList() ?? new List<ActionLogInfo>()
                     });
                 }
 
                 Log.Debug("AnalyticsService: Fetched {Count} heatmap cells from {From} to {To}.",
                     cells.Count, from.ToShortDateString(), to.ToShortDateString());
-
                 return cells;
             }
             catch (Exception ex)

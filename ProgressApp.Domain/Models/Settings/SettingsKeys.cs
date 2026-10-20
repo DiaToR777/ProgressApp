@@ -2,5 +2,4 @@
 
 public static class SettingsKeys
 {
-    public const string Goal = "Goal";
 }

@@ -8,6 +8,7 @@
         xmlns:vmAnalytics="clr-namespace:ProgressApp.WpfUI.ViewModels.Analytics"
         xmlns:vmInitial="clr-namespace:ProgressApp.WpfUI.ViewModels.InitialSetup"
         xmlns:vmLogin="clr-namespace:ProgressApp.WpfUI.ViewModels.Login"
+        xmlns:vmGoal="clr-namespace:ProgressApp.WpfUI.ViewModels.Goal"
                  
                  
         xmlns:viewLogin="clr-namespace:ProgressApp.WpfUI.Views.Login"
@@ -15,6 +16,7 @@
         xmlns:viewSettings="clr-namespace:ProgressApp.WpfUI.Views.Settings"
         xmlns:viewAnalytics="clr-namespace:ProgressApp.WpfUI.Views.Analytics"
         xmlns:viewInitial="clr-namespace:ProgressApp.WpfUI.Views.InitialSetup"
+        xmlns:viewGoal="clr-namespace:ProgressApp.WpfUI.Views.Goal"
                  
                  
         Title="{Binding Source={StaticResource Langs}, Path=[AppTitle]}"
@@ -32,6 +34,11 @@
         <DataTemplate DataType="{x:Type vmToday:TodayViewModel}">
             <viewToday:TodayView />
         </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type vmGoal:GoalViewModel}">
+            <viewGoal:GoalView />
+        </DataTemplate>
+        
         <DataTemplate DataType="{x:Type vmSettings:SettingsViewModel}">
             <viewSettings:SettingsView />
         </DataTemplate>
@@ -68,12 +75,16 @@
                                      Command="{Binding ShowTodayCommand}" 
                                      Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
 
-                <!--rename to ShowAnalyticsCommand and langs keys...-->
                 <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Analytics]}"
                                      Icon="{ui:SymbolIcon Symbol=Table24}"
                                      Command="{Binding ShowAnalyticsCommand}" 
                                      Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
-
+                
+                <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_GoalView]}"
+                           Icon="{ui:SymbolIcon Symbol=Target24}"
+                           Command="{Binding ShowGoalCommand}" 
+                           Margin="0,0,0,5" HorizontalAlignment="Stretch"/>
+                
                 <ui:Button Appearance="Primary" Content="{Binding Source={StaticResource Langs}, Path=[NavBtn_Settings]}"
                                      Icon="{ui:SymbolIcon Symbol=Settings24}"
                                      Command="{Binding ShowSettingsCommand}" 

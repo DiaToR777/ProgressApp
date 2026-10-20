@@ -391,4 +391,70 @@ Records imported: {0}</value>
   <data name="Subtitle_EmptyTable" xml:space="preserve">
     <value>It looks a bit empty here. Start by adding your first journal entry to track your progress.</value>
   </data>
+  <data name="Title_GoalDescription" xml:space="preserve">
+    <value>Description of the goal (optional)</value>
+  </data>
+  <data name="Title_MilestoneDuration" xml:space="preserve">
+    <value>Milestone duration (days)</value>
+  </data>
+  <data name="Title_ActionToReachGoal" xml:space="preserve">
+    <value>Action to reach the goal</value>
+  </data>
+  <data name="Placeholder_ActionExample" xml:space="preserve">
+    <value>For example: learning</value>
+  </data>
+  <data name="Title_x/wk" xml:space="preserve">
+    <value>x/wk</value>
+  </data>
+  <data name="Button_AddAction" xml:space="preserve">
+    <value>+ Add Action</value>
+  </data>
+  <data name="Msg_ErrorLoadingActions" xml:space="preserve">
+    <value>Failed to load active actions. Check logs</value>
+  </data>
+  <data name="Msg_ErrorLoadingGoalProgress" xml:space="preserve">
+    <value>Failed to calculate goal progress. Check logs</value>
+  </data>
+  <data name="Msg_UserNotFound" xml:space="preserve">
+    <value>The user was not found. Please try restarting the app.. Check logs for more details</value>
+  </data>
+  <data name="Title_ActionOfDay" xml:space="preserve">
+    <value>Actions of the day</value>
+  </data>
+  <data name="Title_TodayAction" xml:space="preserve">
+    <value>Actions for today:</value>
+  </data>
+  <data name="Title_ExecutionStability" xml:space="preserve">
+    <value>Execution stability</value>
+  </data>
+  <data name="Title_days" xml:space="preserve">
+    <value>Days</value>
+  </data>
+  <data name="Title_MyGoal" xml:space="preserve">
+    <value>My goal</value>
+  </data>
+  <data name="Title_Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="NavBtn_GoalView" xml:space="preserve">
+    <value>Goal</value>
+  </data>
+  <data name="Btn_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Placeholder_ActionName" xml:space="preserve">
+    <value>Action name</value>
+  </data>
+  <data name="Title_/wk" xml:space="preserve">
+    <value>/wk</value>
+  </data>
+  <data name="Msg_ConfirmRemoveAction" xml:space="preserve">
+    <value>Delete «{0}»? Are you sure?</value>
+  </data>
+  <data name="Msg_ErrorLoadingUser" xml:space="preserve">
+    <value>The user profile could not be loaded. For more information, see the logs</value>
+  </data>
+  <data name="Msg_UsernameTooLong" xml:space="preserve">
+    <value>Username is too long (max 50 characters)</value>
+  </data>
 </root>
