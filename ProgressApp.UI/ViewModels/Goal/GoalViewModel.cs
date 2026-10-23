@@ -15,8 +15,8 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         public List<GoalAction> CurrentActions => ActiveGoal?.Milestones.FirstOrDefault()?.Actions ?? new();
         
         private readonly IGoalService _goalService;
-        private readonly ICheckinService _checkinService;
         private readonly IMessageService _messageService;
+        private readonly IAnalyticsService _analyticsService;
         
         [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(IsNotEditingGoal))]
@@ -48,11 +48,11 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
 
         public GoalViewModel(
             IGoalService goalService,
-            ICheckinService checkinService,
-            IMessageService messageService)
+            IMessageService messageService,
+            IAnalyticsService analyticsService)
         {
+            _analyticsService = analyticsService;
             _goalService = goalService;
-            _checkinService = checkinService;
             _messageService = messageService;
 
             Initialization = LoadAsync();
@@ -155,7 +155,7 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
             try
             {
                 ActiveGoal = await _goalService.GetActiveGoalAsync();
-                MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
+                MilestoneProgress = await _analyticsService.GetActiveMilestoneProgressAsync();
             }
             catch (AppException ex)
             {

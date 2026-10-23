@@ -67,7 +67,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 await _checkinService.SaveTodayAsync(Description, SelectedResult, completions);
 
                 CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
-                MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
+                MilestoneProgress = await _analyticsService.GetActiveMilestoneProgressAsync();
 
                 await _messageService.ShowInfoAsync("Msg_RecordSaved");
                 Log.Debug("TodayViewModel: Entry saved successfully");
@@ -88,7 +88,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
 
                 var entry = await _checkinService.GetTodayAsync();
-                MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
+                MilestoneProgress = await _analyticsService.GetActiveMilestoneProgressAsync();
                 var actions = await _checkinService.GetActiveActionsAsync();
                 ActiveActions.Clear();
                 foreach (var action in actions)
