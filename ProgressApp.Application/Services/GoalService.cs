@@ -17,6 +17,49 @@ public class GoalService : IGoalService
         _goalRepository = goalRepository;
     }
 
+    public async Task CompleteMilestoneAsync(Guid milestoneId, MilestoneStatus status)
+    {
+        if (status is not (MilestoneStatus.Success or MilestoneStatus.Fail))
+            throw new AppException("Msg_InvalidMilestoneStatus", args: status);
+
+        try
+        {
+            var goalStatus = status == MilestoneStatus.Success
+                ? GoalStatus.Completed
+                : GoalStatus.Archived;
+
+            await _goalRepository.CloseMilestoneAsync(milestoneId, status, goalStatus);
+            Log.Information("Milestone {Id} closed as {Status}, goal set to {GoalStatus}.",
+                milestoneId, status, goalStatus);
+        }
+        catch (Exception ex) when (ex is not AppException)
+        {
+            Log.Error(ex, "Failed to complete milestone {Id}", milestoneId);
+            throw new AppException("Msg_ErrorCompletingMilestone", isCritical: true);
+        }
+    }
+
+    public async Task ExtendMilestoneAsync(Guid milestoneId, int extraDays)
+    {
+        if (extraDays is < 1 or > 365)
+            throw new AppException("Msg_InvalidExtraDays");
+
+        try
+        {
+            var milestone = await _goalRepository.GetMilestoneByIdAsync(milestoneId);
+            if (milestone == null) throw new AppException("Msg_MilestoneNotFound");
+
+            milestone.TargetDays += extraDays;
+            await _goalRepository.UpdateMilestoneAsync(milestone);
+            Log.Information("Milestone {Id} extended by {Days} days.", milestoneId, extraDays);
+        }
+        catch (Exception ex) when (ex is not AppException)
+        {
+            Log.Error(ex, "Failed to extend milestone {Id}", milestoneId);
+            throw new AppException("Msg_ErrorExtendingMilestone", isCritical: true);
+        }
+    }
+
     public async Task<Goal?> GetActiveGoalAsync()
     {
         try
@@ -31,7 +74,7 @@ public class GoalService : IGoalService
             throw new AppException("Msg_ErrorLoadingGoal", isCritical: true);
         }
     }
-    
+
     public async Task AddActionAsync(Guid milestoneId, string title, int targetCountPerWeek)
     {
         if (string.IsNullOrWhiteSpace(title))
@@ -56,7 +99,7 @@ public class GoalService : IGoalService
             throw new AppException("Msg_ErrorAddingAction", isCritical: true);
         }
     }
-    
+
     public async Task UpdateActionAsync(Guid actionId, string title, int targetCountPerWeek)
     {
         if (string.IsNullOrWhiteSpace(title))

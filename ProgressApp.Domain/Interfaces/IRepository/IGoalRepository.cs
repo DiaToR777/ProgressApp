@@ -4,7 +4,9 @@ namespace ProgressApp.Domain.Interfaces.IRepository;
 
 public interface IGoalRepository
 {
-    Task<Milestone?> GetActiveMilestoneWithDetailsAsync(Guid goalId);
+    Task CloseMilestoneAsync(Guid milestoneId, MilestoneStatus milestoneStatus, GoalStatus goalStatus);
+    Task<Milestone?> GetMilestoneByIdAsync(Guid milestoneId);
+    Task UpdateMilestoneAsync(Milestone milestone);
     Task<Goal?> GetGoalByIdAsync(Guid goalId); 
     Task<Goal?> GetActiveGoalAsync(Guid userId);
     Task<Goal> CreateGoalAsync(Goal goal);
