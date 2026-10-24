@@ -457,4 +457,49 @@
   <data name="Msg_UsernameTooLong" xml:space="preserve">
     <value>Ім'я користувача занадто довге (максимум 50 символів)</value>
   </data>
+  <data name="Msg_InvalidMilestoneStatus" xml:space="preserve">
+    <value>Статус рубежу '{0}' є неприпустимим. Дозволені значення: Success або Fail</value>
+  </data>
+  <data name="Msg_MilestoneNotFound" xml:space="preserve">
+    <value>Вказаний рубеж не знайдено</value>
+  </data>
+  <data name="Msg_ErrorCompletingMilestone" xml:space="preserve">
+    <value>Сталася помилка під час завершення етапу. Перегляньте тлоги для деталей</value>
+  </data>
+  <data name="Msg_InvalidExtraDays" xml:space="preserve">
+    <value>Некоректна кількість додаткових днів. Дозволений діапазон: від 1 до 365</value>
+  </data>
+  <data name="Msg_ErrorExtendingMilestone" xml:space="preserve">
+    <value>Не вдалося продовжити рубеж. Перегляньте логи</value>
+  </data>
+  <data name="Btn_ExtendMilestone" xml:space="preserve">
+    <value>Продовжити рубеж</value>
+  </data>
+  <data name="Btn_NotAchieved" xml:space="preserve">
+    <value>Не досягнуто</value>
+  </data>
+  <data name="Btn_Achieved" xml:space="preserve">
+    <value>Досягнуто</value>
+  </data>
+  <data name="Hint_SuggestSuccess" xml:space="preserve">
+    <value>Чудова стабільність! Схоже, ви успішно закрили цей рубеж</value>
+  </data>
+  <data name="Hint_SuggestFail" xml:space="preserve">
+    <value>Стабільність виконання низька. Можливо, варто переглянути план або продовжити рубеж</value>
+  </data>
+  <data name="Title_MilestoneFinished" xml:space="preserve">
+    <value>Рубеж завершено</value>
+  </data>
+  <data name="Title_NoActiveGoal" xml:space="preserve">
+    <value>Немає активної цілі</value>
+  </data>
+  <data name="Hint_CreateGoal" xml:space="preserve">
+    <value>Створіть ціль, щоб почати</value>
+  </data>
+  <data name="Btn_CreateGoal" xml:space="preserve">
+    <value>Створити ціль</value>
+  </data>
+  <data name="Msg_CreateGoalError" xml:space="preserve">
+    <value>Не вдалося створити ціль. Перевірте логи для детальної інформації</value>
+  </data>
 </root>

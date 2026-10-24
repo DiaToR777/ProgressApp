@@ -12,161 +12,271 @@
 
     <ScrollViewer VerticalScrollBarVisibility="Auto"
                   helpers:LanguageHelper.UpdateLanguage="{Binding Source={StaticResource Langs}, Path=CurrentCulture}">
-        <StackPanel Margin="20" Width="500">
+        <StackPanel Margin="20" Width="540">
 
-            <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_MyGoal]}"
-                          FontWeight="Bold" FontSize="28" Margin="0,0,0,20"/>
-            
-            <ui:Card Padding="15" Margin="0,0,0,15"
-                     DataContext="{Binding Completion}"
-                     Visibility="{Binding IsMilestoneExpired, Converter={StaticResource BoolToVis}}">
-                <StackPanel>
-                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_MilestoneFinished]}"
-                                  FontWeight="Bold" FontSize="16" Margin="0,0,0,6"/>
+            <ui:Card Padding="20"
+                     Visibility="{Binding HasNoActiveGoal, Converter={StaticResource BoolToVis}}">
 
-                    <ui:TextBlock Appearance="Secondary" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,10">
-                        <Run Text="{Binding Source={StaticResource Langs}, Path=[Title_ExecutionStability], Mode=OneWay}" />
-                        <Run Text=": " />
-                        <Run Text="{Binding Progress.ConsistencyPercent, Mode=OneWay, StringFormat={}{0}%}" />
-                    </ui:TextBlock>
+                <StackPanel Margin="0,10">
+                    <ui:SymbolIcon Symbol="Target24" FontSize="48" Margin="0,0,0,12" HorizontalAlignment="Center" />
+                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_NoActiveGoal]}"
+                                  FontWeight="Bold" FontSize="18" HorizontalAlignment="Center" Margin="0,0,0,6" />
+                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_CreateGoal]}"
+                                  Appearance="Secondary" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20" />
 
-                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_SuggestSuccess]}"
-                                  Appearance="Secondary" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"
-                                  Visibility="{Binding SuggestsSuccess, Converter={StaticResource BoolToVis}}"/>
-                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_SuggestFail]}"
-                                  Appearance="Secondary" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"
-                                  Visibility="{Binding SuggestsFail, Converter={StaticResource BoolToVis}}"/>
+                    <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" Margin="0,0,0,5" />
 
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Achieved]}"
-                                   Command="{Binding CompleteSuccessCommand}"
-                                   Appearance="Primary"/>
-                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_NotAchieved]}"
-                                   Command="{Binding CompleteFailCommand}"
-                                   Margin="8,0,0,0"/>
-                    </StackPanel>
+                    <ScrollViewer Height="80" VerticalScrollBarVisibility="Visible">
+                        <ui:TextBox Text="{Binding NewGoalTitle, UpdateSourceTrigger=PropertyChanged}"
+                                    MaxLength="150"
+                                    TextWrapping="Wrap"
+                                    AcceptsReturn="True"
+                                    VerticalContentAlignment="Top"
+                                    TabIndex="2"
+                                    Margin="0,0,0,15" />
+                    </ScrollViewer>
 
-                    <StackPanel Orientation="Horizontal">
-                        <ui:NumberBox Value="{Binding ExtendDays, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Minimum="1" Maximum="365"
-                                      MinWidth="80"
-                                      HorizontalAlignment="Left"/>
-                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_ExtendMilestone]}"
-                                   Command="{Binding ExtendMilestoneCommand}"
-                                   Margin="8,0,0,0"/>
-                    </StackPanel>
-                </StackPanel>
-            </ui:Card>
+                    <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_GoalDescription]}"
+                           Margin="0,0,0,5" />
 
-            <ui:Card Padding="15" Margin="0,0,0,15">
-                <StackPanel>
-                    <StackPanel Visibility="{Binding IsNotEditingGoal, Converter={StaticResource BoolToVis}}">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <ui:TextBlock Text="{Binding ActiveGoal.Title}" FontWeight="Medium" FontSize="18"/>
-                                <ui:TextBlock Text="{Binding ActiveGoal.Description}"
-                                              Appearance="Secondary" FontSize="13" Margin="0,6,0,0"
-                                              TextWrapping="Wrap"/>
-                            </StackPanel>
-                            <ui:Button Grid.Column="1" Content="✎" Command="{Binding StartEditGoalCommand}" VerticalAlignment="Top"/>
-                        </Grid>
-                    </StackPanel>
+                    <ScrollViewer Height="80" VerticalScrollBarVisibility="Visible">
+                        <ui:TextBox Text="{Binding NewGoalDescription, UpdateSourceTrigger=PropertyChanged}"
+                                    AcceptsReturn="True"
+                                    TextWrapping="Wrap"
+                                    Height="60"
+                                    Margin="0,0,0,15" />
+                    </ScrollViewer>
 
-                    <StackPanel Visibility="{Binding IsEditingGoal, Converter={StaticResource BoolToVis}}">
-                        <ui:TextBox Text="{Binding EditGoalTitle, UpdateSourceTrigger=PropertyChanged}"
-                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" Margin="0,0,0,8"/>
-                        <ui:TextBox Text="{Binding EditGoalDescription, UpdateSourceTrigger=PropertyChanged}"
-                                    AcceptsReturn="True" TextWrapping="Wrap" Height="60"
-                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Title_GoalDescription]}" Margin="0,0,0,8"/>
-                        <StackPanel Orientation="Horizontal">
-                            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Save]}" Command="{Binding SaveGoalCommand}" Appearance="Primary"/>
-                            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Cancel]}" Command="{Binding CancelEditGoalCommand}" Margin="8,0,0,0"/>
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
-            </ui:Card>
+                    <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_MilestoneDuration]}"
+                           Margin="0,0,0,5" />
+                    <ui:NumberBox Value="{Binding NewMilestoneDays}"
+                                  Minimum="1"
+                                  Maximum="365"
+                                  Margin="0,0,0,20" />
 
-            <ui:Card Padding="15" Margin="0,0,0,15">
-                <StackPanel Margin="0,0,0,10">
-                    <ui:TextBlock Appearance="Secondary" FontSize="12">
-                        <Run Text="{Binding MilestoneProgress.DaysElapsed, Mode=OneWay}" />
-                        <Run Text="/" />
-                        <Run Text="{Binding MilestoneProgress.TargetDays, Mode=OneWay}" />
-                        <Run Text="{Binding Source={StaticResource Langs}, Path=[Title_days], Mode=OneWay}" />
-                    </ui:TextBlock>
-                    <ProgressBar Value="{Binding MilestoneProgress.DaysCompletionPercent}" Maximum="100" Height="6"
-                                 Margin="0,4,0,12" />
-
-                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ExecutionStability]}" Appearance="Secondary" FontSize="12" />
-                    <ProgressBar Value="{Binding MilestoneProgress.ConsistencyPercent}" Maximum="100" Height="6"
-                                 Margin="0,4,0,0" />
-                    <ui:TextBlock Text="{Binding MilestoneProgress.ConsistencyPercent, StringFormat={}{0}%}" FontSize="12"
-                                  Appearance="Secondary" HorizontalAlignment="Right" />
-                </StackPanel>
-            </ui:Card>
-
-            <ui:Card Padding="15" DataContext="{Binding Actions}">
-                <StackPanel>
-                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Actions]}" Appearance="Secondary" FontSize="12" Margin="0,0,0,8"/>
-
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
-                        <ui:TextBox Text="{Binding NewActionTitle, UpdateSourceTrigger=PropertyChanged}"
-                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_ActionName]}"
-                                    Width="220"/>
-                        <ui:NumberBox Value="{Binding NewActionTargetCountPerWeek, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Minimum="1"
-                                      Maximum="7"
-                                      MinWidth="80"
-                                      HorizontalAlignment="Left"
-                                         Margin="8,0,0,0"/>
-                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Save]}"
-                                   Command="{Binding SaveActionCommand}"
-                                   Margin="8,0,0,0"/>
-                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Cancel]}"
-                                   Command="{Binding CancelEditActionCommand}"
-                                   Margin="4,0,0,0"/>
-                    </StackPanel>
-
-                    <ItemsControl ItemsSource="{Binding Items}">
+                    <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_ActionToReachGoal]}"
+                           Margin="0,0,0,5" />
+                    <ItemsControl ItemsSource="{Binding NewActions}" Margin="0,0,0,10">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" Padding="0,10">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal" Margin="0,4">
+                                    <ui:TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                                PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_ActionExample]}"
+                                                Width="180" />
+                                    <ui:NumberBox Value="{Binding TargetCountPerWeek}"
+                                                  Minimum="1" Maximum="7"
+                                                  MinWidth="70"
+                                                  HorizontalAlignment="Left"
+                                                  Margin="8,0,0,0" />
 
-                                        <TextBlock Grid.Column="0" VerticalAlignment="Center">
-                                            <Run Text="{Binding Title}"/>
-                                            <Run Text=" · "/>
-                                            <Run Text="{Binding TargetCountPerWeek}"/>
-                                            <Run Text="{Binding Source={StaticResource Langs}, Path=[Title_/wk], Mode=OneWay}"/>
-                                        </TextBlock>
-
-                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
-                                            <!-- ВАЖНО: ищем DataContext у ItemsControl (там GoalActionsViewModel),
-                                                 а не у UserControl (там родительский GoalViewModel) -->
-                                            <ui:Button Content="✎"
-                                                       Command="{Binding DataContext.StartEditActionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                       CommandParameter="{Binding}"
-                                                       Margin="8,0,0,0"/>
-                                            <ui:Button Content="✕"
-                                                       Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                                       CommandParameter="{Binding}"
-                                                       Margin="4,0,0,0"/>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
+                                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_x/wk]}"
+                                                  Margin="4,4,8,0" Appearance="Secondary" />
+                                    <ui:Button Content="✕"
+                                               Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                               CommandParameter="{Binding}" />
+                                </StackPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+
+                    <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Button_AddAction]}"
+                               Command="{Binding AddActionCommand}"
+                               Appearance="Secondary"
+                               Margin="0,0,0,20" />
+
+                    <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_CreateGoal]}"
+                               Command="{Binding CreateGoalCommand}"
+                               Appearance="Primary"
+                               HorizontalAlignment="Stretch" />
+
                 </StackPanel>
+
             </ui:Card>
+
+            <StackPanel Visibility="{Binding HasActiveGoal, Converter={StaticResource BoolToVis}}">
+                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_MyGoal]}"
+                              FontWeight="Bold" FontSize="28" Margin="0,0,0,20" />
+
+                <ui:Card Padding="15" Margin="0,0,0,15"
+                         DataContext="{Binding Completion}"
+                         Visibility="{Binding IsMilestoneExpired, Converter={StaticResource BoolToVis}}">
+                    <StackPanel>
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_MilestoneFinished]}"
+                                      FontWeight="Bold" FontSize="16" Margin="0,0,0,6" />
+
+                        <ui:TextBlock Appearance="Secondary" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,10">
+                            <Run
+                                Text="{Binding Source={StaticResource Langs}, Path=[Title_ExecutionStability], Mode=OneWay}" />
+                            <Run Text=": " />
+                            <Run Text="{Binding Progress.ConsistencyPercent, Mode=OneWay, StringFormat={}{0}%}" />
+                        </ui:TextBlock>
+
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_SuggestSuccess]}"
+                                      Appearance="Secondary" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"
+                                      Visibility="{Binding SuggestsSuccess, Converter={StaticResource BoolToVis}}" />
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_SuggestFail]}"
+                                      Appearance="Secondary" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"
+                                      Visibility="{Binding SuggestsFail, Converter={StaticResource BoolToVis}}" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Achieved]}"
+                                       Command="{Binding CompleteSuccessCommand}"
+                                       Appearance="Primary" />
+                            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_NotAchieved]}"
+                                       Command="{Binding CompleteFailCommand}"
+                                       Margin="8,0,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <ui:NumberBox
+                                Value="{Binding ExtendDays, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Minimum="1" Maximum="365"
+                                MinWidth="80"
+                                HorizontalAlignment="Left" />
+                            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_ExtendMilestone]}"
+                                       Command="{Binding ExtendMilestoneCommand}"
+                                       Margin="8,0,0,0" />
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card Padding="15" Margin="0,0,0,15">
+                    <StackPanel>
+                        <StackPanel Visibility="{Binding IsNotEditingGoal, Converter={StaticResource BoolToVis}}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+
+                                    <ui:TextBlock Text="{Binding ActiveGoal.Title}" FontWeight="Medium" FontSize="18"
+                                                  TextWrapping="Wrap" />
+
+                                    <ScrollViewer MaxHeight="100"
+                                                  VerticalScrollBarVisibility="Auto"
+                                                  Margin="0,6,0,0">
+                                        <ui:TextBlock Text="{Binding ActiveGoal.Description}"
+                                                      Appearance="Secondary"
+                                                      FontSize="13"
+                                                      TextWrapping="Wrap" />
+                                    </ScrollViewer>
+                                    
+                                </StackPanel>
+                                <ui:Button Grid.Column="1" Content="✎" Command="{Binding StartEditGoalCommand}"
+                                           VerticalAlignment="Top" />
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Visibility="{Binding IsEditingGoal, Converter={StaticResource BoolToVis}}">
+                            <ui:TextBox Text="{Binding EditGoalTitle, UpdateSourceTrigger=PropertyChanged}"
+                                        PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}"
+                                        MaxLength="150"
+                                        Margin="0,0,0,8" />
+
+
+                            <ScrollViewer Height="60" VerticalScrollBarVisibility="Auto" Margin="0,0,0,8">
+                                <ui:TextBox Text="{Binding EditGoalDescription, UpdateSourceTrigger=PropertyChanged}"
+                                            AcceptsReturn="True" TextWrapping="Wrap"
+                                            MaxLength="1500"
+                                            PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Title_GoalDescription]}" />
+                            </ScrollViewer>
+
+
+                            <StackPanel Orientation="Horizontal">
+                                <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Save]}"
+                                           Command="{Binding SaveGoalCommand}" Appearance="Primary" />
+                                <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Cancel]}"
+                                           Command="{Binding CancelEditGoalCommand}" Margin="8,0,0,0" />
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card Padding="15" Margin="0,0,0,15">
+                    <StackPanel Margin="0,0,0,10">
+                        <ui:TextBlock Appearance="Secondary" FontSize="12">
+                            <Run Text="{Binding MilestoneProgress.DaysElapsed, Mode=OneWay}" />
+                            <Run Text="/" />
+                            <Run Text="{Binding MilestoneProgress.TargetDays, Mode=OneWay}" />
+                            <Run Text="{Binding Source={StaticResource Langs}, Path=[Title_days], Mode=OneWay}" />
+                        </ui:TextBlock>
+                        <ProgressBar Value="{Binding MilestoneProgress.DaysCompletionPercent}" Maximum="100" Height="6"
+                                     Margin="0,4,0,12" />
+
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ExecutionStability]}"
+                                      Appearance="Secondary" FontSize="12" />
+                        <ProgressBar Value="{Binding MilestoneProgress.ConsistencyPercent}" Maximum="100" Height="6"
+                                     Margin="0,4,0,0" />
+                        <ui:TextBlock Text="{Binding MilestoneProgress.ConsistencyPercent, StringFormat={}{0}%}"
+                                      FontSize="12"
+                                      Appearance="Secondary" HorizontalAlignment="Right" />
+                    </StackPanel>
+                </ui:Card>
+
+                <ui:Card Padding="15" DataContext="{Binding Actions}">
+                    <StackPanel>
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Actions]}"
+                                      Appearance="Secondary" FontSize="12" Margin="0,0,0,8" />
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <ui:TextBox Text="{Binding NewActionTitle, UpdateSourceTrigger=PropertyChanged}"
+                                        PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_ActionName]}"
+                                        MaxLength="150"
+                                        Width="220" />
+                            <ui:NumberBox
+                                Value="{Binding NewActionTargetCountPerWeek, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Minimum="1"
+                                Maximum="7"
+                                MinWidth="80"
+                                HorizontalAlignment="Left"
+                                Margin="8,0,0,0" />
+                            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Save]}"
+                                       Command="{Binding SaveActionCommand}"
+                                       Margin="8,0,0,0" />
+                            <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Cancel]}"
+                                       Command="{Binding CancelEditActionCommand}"
+                                       Margin="4,0,0,0" />
+                        </StackPanel>
+
+                        <ItemsControl ItemsSource="{Binding Items}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0,0,0,1"
+                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                            Padding="0,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                                                <Run Text="{Binding Title}" />
+                                                <Run Text=" · " />
+                                                <Run Text="{Binding TargetCountPerWeek}" />
+                                                <Run
+                                                    Text="{Binding Source={StaticResource Langs}, Path=[Title_/wk], Mode=OneWay}" />
+                                            </TextBlock>
+
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <ui:Button Content="✎"
+                                                           Command="{Binding DataContext.StartEditActionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                           CommandParameter="{Binding}"
+                                                           Margin="8,0,0,0" />
+                                                <ui:Button Content="✕"
+                                                           Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                           CommandParameter="{Binding}"
+                                                           Margin="4,0,0,0" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ui:Card>
+            </StackPanel>
 
         </StackPanel>
     </ScrollViewer>

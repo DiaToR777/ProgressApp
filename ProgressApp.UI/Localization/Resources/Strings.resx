@@ -457,4 +457,49 @@ Records imported: {0}</value>
   <data name="Msg_UsernameTooLong" xml:space="preserve">
     <value>Username is too long (max 50 characters)</value>
   </data>
+  <data name="Msg_InvalidMilestoneStatus" xml:space="preserve">
+    <value>Milestone status '{0}' is invalid. Allowed values are Success or Fail</value>
+  </data>
+  <data name="Msg_MilestoneNotFound" xml:space="preserve">
+    <value>The specified milestone was not found</value>
+  </data>
+  <data name="Msg_ErrorCompletingMilestone" xml:space="preserve">
+    <value>Error while completing the milestone. Check logs for details</value>
+  </data>
+  <data name="Msg_InvalidExtraDays" xml:space="preserve">
+    <value>Invalid number of extra days. The allowed range is between 1 and 365</value>
+  </data>
+  <data name="Msg_ErrorExtendingMilestone" xml:space="preserve">
+    <value>Failed to extend the milestone. Check logs</value>
+  </data>
+  <data name="Btn_ExtendMilestone" xml:space="preserve">
+    <value>Extend milestone</value>
+  </data>
+  <data name="Btn_NotAchieved" xml:space="preserve">
+    <value>Not achieved</value>
+  </data>
+  <data name="Btn_Achieved" xml:space="preserve">
+    <value>Achieved</value>
+  </data>
+  <data name="Hint_SuggestSuccess" xml:space="preserve">
+    <value>Great consistency! Looks like you have successfully completed this milestone</value>
+  </data>
+  <data name="Hint_SuggestFail" xml:space="preserve">
+    <value>Execution consistency is low. You might want to review your plan or extend the milestone</value>
+  </data>
+  <data name="Title_MilestoneFinished" xml:space="preserve">
+    <value>Milestone completed</value>
+  </data>
+  <data name="Title_NoActiveGoal" xml:space="preserve">
+    <value>No active goal</value>
+  </data>
+  <data name="Hint_CreateGoal" xml:space="preserve">
+    <value>Create a goal to get started</value>
+  </data>
+  <data name="Btn_CreateGoal" xml:space="preserve">
+    <value>Create goal</value>
+  </data>
+  <data name="Msg_CreateGoalError" xml:space="preserve">
+    <value>Failed to create the goal. Check the logs for detailed information</value>
+  </data>
 </root>

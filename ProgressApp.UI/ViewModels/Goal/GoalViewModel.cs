@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ProgressApp.Domain.Exceptions;
@@ -17,7 +18,22 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         private readonly IMessageService _messageService;
 
         public MilestoneCompletionViewModel Completion { get; }
+
+        public ObservableCollection<Common.ActionInputViewModel> NewActions { get; } = new();
+
         public GoalActionsViewModel Actions { get; }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CreateGoalCommand))]
+        private string _newGoalTitle = string.Empty;
+
+        [ObservableProperty]
+        private string _newGoalDescription = string.Empty;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(CreateGoalCommand))]
+        private int _newMilestoneDays = 40;
+        
 
         [ObservableProperty] private Domain.Models.Goals.Goal? _activeGoal;
         [ObservableProperty] private MilestoneProgress? _milestoneProgress;
@@ -26,6 +42,8 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         [ObservableProperty] private string _editGoalTitle = string.Empty;
         [ObservableProperty] private string _editGoalDescription = string.Empty;
 
+        public bool HasNoActiveGoal => ActiveGoal == null;
+
         public bool IsNotEditingGoal => !IsEditingGoal;
         public bool HasActiveGoal => ActiveGoal != null;
 
@@ -33,7 +51,10 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
             => OnPropertyChanged(nameof(IsNotEditingGoal));
 
         partial void OnActiveGoalChanged(Domain.Models.Goals.Goal? value)
-            => OnPropertyChanged(nameof(HasActiveGoal));
+        {
+            OnPropertyChanged(nameof(HasActiveGoal));
+            OnPropertyChanged(nameof(HasNoActiveGoal));
+        }
 
         public GoalViewModel(
             IGoalService goalService,
@@ -88,6 +109,47 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
             }
         }
 
+        [RelayCommand(CanExecute = nameof(CanFinish), AllowConcurrentExecutions = false)]
+        private async Task CreateGoal()
+        {
+            if (string.IsNullOrWhiteSpace(NewGoalTitle)) return;
+
+            try
+            {
+                var actionsData = NewActions
+                    .Where(a => !string.IsNullOrWhiteSpace(a.Title))
+                    .Select(a => (a.Title, a.TargetCountPerWeek))
+                    .ToList();
+
+                await _goalService.CreateGoalAsync(
+                    NewGoalTitle,
+                    string.IsNullOrWhiteSpace(NewGoalDescription) ? null : NewGoalDescription,
+                    NewMilestoneDays, actionsData);
+
+                NewGoalTitle = string.Empty;
+                NewGoalDescription = string.Empty;
+                NewMilestoneDays = 30;
+
+                await LoadAsync();
+            }
+            catch (AppException ex)
+            {
+                await _messageService.ShowErrorAsync(ex);
+            }
+        }
+
+        [RelayCommand]
+        private void AddAction()
+        {
+            NewActions.Add(new Common.ActionInputViewModel());
+        }
+
+        [RelayCommand]
+        private void RemoveAction(Common.ActionInputViewModel action)
+        {
+            NewActions.Remove(action);
+        }
+
         private async Task LoadAsync()
         {
             try
@@ -103,6 +165,12 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
                 Log.Error(ex, "GoalViewModel: Failed to load goal data");
                 await _messageService.ShowErrorAsync(ex);
             }
+        }
+
+        private bool CanFinish()
+        {
+            return !string.IsNullOrWhiteSpace(NewGoalTitle) &&
+                   NewMilestoneDays > 0;
         }
     }
 }

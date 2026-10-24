@@ -105,6 +105,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Achieved.
+        /// </summary>
+        public static string Btn_Achieved {
+            get {
+                return ResourceManager.GetString("Btn_Achieved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apply.
         /// </summary>
         public static string Btn_Apply {
@@ -132,11 +141,38 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create goal.
+        /// </summary>
+        public static string Btn_CreateGoal {
+            get {
+                return ResourceManager.GetString("Btn_CreateGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extend milestone.
+        /// </summary>
+        public static string Btn_ExtendMilestone {
+            get {
+                return ResourceManager.GetString("Btn_ExtendMilestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string Btn_No {
             get {
                 return ResourceManager.GetString("Btn_No", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not achieved.
+        /// </summary>
+        public static string Btn_NotAchieved {
+            get {
+                return ResourceManager.GetString("Btn_NotAchieved", resourceCulture);
             }
         }
         
@@ -231,6 +267,33 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create a goal to get started.
+        /// </summary>
+        public static string Hint_CreateGoal {
+            get {
+                return ResourceManager.GetString("Hint_CreateGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Execution consistency is low. You might want to review your plan or extend the milestone.
+        /// </summary>
+        public static string Hint_SuggestFail {
+            get {
+                return ResourceManager.GetString("Hint_SuggestFail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Great consistency! Looks like you have successfully completed this milestone.
+        /// </summary>
+        public static string Hint_SuggestSuccess {
+            get {
+                return ResourceManager.GetString("Hint_SuggestSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to change password. Check logs.
         /// </summary>
         public static string Msg_ChangePasswordFailedError {
@@ -245,6 +308,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_ConfirmRemoveAction {
             get {
                 return ResourceManager.GetString("Msg_ConfirmRemoveAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to create the goal. Check the logs for detailed information.
+        /// </summary>
+        public static string Msg_CreateGoalError {
+            get {
+                return ResourceManager.GetString("Msg_CreateGoalError", resourceCulture);
             }
         }
         
@@ -294,11 +366,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while completing the milestone. Check logs for details.
+        /// </summary>
+        public static string Msg_ErrorCompletingMilestone {
+            get {
+                return ResourceManager.GetString("Msg_ErrorCompletingMilestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Database access error. Check logs.
         /// </summary>
         public static string Msg_ErrorDbAccessFailed {
             get {
                 return ResourceManager.GetString("Msg_ErrorDbAccessFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to extend the milestone. Check logs.
+        /// </summary>
+        public static string Msg_ErrorExtendingMilestone {
+            get {
+                return ResourceManager.GetString("Msg_ErrorExtendingMilestone", resourceCulture);
             }
         }
         
@@ -443,6 +533,33 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_ImportCsvError {
             get {
                 return ResourceManager.GetString("Msg_ImportCsvError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid number of extra days. The allowed range is between 1 and 365.
+        /// </summary>
+        public static string Msg_InvalidExtraDays {
+            get {
+                return ResourceManager.GetString("Msg_InvalidExtraDays", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Milestone status &apos;{0}&apos; is invalid. Allowed values are Success or Fail.
+        /// </summary>
+        public static string Msg_InvalidMilestoneStatus {
+            get {
+                return ResourceManager.GetString("Msg_InvalidMilestoneStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified milestone was not found.
+        /// </summary>
+        public static string Msg_MilestoneNotFound {
+            get {
+                return ResourceManager.GetString("Msg_MilestoneNotFound", resourceCulture);
             }
         }
         
@@ -961,11 +1078,29 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Milestone completed.
+        /// </summary>
+        public static string Title_MilestoneFinished {
+            get {
+                return ResourceManager.GetString("Title_MilestoneFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to My goal.
         /// </summary>
         public static string Title_MyGoal {
             get {
                 return ResourceManager.GetString("Title_MyGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No active goal.
+        /// </summary>
+        public static string Title_NoActiveGoal {
+            get {
+                return ResourceManager.GetString("Title_NoActiveGoal", resourceCulture);
             }
         }
         
