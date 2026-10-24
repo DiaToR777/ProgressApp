@@ -7,7 +7,9 @@ public interface IGoalService
     Task CompleteMilestoneAsync(Guid milestoneId, MilestoneStatus status);
     Task ExtendMilestoneAsync(Guid milestoneId, int extraDays);
     Task<Goal?> GetActiveGoalAsync();
-    Task<Goal> CreateGoalAsync(Guid userId, string title, string? description, int milestoneDays);
+    Task<Goal> CreateGoalAsync(string title, string? description, int milestoneDays,
+        List<(string Title, int TargetCountPerWeek)> actions);
+
     Task UpdateGoalAsync(Guid goalId, string title, string? description);
     Task AddActionAsync(Guid milestoneId, string title, int targetCountPerWeek);
     Task UpdateActionAsync(Guid actionId, string title, int targetCountPerWeek);
