@@ -11,62 +11,49 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
     public partial class GoalViewModel : ObservableObject
     {
         public Task Initialization { get; }
-        
-        public List<GoalAction> CurrentActions => ActiveGoal?.Milestones.FirstOrDefault()?.Actions ?? new();
-        
+
         private readonly IGoalService _goalService;
-        private readonly IMessageService _messageService;
         private readonly IAnalyticsService _analyticsService;
-        
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(IsNotEditingGoal))]
-        private bool _isEditingGoal;
+        private readonly IMessageService _messageService;
 
-        [ObservableProperty]
-        private string _editGoalTitle = string.Empty;
+        public MilestoneCompletionViewModel Completion { get; }
+        public GoalActionsViewModel Actions { get; }
 
-        [ObservableProperty]
-        private string _editGoalDescription = string.Empty;
-        
-        [ObservableProperty]
-        private GoalAction? _editingAction;
-        
-        [ObservableProperty]
-        private string _newActionTitle = string.Empty;
+        [ObservableProperty] private Domain.Models.Goals.Goal? _activeGoal;
+        [ObservableProperty] private MilestoneProgress? _milestoneProgress;
 
-        [ObservableProperty]
-        private int _newActionTargetCountPerWeek = 7;
+        [ObservableProperty] private bool _isEditingGoal;
+        [ObservableProperty] private string _editGoalTitle = string.Empty;
+        [ObservableProperty] private string _editGoalDescription = string.Empty;
 
-        [ObservableProperty]
-        [NotifyPropertyChangedFor(nameof(CurrentActions))]
-        private Domain.Models.Goals.Goal? _activeGoal;
-        
         public bool IsNotEditingGoal => !IsEditingGoal;
+        public bool HasActiveGoal => ActiveGoal != null;
 
-        [ObservableProperty] 
-        private MilestoneProgress? _milestoneProgress;
+        partial void OnIsEditingGoalChanged(bool value)
+            => OnPropertyChanged(nameof(IsNotEditingGoal));
+
+        partial void OnActiveGoalChanged(Domain.Models.Goals.Goal? value)
+            => OnPropertyChanged(nameof(HasActiveGoal));
 
         public GoalViewModel(
             IGoalService goalService,
+            IAnalyticsService analyticsService,
             IMessageService messageService,
-            IAnalyticsService analyticsService)
+            MilestoneCompletionViewModel completion,
+            GoalActionsViewModel actions)
         {
-            _analyticsService = analyticsService;
             _goalService = goalService;
+            _analyticsService = analyticsService;
             _messageService = messageService;
+            Completion = completion;
+            Actions = actions;
+
+            Completion.Changed = LoadAsync;
+            Actions.Changed = LoadAsync;
 
             Initialization = LoadAsync();
         }
-        
-        [RelayCommand]
-        private void StartEditAction(GoalAction action)
-        {
-            EditingAction = action;
-            NewActionTitle = action.Title;
-            NewActionTargetCountPerWeek = action.TargetCountPerWeek;
-        }
-        
-        
+
         [RelayCommand]
         private void StartEditGoal()
         {
@@ -78,10 +65,7 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         }
 
         [RelayCommand]
-        private void CancelEditGoal()
-        {
-            IsEditingGoal = false;
-        }
+        private void CancelEditGoal() => IsEditingGoal = false;
 
         [RelayCommand]
         private async Task SaveGoal()
@@ -104,72 +88,21 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
             }
         }
 
-        [RelayCommand]
-        private async Task SaveAction()
-        {
-            if (string.IsNullOrWhiteSpace(NewActionTitle)) return;
-
-            try
-            {
-                if (EditingAction != null)
-                {
-                    await _goalService.UpdateActionAsync(EditingAction.Id, NewActionTitle, NewActionTargetCountPerWeek);
-                }
-                else
-                {
-                    var milestoneId = ActiveGoal?.Milestones.FirstOrDefault()?.Id;
-                    if (milestoneId == null) return;
-
-                    await _goalService.AddActionAsync(milestoneId.Value, NewActionTitle, NewActionTargetCountPerWeek);
-                }
-                
-                CancelEditAction();
-            
-                await LoadAsync();
-            }
-            catch (AppException ex)
-            {
-                await _messageService.ShowErrorAsync(ex);
-            }
-        }
-
-        [RelayCommand]
-        private async Task RemoveAction(GoalAction action)
-        {
-            var confirmed = await _messageService.ShowConfirmationAsync("Msg_ConfirmRemoveAction", action.Title);
-            if (!confirmed) return;
-
-            try
-            {
-                await _goalService.RemoveActionAsync(action.Id);
-                await LoadAsync();
-            }
-            catch (AppException ex)
-            {
-                await _messageService.ShowErrorAsync(ex);
-            }
-        }
-
         private async Task LoadAsync()
         {
             try
             {
                 ActiveGoal = await _goalService.GetActiveGoalAsync();
                 MilestoneProgress = await _analyticsService.GetActiveMilestoneProgressAsync();
+
+                Completion.Update(MilestoneProgress);
+                Actions.Update(ActiveGoal);
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "GoalViewModel: Failed to load goal data");
                 await _messageService.ShowErrorAsync(ex);
             }
-        }
-        
-        [RelayCommand]
-        private void CancelEditAction()
-        {
-            EditingAction = null;
-            NewActionTitle = string.Empty;
-            NewActionTargetCountPerWeek = 7;
         }
     }
 }

@@ -16,6 +16,47 @@
 
             <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_MyGoal]}"
                           FontWeight="Bold" FontSize="28" Margin="0,0,0,20"/>
+            
+            <ui:Card Padding="15" Margin="0,0,0,15"
+                     DataContext="{Binding Completion}"
+                     Visibility="{Binding IsMilestoneExpired, Converter={StaticResource BoolToVis}}">
+                <StackPanel>
+                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_MilestoneFinished]}"
+                                  FontWeight="Bold" FontSize="16" Margin="0,0,0,6"/>
+
+                    <ui:TextBlock Appearance="Secondary" FontSize="13" TextWrapping="Wrap" Margin="0,0,0,10">
+                        <Run Text="{Binding Source={StaticResource Langs}, Path=[Title_ExecutionStability], Mode=OneWay}" />
+                        <Run Text=": " />
+                        <Run Text="{Binding Progress.ConsistencyPercent, Mode=OneWay, StringFormat={}{0}%}" />
+                    </ui:TextBlock>
+
+                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_SuggestSuccess]}"
+                                  Appearance="Secondary" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"
+                                  Visibility="{Binding SuggestsSuccess, Converter={StaticResource BoolToVis}}"/>
+                    <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_SuggestFail]}"
+                                  Appearance="Secondary" FontSize="12" Margin="0,0,0,10" TextWrapping="Wrap"
+                                  Visibility="{Binding SuggestsFail, Converter={StaticResource BoolToVis}}"/>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Achieved]}"
+                                   Command="{Binding CompleteSuccessCommand}"
+                                   Appearance="Primary"/>
+                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_NotAchieved]}"
+                                   Command="{Binding CompleteFailCommand}"
+                                   Margin="8,0,0,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
+                        <ui:NumberBox Value="{Binding ExtendDays, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Minimum="1" Maximum="365"
+                                      MinWidth="80"
+                                      HorizontalAlignment="Left"/>
+                        <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_ExtendMilestone]}"
+                                   Command="{Binding ExtendMilestoneCommand}"
+                                   Margin="8,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+            </ui:Card>
 
             <ui:Card Padding="15" Margin="0,0,0,15">
                 <StackPanel>
@@ -48,8 +89,6 @@
                     </StackPanel>
                 </StackPanel>
             </ui:Card>
-            
-            
 
             <ui:Card Padding="15" Margin="0,0,0,15">
                 <StackPanel Margin="0,0,0,10">
@@ -70,7 +109,7 @@
                 </StackPanel>
             </ui:Card>
 
-            <ui:Card Padding="15">
+            <ui:Card Padding="15" DataContext="{Binding Actions}">
                 <StackPanel>
                     <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_Actions]}" Appearance="Secondary" FontSize="12" Margin="0,0,0,8"/>
 
@@ -82,19 +121,17 @@
                                       Minimum="1"
                                       Maximum="7"
                                       MinWidth="80"
-                                      Margin="8,0,0,0"/>
+                                      HorizontalAlignment="Left"
+                                         Margin="8,0,0,0"/>
                         <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Save]}"
                                    Command="{Binding SaveActionCommand}"
                                    Margin="8,0,0,0"/>
                         <ui:Button Content="{Binding Source={StaticResource Langs}, Path=[Btn_Cancel]}"
                                    Command="{Binding CancelEditActionCommand}"
-                                   Visibility="{Binding IsEditingAction, Converter={StaticResource BoolToVis}}"
                                    Margin="4,0,0,0"/>
                     </StackPanel>
 
-                    
-                    
-                    <ItemsControl ItemsSource="{Binding CurrentActions}">
+                    <ItemsControl ItemsSource="{Binding Items}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}" Padding="0,10">
@@ -109,21 +146,20 @@
                                             <Run Text=" · "/>
                                             <Run Text="{Binding TargetCountPerWeek}"/>
                                             <Run Text="{Binding Source={StaticResource Langs}, Path=[Title_/wk], Mode=OneWay}"/>
-                                            
                                         </TextBlock>
 
                                         <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                            <!-- ВАЖНО: ищем DataContext у ItemsControl (там GoalActionsViewModel),
+                                                 а не у UserControl (там родительский GoalViewModel) -->
                                             <ui:Button Content="✎"
-                                                       Command="{Binding DataContext.StartEditActionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                       Command="{Binding DataContext.StartEditActionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                        CommandParameter="{Binding}"
                                                        Margin="8,0,0,0"/>
                                             <ui:Button Content="✕"
-                                                       Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                       Command="{Binding DataContext.RemoveActionCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                        CommandParameter="{Binding}"
                                                        Margin="4,0,0,0"/>
                                         </StackPanel>
-                                        
-                                        
                                     </Grid>
                                 </Border>
                             </DataTemplate>
