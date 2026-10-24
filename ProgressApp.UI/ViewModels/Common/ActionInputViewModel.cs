@@ -1,6 +1,6 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 
-namespace ProgressApp.WpfUI.ViewModels.InitialSetup;
+namespace ProgressApp.WpfUI.ViewModels.Common;
 
 public partial class ActionInputViewModel : ObservableObject
 {
