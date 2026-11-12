@@ -502,4 +502,19 @@ Records imported: {0}</value>
   <data name="Msg_CreateGoalError" xml:space="preserve">
     <value>Failed to create the goal. Check the logs for detailed information</value>
   </data>
+  <data name="Hint_NoActiveMilestoneToday" xml:space="preserve">
+    <value>Set a goal to track your progress</value>
+  </data>
+  <data name="Hint_MilestoneExpiredToday" xml:space="preserve">
+    <value>Current milestone days are over. Review your progress or extend the goal</value>
+  </data>
+  <data name="Btn_GoToGoal" xml:space="preserve">
+    <value>View Goals</value>
+  </data>
+  <data name="Msg_ConfirmCompleteGoal" xml:space="preserve">
+    <value>Complete the current goal?</value>
+  </data>
+  <data name="Msg_ConfirmExtendMilestone" xml:space="preserve">
+    <value>Extend the duration of the current milestone?</value>
+  </data>
 </root>

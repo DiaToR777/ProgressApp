@@ -159,6 +159,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to View Goals.
+        /// </summary>
+        public static string Btn_GoToGoal {
+            get {
+                return ResourceManager.GetString("Btn_GoToGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No.
         /// </summary>
         public static string Btn_No {
@@ -276,6 +285,24 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current milestone days are over. Review your progress or extend the goal.
+        /// </summary>
+        public static string Hint_MilestoneExpiredToday {
+            get {
+                return ResourceManager.GetString("Hint_MilestoneExpiredToday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set a goal to track your progress.
+        /// </summary>
+        public static string Hint_NoActiveMilestoneToday {
+            get {
+                return ResourceManager.GetString("Hint_NoActiveMilestoneToday", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Execution consistency is low. You might want to review your plan or extend the milestone.
         /// </summary>
         public static string Hint_SuggestFail {
@@ -299,6 +326,24 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         public static string Msg_ChangePasswordFailedError {
             get {
                 return ResourceManager.GetString("Msg_ChangePasswordFailedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete the current goal?.
+        /// </summary>
+        public static string Msg_ConfirmCompleteGoal {
+            get {
+                return ResourceManager.GetString("Msg_ConfirmCompleteGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extend the duration of the current milestone?.
+        /// </summary>
+        public static string Msg_ConfirmExtendMilestone {
+            get {
+                return ResourceManager.GetString("Msg_ConfirmExtendMilestone", resourceCulture);
             }
         }
         

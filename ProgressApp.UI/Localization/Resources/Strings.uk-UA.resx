@@ -502,4 +502,19 @@
   <data name="Msg_CreateGoalError" xml:space="preserve">
     <value>Не вдалося створити ціль. Перевірте логи для детальної інформації</value>
   </data>
+  <data name="Hint_NoActiveMilestoneToday" xml:space="preserve">
+    <value>Створіть мету, щоб відстежувати свої успіхи</value>
+  </data>
+  <data name="Hint_MilestoneExpiredToday" xml:space="preserve">
+    <value>Час поточного рубежу вийшов. Підбийте підсумки або продовжте ціль</value>
+  </data>
+  <data name="Btn_GoToGoal" xml:space="preserve">
+    <value>До цілі</value>
+  </data>
+  <data name="Msg_ConfirmCompleteGoal" xml:space="preserve">
+    <value>Завершити поточну ціль?</value>
+  </data>
+  <data name="Msg_ConfirmExtendMilestone" xml:space="preserve">
+    <value>Продовжити термін дії поточного рубежу?</value>
+  </data>
 </root>
