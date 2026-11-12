@@ -60,7 +60,9 @@ namespace ProgressApp.WpfUI.ViewModels
         [RelayCommand]
         private void ShowToday()
         {
-            CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
+            var todayVm = _serviceProvider.GetRequiredService<TodayViewModel>();
+            todayVm.RequestShowGoal = ShowGoal;
+            CurrentView = todayVm;
             IsNavigationVisible = true;
         }
 
