@@ -46,7 +46,7 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         {
             if (Progress == null) return;
 
-            var confirmed = await _messageService.ShowConfirmationAsync("Msg_ConfirmCompleteMilestone");
+            var confirmed = await _messageService.ShowConfirmationAsync("Msg_ConfirmCompleteGoal");
             if (!confirmed) return;
 
             try
@@ -64,7 +64,10 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         private async Task ExtendMilestone()
         {
             if (Progress == null) return;
-
+            
+            var confirmed = await _messageService.ShowConfirmationAsync("Msg_ConfirmExtendMilestone");
+            if (!confirmed) return;
+            
             try
             {
                 await _goalService.ExtendMilestoneAsync(Progress.MilestoneId, ExtendDays);
