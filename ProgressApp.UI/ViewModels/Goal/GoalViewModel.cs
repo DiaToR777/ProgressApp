@@ -41,7 +41,10 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         [ObservableProperty] private MilestoneProgress? _milestoneProgress;
 
         [ObservableProperty] private bool _isEditingGoal;
-        [ObservableProperty] private string _editGoalTitle = string.Empty;
+        
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveGoalCommand))]
+        private string _editGoalTitle = string.Empty;
         [ObservableProperty] private string _editGoalDescription = string.Empty;
 
         public bool HasNoActiveGoal => ActiveGoal == null;
@@ -90,7 +93,7 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         [RelayCommand]
         private void CancelEditGoal() => IsEditingGoal = false;
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSaveGoal))]
         private async Task SaveGoal()
         {
             if (ActiveGoal == null || string.IsNullOrWhiteSpace(EditGoalTitle)) return;
@@ -170,6 +173,8 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
             }
         }
 
+        private bool CanSaveGoal() => !string.IsNullOrWhiteSpace(EditGoalTitle);
+        
         private bool CanFinish()
         {
             return !string.IsNullOrWhiteSpace(NewGoalTitle) &&

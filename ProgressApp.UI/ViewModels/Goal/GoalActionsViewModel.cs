@@ -17,7 +17,10 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
 
         [ObservableProperty] private List<GoalAction> _items = new();
         [ObservableProperty] private GoalAction? _editingAction;
-        [ObservableProperty] private string _newActionTitle = string.Empty;
+        
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(SaveActionCommand))]
+        private string _newActionTitle = string.Empty;
         [ObservableProperty] private int _newActionTargetCountPerWeek = 7;
 
         public bool IsEditingAction => EditingAction != null;
@@ -49,7 +52,7 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         [RelayCommand]
         private void CancelEditAction() => ResetForm();
 
-        [RelayCommand]
+        [RelayCommand(CanExecute = nameof(CanSaveAction))]
         private async Task SaveAction()
         {
             if (string.IsNullOrWhiteSpace(NewActionTitle)) return;
@@ -98,7 +101,9 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
             NewActionTitle = string.Empty;
             NewActionTargetCountPerWeek = 7;
         }
-
+        
+        private bool CanSaveAction() => !string.IsNullOrWhiteSpace(NewActionTitle);
+        
         private Task NotifyChangedAsync() => Changed?.Invoke() ?? Task.CompletedTask;
     }
 }
