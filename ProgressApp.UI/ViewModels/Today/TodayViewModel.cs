@@ -46,12 +46,6 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         private string _description = string.Empty;
 
-        partial void OnDescriptionChanging(string? value)
-        {
-            if (value?.Length > 1500)
-                _description = value.Substring(0, 1500);
-        }
-
         [ObservableProperty]
         private DayResult _selectedResult;
 
@@ -129,7 +123,7 @@ namespace ProgressApp.WpfUI.ViewModels.Today
 
                 if (entry != null)
                 {
-                    Description = entry.Description;
+                    Description = entry.Description?.Length > 1500 ? entry.Description[..1500] : entry.Description;
                     SelectedResult = entry.Result;
                 }
                 else
