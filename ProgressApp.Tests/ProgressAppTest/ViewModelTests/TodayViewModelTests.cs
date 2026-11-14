@@ -57,6 +57,44 @@ public sealed class TodayViewModelTests
         _messageMock.Verify(m => m.ShowInfoAsync("Msg_RecordSaved"), Times.Once);
     }
 
+    [TestMethod]
+    public async Task Initialize_WhenMilestoneActive_ShouldLoadActionsAndSetFlags()
+    {
+        var actionId = Guid.NewGuid();
+        _analyticsMock.Setup(a => a.GetActiveMilestoneProgressAsync())
+            .ReturnsAsync(new MilestoneProgress { IsExpired = false });
+        _serviceMock.Setup(s => s.GetActiveActionsAsync())
+            .ReturnsAsync([new GoalAction { Id = actionId, Title = "Test Action" }]);
+        _serviceMock.Setup(s => s.GetTodayAsync())
+            .ReturnsAsync(new DailyCheckin
+            {
+                Description = "Done",
+                Result = DayResult.Success,
+                ActionLogs = [new ActionLog { GoalActionId = actionId, IsCompleted = true }]
+            });
+
+        var vm = CreateViewModel();
+        await vm.Initialization;
+
+        vm.IsMilestoneActive.Should().BeTrue();
+        vm.CanShowActions.Should().BeTrue();
+        vm.ActiveActions.Should().ContainSingle(a => a.ActionId == actionId && a.IsCompleted);
+    }
+    
+    [TestMethod]
+    public void SaveCommand_CanExecute_ShouldDependOnDescription()
+    {
+        var vm = CreateViewModel();
+
+        vm.SaveCommand.CanExecute(null).Should().BeFalse();
+
+        vm.Description = "   ";
+        vm.SaveCommand.CanExecute(null).Should().BeFalse();
+
+        vm.Description = "Valid note";
+        vm.SaveCommand.CanExecute(null).Should().BeTrue();
+    }
+    
     private TodayViewModel CreateViewModel()
     {
         return new TodayViewModel(_serviceMock.Object, _messageMock.Object, _analyticsMock.Object);
