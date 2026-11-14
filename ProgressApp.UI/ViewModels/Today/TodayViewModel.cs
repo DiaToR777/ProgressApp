@@ -15,8 +15,12 @@ namespace ProgressApp.WpfUI.ViewModels.Today
     {
         public Task Initialization { get; }
         public ObservableCollection<ActionCheckboxViewModel> ActiveActions { get; } = new();
-
+        
+        public Action? RequestShowGoal { get; set; }
+        
         public bool HasActiveActions => ActiveActions.Count > 0;
+        
+        public bool CanShowActions => HasActiveActions && IsMilestoneActive;
         
         private readonly ICheckinService _checkinService;
         private readonly IMessageService _messageService;
@@ -26,17 +30,21 @@ namespace ProgressApp.WpfUI.ViewModels.Today
         public IEnumerable<LocalizedEnum<DayResult>> AllResult { get; }
         
         [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsMilestoneActive))]
+        private bool _isMilestoneMissing;
+        
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsMilestoneActive))] 
+        private bool _isMilestoneExpired;
+        
+        public bool IsMilestoneActive => !IsMilestoneExpired && !IsMilestoneMissing;
+        
+        [ObservableProperty]
         private MilestoneProgress? _milestoneProgress;
         
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(SaveCommand))]
         private string _description = string.Empty;
-
-        partial void OnDescriptionChanging(string? value)
-        {
-            if (value?.Length > 1500)
-                _description = value.Substring(0, 1500);
-        }
 
         [ObservableProperty]
         private DayResult _selectedResult;
@@ -67,7 +75,8 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 await _checkinService.SaveTodayAsync(Description, SelectedResult, completions);
 
                 CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
-                MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
+                MilestoneProgress = await _analyticsService.GetActiveMilestoneProgressAsync();
+                UpdateMilestoneState();
 
                 await _messageService.ShowInfoAsync("Msg_RecordSaved");
                 Log.Debug("TodayViewModel: Entry saved successfully");
@@ -88,25 +97,33 @@ namespace ProgressApp.WpfUI.ViewModels.Today
                 Log.Debug("TodayViewModel: Loading data for {Date}", CurrentDate);
 
                 var entry = await _checkinService.GetTodayAsync();
-                MilestoneProgress = await _checkinService.GetActiveMilestoneProgressAsync();
-                var actions = await _checkinService.GetActiveActionsAsync();
-                ActiveActions.Clear();
-                foreach (var action in actions)
+                MilestoneProgress = await _analyticsService.GetActiveMilestoneProgressAsync();
+                
+                UpdateMilestoneState();
+                
+                if (IsMilestoneActive)
                 {
-                    var vm = new ActionCheckboxViewModel(action);
+                    var actions = await _checkinService.GetActiveActionsAsync();
+                    foreach (var action in actions)
+                    {
+                        var vm = new ActionCheckboxViewModel(action);
 
-                    var existingLog = entry?.ActionLogs.FirstOrDefault(l => l.GoalActionId == action.Id);
-                    if (existingLog != null)
-                        vm.IsCompleted = existingLog.IsCompleted; // восстанавливаем состояние чекбокса
+                        var existingLog = entry?.ActionLogs.FirstOrDefault(l => l.GoalActionId == action.Id);
+                        if (existingLog != null)
+                            vm.IsCompleted = existingLog.IsCompleted; 
 
-                    ActiveActions.Add(vm);
+                        ActiveActions.Add(vm);
+                    }
+                    
+                    OnPropertyChanged(nameof(HasActiveActions));
+                    OnPropertyChanged(nameof(CanShowActions));
                 }
                 
                 CurrentStreak = await _analyticsService.GetCurrentStreakAsync();
 
                 if (entry != null)
                 {
-                    Description = entry.Description ;
+                    Description = entry.Description?.Length > 1500 ? entry.Description[..1500] : entry.Description;
                     SelectedResult = entry.Result;
                 }
                 else
@@ -118,6 +135,26 @@ namespace ProgressApp.WpfUI.ViewModels.Today
             {
                 Log.Error(ex, "TodayViewModel: Error loading today's entry");
                 await _messageService.ShowErrorAsync(ex);
+            }
+        }
+        
+        [RelayCommand]
+        private void GoToGoal()
+        {
+            RequestShowGoal?.Invoke();
+        }
+        
+        private void UpdateMilestoneState()
+        {
+            if (MilestoneProgress == null)
+            {
+                IsMilestoneMissing = true;
+                IsMilestoneExpired = false;
+            }
+            else
+            {
+                IsMilestoneMissing = false;
+                IsMilestoneExpired = MilestoneProgress.IsExpired;
             }
         }
     }

@@ -31,6 +31,64 @@
                 </StackPanel>
             </Grid>
 
+            <ui:Card Padding="14,12" 
+                     Margin="0,0,0,20"
+                     Visibility="{Binding IsMilestoneExpired, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_MilestoneFinished]}"
+                                      FontWeight="SemiBold" 
+                                      FontSize="14" />
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_MilestoneExpiredToday]}"
+                                      Appearance="Secondary" 
+                                      FontSize="12" 
+                                      TextWrapping="Wrap" 
+                                      Margin="0,2,0,0" />
+                    </StackPanel>
+
+                    <ui:Button Grid.Column="1" 
+                               Content="{Binding Source={StaticResource Langs}, Path=[Btn_GoToGoal]}"
+                               Command="{Binding GoToGoalCommand}"
+                               Appearance="Primary"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0" />
+                </Grid>
+            </ui:Card>
+
+            <ui:Card Padding="14,12" 
+                     Margin="0,0,0,20"
+                     Visibility="{Binding IsMilestoneMissing, Converter={StaticResource BoolToVis}}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_NoActiveGoal]}"
+                                      FontWeight="SemiBold" 
+                                      FontSize="14" />
+                        <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Hint_NoActiveMilestoneToday]}"
+                                      Appearance="Secondary" 
+                                      FontSize="12" 
+                                      TextWrapping="Wrap" 
+                                      Margin="0,2,0,0" />
+                    </StackPanel>
+
+                    <ui:Button Grid.Column="1" 
+                               Content="{Binding Source={StaticResource Langs}, Path=[Btn_CreateGoal]}"
+                               Command="{Binding GoToGoalCommand}"
+                               Appearance="Primary"
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0" />
+                </Grid>
+            </ui:Card>
+
             <ui:Card Padding="12,8" HorizontalAlignment="Left" Margin="0,0,0,20">
                 <StackPanel Orientation="Horizontal">
                     <ui:SymbolIcon Symbol="Flash24" Margin="0,0,8,0">
@@ -54,7 +112,7 @@
                 </StackPanel>
             </ui:Card>
 
-            <StackPanel Margin="0,0,0,10">
+            <StackPanel Margin="0,0,0,10" Visibility="{Binding IsMilestoneActive, Converter={StaticResource BoolToVis}}">
                 <ui:TextBlock Appearance="Secondary" FontSize="12">
                     <Run Text="{Binding MilestoneProgress.DaysElapsed, Mode=OneWay}" />
                     <Run Text="/" />
@@ -115,7 +173,7 @@
                     </ComboBox.ItemTemplate>
                 </ComboBox>
 
-                <StackPanel Visibility="{Binding HasActiveActions, Converter={StaticResource BoolToVis}}">
+                <StackPanel Visibility="{Binding CanShowActions, Converter={StaticResource BoolToVis}}">
                     <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_TodayAction]}" Margin="0,0,0,5" FontWeight="SemiBold" />
                     <ItemsControl ItemsSource="{Binding ActiveActions}" Margin="0,0,0,20">
                         <ItemsControl.ItemTemplate>

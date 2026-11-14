@@ -23,7 +23,7 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
 
         public List<LanguageModel> AvailableLanguages => LanguageConfig.AvailableLanguages;
 
-        public ObservableCollection<ActionInputViewModel> Actions { get; } = new();
+        public ObservableCollection<Common.ActionInputViewModel> Actions { get; } = new();
 
         [ObservableProperty] [NotifyCanExecuteChangedFor(nameof(FinishCommand))]
         private string _username = string.Empty;
@@ -77,11 +77,11 @@ namespace ProgressApp.WpfUI.ViewModels.InitialSetup
         [RelayCommand]
         private void AddAction()
         {
-            Actions.Add(new ActionInputViewModel());
+            Actions.Add(new Common.ActionInputViewModel());
         }
 
         [RelayCommand]
-        private void RemoveAction(ActionInputViewModel action)
+        private void RemoveAction(Common.ActionInputViewModel action)
         {
             Actions.Remove(action);
         }

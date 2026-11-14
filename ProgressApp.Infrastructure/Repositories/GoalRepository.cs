@@ -6,13 +6,45 @@ using ProgressApp.Infrastructure.Data;
 
 namespace ProgressApp.Infrastructure.Repositories;
 
-public class GoalRepository :  IGoalRepository
-{ 
+public class GoalRepository : IGoalRepository
+{
     private readonly IServiceScopeFactory _scopeFactory;
 
     public GoalRepository(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;
+    }
+
+    public async Task CloseMilestoneAsync(Guid milestoneId, MilestoneStatus milestoneStatus, GoalStatus goalStatus)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+
+        var milestone = await context.Milestones
+            .Include(m => m.Goal)
+            .FirstOrDefaultAsync(m => m.Id == milestoneId);
+
+        if (milestone == null) return;
+
+        milestone.Status = milestoneStatus;
+        milestone.Goal.Status = goalStatus;
+
+        await context.SaveChangesAsync();
+    }
+
+    public async Task<Milestone?> GetMilestoneByIdAsync(Guid milestoneId)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+        return await context.Milestones.FirstOrDefaultAsync(m => m.Id == milestoneId);
+    }
+
+    public async Task UpdateMilestoneAsync(Milestone milestone)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+        context.Milestones.Update(milestone);
+        await context.SaveChangesAsync();
     }
 
     public async Task<GoalAction> AddActionAsync(GoalAction action)
@@ -23,14 +55,14 @@ public class GoalRepository :  IGoalRepository
         await context.SaveChangesAsync();
         return action;
     }
-    
+
     public async Task<GoalAction?> GetActionByIdAsync(Guid actionId)
     {
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
         return await context.GoalActions.FirstOrDefaultAsync(a => a.Id == actionId);
     }
-    
+
     public async Task UpdateActionAsync(GoalAction action)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -38,7 +70,7 @@ public class GoalRepository :  IGoalRepository
         context.GoalActions.Update(action);
         await context.SaveChangesAsync();
     }
-    
+
     public async Task RemoveActionAsync(Guid actionId)
     {
         using var scope = _scopeFactory.CreateScope();
@@ -57,27 +89,14 @@ public class GoalRepository :  IGoalRepository
             throw;
         }
     }
-    
+
     public async Task<Goal?> GetGoalByIdAsync(Guid goalId)
     {
         using var scope = _scopeFactory.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
         return await context.Goals.FirstOrDefaultAsync(g => g.Id == goalId);
     }
-    
-    public async Task<Milestone?> GetActiveMilestoneWithDetailsAsync(Guid goalId)
-    {
-        using var scope = _scopeFactory.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
 
-        return await context.Milestones
-            .AsNoTracking()
-            .Include(m => m.Actions)
-            .Include(m => m.Checkins)
-            .ThenInclude(c => c.ActionLogs)
-            .Where(m => m.GoalId == goalId && m.Status == MilestoneStatus.Active)
-            .FirstOrDefaultAsync();
-    }
 
     public async Task<Goal?> GetActiveGoalAsync(Guid userId)
     {
@@ -101,7 +120,7 @@ public class GoalRepository :  IGoalRepository
         await context.SaveChangesAsync();
 
         return goal;
-    }   
+    }
 
     public async Task UpdateGoalAsync(Goal goal)
     {
@@ -123,7 +142,7 @@ public class GoalRepository :  IGoalRepository
             .Include(m => m.Checkins)
             .ThenInclude(c => c.ActionLogs)
             .Where(m => m.GoalId == goalId && m.Status == MilestoneStatus.Active)
-            .FirstOrDefaultAsync(); 
+            .FirstOrDefaultAsync();
     }
 
     public async Task<Milestone> CreateMilestoneAsync(Milestone milestone)

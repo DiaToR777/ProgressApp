@@ -78,7 +78,9 @@ namespace ProgressApp.WpfUI
             services.AddTransient<HeatmapViewModel>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<GoalViewModel>();
-
+            services.AddTransient<MilestoneCompletionViewModel>();
+            services.AddTransient<GoalActionsViewModel>();
+            
             _serviceProvider = services.BuildServiceProvider();
         }
 

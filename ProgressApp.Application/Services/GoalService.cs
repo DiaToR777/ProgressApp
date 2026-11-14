@@ -2,6 +2,7 @@ using ProgressApp.Domain.Exceptions;
 using ProgressApp.Domain.Interfaces.IRepository;
 using ProgressApp.Domain.Interfaces.IService;
 using ProgressApp.Domain.Models.Goals;
+using ProgressApp.Domain.Models.User;
 using Serilog;
 
 namespace ProgressApp.Application.Services;
@@ -15,6 +16,49 @@ public class GoalService : IGoalService
     {
         _userRepository = userRepository;
         _goalRepository = goalRepository;
+    }
+
+    public async Task CompleteMilestoneAsync(Guid milestoneId, MilestoneStatus status)
+    {
+        if (status is not (MilestoneStatus.Success or MilestoneStatus.Fail))
+            throw new AppException("Msg_InvalidMilestoneStatus", args: status);
+
+        try
+        {
+            var goalStatus = status == MilestoneStatus.Success
+                ? GoalStatus.Completed
+                : GoalStatus.Archived;
+
+            await _goalRepository.CloseMilestoneAsync(milestoneId, status, goalStatus);
+            Log.Information("Milestone {Id} closed as {Status}, goal set to {GoalStatus}.",
+                milestoneId, status, goalStatus);
+        }
+        catch (Exception ex) when (ex is not AppException)
+        {
+            Log.Error(ex, "Failed to complete milestone {Id}", milestoneId);
+            throw new AppException("Msg_ErrorCompletingMilestone", isCritical: true);
+        }
+    }
+
+    public async Task ExtendMilestoneAsync(Guid milestoneId, int extraDays)
+    {
+        if (extraDays is < 1 or > 365)
+            throw new AppException("Msg_InvalidExtraDays");
+
+        try
+        {
+            var milestone = await _goalRepository.GetMilestoneByIdAsync(milestoneId);
+            if (milestone == null) throw new AppException("Msg_MilestoneNotFound");
+
+            milestone.TargetDays += extraDays;
+            await _goalRepository.UpdateMilestoneAsync(milestone);
+            Log.Information("Milestone {Id} extended by {Days} days.", milestoneId, extraDays);
+        }
+        catch (Exception ex) when (ex is not AppException)
+        {
+            Log.Error(ex, "Failed to extend milestone {Id}", milestoneId);
+            throw new AppException("Msg_ErrorExtendingMilestone", isCritical: true);
+        }
     }
 
     public async Task<Goal?> GetActiveGoalAsync()
@@ -31,7 +75,7 @@ public class GoalService : IGoalService
             throw new AppException("Msg_ErrorLoadingGoal", isCritical: true);
         }
     }
-    
+
     public async Task AddActionAsync(Guid milestoneId, string title, int targetCountPerWeek)
     {
         if (string.IsNullOrWhiteSpace(title))
@@ -56,7 +100,7 @@ public class GoalService : IGoalService
             throw new AppException("Msg_ErrorAddingAction", isCritical: true);
         }
     }
-    
+
     public async Task UpdateActionAsync(Guid actionId, string title, int targetCountPerWeek)
     {
         if (string.IsNullOrWhiteSpace(title))
@@ -95,40 +139,74 @@ public class GoalService : IGoalService
         }
     }
 
-    public async Task<Goal> CreateGoalAsync(Guid userId, string title, string? description, int milestoneDays)
+    public async Task<Goal> CreateGoalAsync(
+        string goalTitle,
+        string? goalDescription,
+        int milestoneDays,
+        List<(string Title, int TargetCountPerWeek)> actions)
     {
-        if (string.IsNullOrWhiteSpace(title))
+        if (string.IsNullOrWhiteSpace(goalTitle))
             throw new AppException("Msg_GoalEmpty");
+
+        User? user;
+        try
+        {
+            user = await _userRepository.GetUserAsync();
+            if (user == null)
+                throw new AppException("Msg_UserNotFound");
+        }
+        catch (Exception ex) when (ex is not AppException)
+        {
+            Log.Error(ex, "Failed to get user while creating goal");
+            throw new AppException("Msg_ErrorLoadingUser", isCritical: true);
+        }
 
         try
         {
             var goal = new Goal
             {
                 Id = Guid.NewGuid(),
-                UserId = userId,
-                Title = title,
-                Description = description,
+                UserId = user.Id, 
+                Title = goalTitle,
+                Description = goalDescription,
                 Status = GoalStatus.Active,
                 CreatedAt = DateTime.Now
             };
 
-            goal.Milestones.Add(new Milestone
+            var milestone = new Milestone
             {
                 Id = Guid.NewGuid(),
                 GoalId = goal.Id,
                 StartDate = DateTime.Today,
                 TargetDays = milestoneDays,
                 Status = MilestoneStatus.Active
-            });
+            };
 
-            return await _goalRepository.CreateGoalAsync(goal);
+            foreach (var (title, targetCountPerWeek) in actions)
+            {
+                milestone.Actions.Add(new GoalAction
+                {
+                    Id = Guid.NewGuid(),
+                    MilestoneId = milestone.Id,
+                    Title = title,
+                    TargetCountPerWeek = targetCountPerWeek
+                });
+            }
+
+            goal.Milestones.Add(milestone);
+
+            var createdGoal = await _goalRepository.CreateGoalAsync(goal);
+            Log.Information("Goal {GoalId} created successfully for user {UserId}", createdGoal.Id, user.Id);
+
+            return createdGoal;
         }
         catch (Exception ex) when (ex is not AppException)
         {
-            Log.Error(ex, "Failed to create goal for user {UserId}", userId);
-            throw new AppException("Msg_SaveGoalError", isCritical: true);
+            Log.Error(ex, "Failed to create goal for user {UserId}", user.Id);
+            throw new AppException("Msg_CreateGoalError", isCritical: true);
         }
     }
+
 
     public async Task UpdateGoalAsync(Guid goalId, string title, string? description)
     {

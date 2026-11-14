@@ -4,6 +4,7 @@ using Moq;
 using ProgressApp.Domain.Interfaces.IService;
 using ProgressApp.Domain.Models.Goals;
 using ProgressApp.WpfUI.Services;
+using ProgressApp.WpfUI.ViewModels.Common;
 using ProgressApp.WpfUI.ViewModels.Goal;
 
 namespace ProgressAppTest.ViewModelTests;
@@ -12,7 +13,7 @@ namespace ProgressAppTest.ViewModelTests;
 public sealed class GoalViewModelTests
 {
     private Mock<IGoalService> _goalServiceMock = null!;
-    private Mock<ICheckinService> _checkinServiceMock = null!;
+    private Mock<IAnalyticsService> _analyticsServiceMock = null!;
     private Mock<IMessageService> _messageServiceMock = null!;
     private readonly Goal _testGoal = CreateTestGoal();
 
@@ -20,17 +21,21 @@ public sealed class GoalViewModelTests
     public void TestInit()
     {
         _goalServiceMock = new Mock<IGoalService>();
-        _checkinServiceMock = new Mock<ICheckinService>();
+        _analyticsServiceMock = new Mock<IAnalyticsService>();
         _messageServiceMock = new Mock<IMessageService>();
+
         _goalServiceMock.Setup(s => s.GetActiveGoalAsync()).ReturnsAsync(_testGoal);
+        _analyticsServiceMock.Setup(s => s.GetActiveMilestoneProgressAsync()).ReturnsAsync((MilestoneProgress?)null);
     }
 
     [TestMethod]
-    public async Task Initialize_ShouldLoadActiveGoalData()
+    public async Task Initialize_ShouldLoadActiveGoalAndUpdateSubViewModels()
     {
         var vm = await CreateAndInitVmAsync();
+
         vm.ActiveGoal.Should().Be(_testGoal);
-        vm.CurrentActions.Should().HaveCount(1);
+        vm.HasActiveGoal.Should().BeTrue();
+        vm.Actions.Items.Should().HaveCount(1);
     }
 
     [TestMethod]
@@ -47,39 +52,41 @@ public sealed class GoalViewModelTests
     }
 
     [TestMethod]
-    public async Task SaveAction_ShouldAddOrUpdateAction_AndResetFields()
+    public async Task CreateGoal_ShouldFilterEmptyActions_AndResetForm()
     {
         var vm = await CreateAndInitVmAsync();
-        var milestoneId = _testGoal.Milestones.First().Id;
+        vm.NewGoalTitle = "Learn C#";
+        vm.NewMilestoneDays = 30;
+        vm.NewActions.Add(new ActionInputViewModel { Title = "Read docs", TargetCountPerWeek = 5 });
+        vm.NewActions.Add(new ActionInputViewModel { Title = "   ", TargetCountPerWeek = 7 });
 
-        vm.NewActionTitle = "New Action";
-        await ((IAsyncRelayCommand)vm.SaveActionCommand).ExecuteAsync(null);
-        _goalServiceMock.Verify(s => s.AddActionAsync(milestoneId, "New Action", 7), Times.Once);
+        await ((IAsyncRelayCommand)vm.CreateGoalCommand).ExecuteAsync(null);
 
-        var existingAction = _testGoal.Milestones.First().Actions.First();
-        vm.StartEditActionCommand.Execute(existingAction);
-        vm.NewActionTitle = "Updated Action";
-        await ((IAsyncRelayCommand)vm.SaveActionCommand).ExecuteAsync(null);
+        _goalServiceMock.Verify(s => s.CreateGoalAsync(
+            "Learn C#",
+            null,
+            30,
+            It.Is<List<(string, int)>>(list => list.Count == 1 && list[0].Item1 == "Read docs")),
+            Times.Once);
+
+        vm.NewActions.Should().BeEmpty();
+        vm.NewMilestoneDays.Should().Be(40); 
         
-        _goalServiceMock.Verify(s => s.UpdateActionAsync(existingAction.Id, "Updated Action", 7), Times.Once);
-        vm.EditingAction.Should().BeNull();
-    }
-
-    [TestMethod]
-    public async Task RemoveAction_WhenConfirmed_ShouldRemove()
-    {
-        var vm = await CreateAndInitVmAsync();
-        var action = _testGoal.Milestones.First().Actions.First();
-        _messageServiceMock.Setup(m => m.ShowConfirmationAsync(It.IsAny<string>(), action.Title)).ReturnsAsync(true);
-
-        await ((IAsyncRelayCommand)vm.RemoveActionCommand).ExecuteAsync(action);
-
-        _goalServiceMock.Verify(s => s.RemoveActionAsync(action.Id), Times.Once);
+        vm.NewGoalTitle.Should().BeEmpty();
     }
 
     private async Task<GoalViewModel> CreateAndInitVmAsync()
     {
-        var vm = new GoalViewModel(_goalServiceMock.Object, _checkinServiceMock.Object, _messageServiceMock.Object);
+        var completionVm = new MilestoneCompletionViewModel(_goalServiceMock.Object, _messageServiceMock.Object);
+        var actionsVm = new GoalActionsViewModel(_goalServiceMock.Object, _messageServiceMock.Object);
+
+        var vm = new GoalViewModel(
+            _goalServiceMock.Object,
+            _analyticsServiceMock.Object,
+            _messageServiceMock.Object,
+            completionVm,
+            actionsVm);
+
         await vm.Initialization;
         return vm;
     }
@@ -88,6 +95,10 @@ public sealed class GoalViewModelTests
     {
         Id = Guid.NewGuid(),
         Title = "Test Goal",
-        Milestones = [new Milestone { Id = Guid.NewGuid(), Actions = [new GoalAction { Id = Guid.NewGuid(), Title = "Action 1", TargetCountPerWeek = 7 }] }]
+        Milestones = [new Milestone
+        {
+            Id = Guid.NewGuid(),
+            Actions = [new GoalAction { Id = Guid.NewGuid(), Title = "Action 1", TargetCountPerWeek = 7 }]
+        }]
     };
 }

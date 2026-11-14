@@ -50,6 +50,7 @@
                                     AcceptsReturn="True"
                                     TextWrapping="Wrap"
                                     Height="60"
+                                    MaxLength="1500"
                                     Margin="0,0,0,15" />
                     </ScrollViewer>
                     
@@ -57,7 +58,8 @@
                            Margin="0,0,0,5" />
                     <ui:NumberBox Value="{Binding MilestoneDays}"
                                   Minimum="1"
-                                  Margin="0,0,0,20" />
+                                  Maximum="365"
+                                  Margin="0,0,0,20"/>
 
                     <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_ActionToReachGoal]}"
                            Margin="0,0,0,5" />
