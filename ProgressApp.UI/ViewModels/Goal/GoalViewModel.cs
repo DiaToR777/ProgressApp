@@ -30,9 +30,11 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         [ObservableProperty]
         private string _newGoalDescription = string.Empty;
 
+        private const int DefaultMilestoneDays = 40;
+        
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(CreateGoalCommand))]
-        private int _newMilestoneDays = 40;
+        private int _newMilestoneDays = DefaultMilestoneDays;
         
 
         [ObservableProperty] private Domain.Models.Goals.Goal? _activeGoal;
@@ -128,7 +130,8 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
 
                 NewGoalTitle = string.Empty;
                 NewGoalDescription = string.Empty;
-                NewMilestoneDays = 30;
+                NewMilestoneDays = DefaultMilestoneDays;
+                NewActions.Clear();
 
                 await LoadAsync();
             }
