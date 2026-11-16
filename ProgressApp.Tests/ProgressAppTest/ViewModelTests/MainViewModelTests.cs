@@ -17,12 +17,14 @@ public sealed class MainViewModelTests
 {
     private Mock<IAuthService> _authMock;
     private Mock<IServiceProvider> _spMock;
+    private Mock<IMessageService> _messageMock;
 
     [TestInitialize]
     public void TestInit()
     {
         _authMock = new Mock<IAuthService>();
         _spMock = new Mock<IServiceProvider>();
+        _messageMock = new Mock<IMessageService>();
     }
 
     [TestMethod]
@@ -32,7 +34,7 @@ public sealed class MainViewModelTests
         var loginVm = new LoginViewModel(_authMock.Object, new Mock<IMessageService>().Object);
         _spMock.Setup(sp => sp.GetService(typeof(LoginViewModel))).Returns(loginVm);
        
-        var vm = new MainViewModel(_authMock.Object, _spMock.Object);
+        var vm = new MainViewModel(_authMock.Object, _spMock.Object, _messageMock.Object);
       
         await vm.InitializeNavigationAsync();
         
@@ -53,7 +55,7 @@ public sealed class MainViewModelTests
        
         _spMock.Setup(sp => sp.GetService(typeof(InitialSetupViewModel))).Returns(setupVm);
         
-        var vm = new MainViewModel(_authMock.Object, _spMock.Object);
+        var vm = new MainViewModel(_authMock.Object, _spMock.Object, _messageMock.Object);
         
         
         await vm.InitializeNavigationAsync();
@@ -73,12 +75,34 @@ public sealed class MainViewModelTests
         _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.Unencrypted);
         _spMock.Setup(sp => sp.GetService(typeof(TodayViewModel))).Returns(todayVm);
         
-        var vm = new MainViewModel(_authMock.Object, _spMock.Object);
+        var vm = new MainViewModel(_authMock.Object, _spMock.Object, _messageMock.Object);
         
         await vm.InitializeNavigationAsync();
         
         vm.ShowTodayCommand.Execute(null);
         vm.IsNavigationVisible.Should().BeTrue();
         vm.CurrentView.Should().Be(todayVm);
+    }
+    
+    [TestMethod]
+    public async Task Initialize_WhenDbUnencrypted_ShouldPrepareAndShowToday()
+    {
+        _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.Unencrypted);
+        _authMock.Setup(a => a.PrepareExistingDatabaseAsync()).Returns(Task.CompletedTask);
+
+        var todayVm = new Mock<TodayViewModel>(
+            new Mock<ICheckinService>().Object, 
+            new Mock<IMessageService>().Object,
+            new Mock<IAnalyticsService>().Object
+        ).Object;
+
+        _spMock.Setup(sp => sp.GetService(typeof(TodayViewModel))).Returns(todayVm);
+
+        var vm = new MainViewModel(_authMock.Object, _spMock.Object, _messageMock.Object);
+        await vm.Initialization;
+
+        _authMock.Verify(a => a.PrepareExistingDatabaseAsync(), Times.AtLeastOnce());
+        vm.CurrentView.Should().Be(todayVm);
+        vm.IsNavigationVisible.Should().BeTrue();
     }
 }

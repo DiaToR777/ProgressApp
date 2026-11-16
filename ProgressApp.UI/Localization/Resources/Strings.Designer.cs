@@ -420,6 +420,15 @@ namespace ProgressApp.WpfUI.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to update the database structure. Original backup was saved. Check logs for datails.
+        /// </summary>
+        public static string Msg_ErrorDatabaseMigration {
+            get {
+                return ResourceManager.GetString("Msg_ErrorDatabaseMigration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Database access error. Check logs.
         /// </summary>
         public static string Msg_ErrorDbAccessFailed {

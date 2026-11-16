@@ -517,4 +517,7 @@
   <data name="Msg_ConfirmExtendMilestone" xml:space="preserve">
     <value>Продовжити термін дії поточного рубежу?</value>
   </data>
+  <data name="Msg_ErrorDatabaseMigration" xml:space="preserve">
+    <value>Не вдалося оновити структуру бази даних. Оригінальний бекап збережено. Перегляньте логи для деталей</value>
+  </data>
 </root>

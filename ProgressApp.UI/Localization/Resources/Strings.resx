@@ -517,4 +517,7 @@ Records imported: {0}</value>
   <data name="Msg_ConfirmExtendMilestone" xml:space="preserve">
     <value>Extend the duration of the current milestone?</value>
   </data>
+  <data name="Msg_ErrorDatabaseMigration" xml:space="preserve">
+    <value>Failed to update the database structure. Original backup was saved. Check logs for datails</value>
+  </data>
 </root>
