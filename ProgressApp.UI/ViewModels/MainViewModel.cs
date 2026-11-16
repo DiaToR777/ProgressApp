@@ -1,58 +1,46 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Enums;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
+using ProgressApp.Domain.Exceptions;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Enums;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.Analytics;
+using ProgressApp.WpfUI.ViewModels.Goal;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
 using ProgressApp.WpfUI.ViewModels.Login;
 using ProgressApp.WpfUI.ViewModels.Settings;
 using ProgressApp.WpfUI.ViewModels.Today;
 using Serilog;
-using System.Windows.Input;
 
 namespace ProgressApp.WpfUI.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public partial class MainViewModel : ObservableObject
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IAuthService _authService;
+        private readonly IMessageService _messageService;
+        public Task Initialization { get; }
 
-        private object? _currentView;
-        private bool _isNavigationVisible = true;
+        [ObservableProperty] private object? _currentView;
 
-        public object? CurrentView
+        [ObservableProperty] private bool _isNavigationVisible = true;
+
+        partial void OnCurrentViewChanged(object? value)
         {
-            get => _currentView;
-            set
-            {
-                if (SetProperty(ref _currentView, value))
-                {
-                    Log.Information("Navigation: switched to {ViewModelName}", value?.GetType().Name ?? "null");
-                }
-            }
-        }
-        public bool IsNavigationVisible
-        {
-            get => _isNavigationVisible;
-            set => SetProperty(ref _isNavigationVisible, value);
+            Log.Information("Navigation: switched to {ViewModelName}", value?.GetType().Name ?? "null");
         }
 
-        public ICommand ShowTodayCommand { get; }
-        public ICommand ShowAnalyticsCommand { get; }
-        public ICommand ShowSettingsCommand { get; }
-
-        public MainViewModel(IAuthService authSevice, IServiceProvider serviceProvider)
+        public MainViewModel(IAuthService authService, IServiceProvider serviceProvider, IMessageService messageService)
         {
-            _authService = authSevice;
+            _authService = authService;
+            _messageService = messageService;
             _serviceProvider = serviceProvider;
 
-            InitializeNavigationAsync();
-
-            ShowTodayCommand = new RelayCommand(async _ => ShowToday());
-            ShowAnalyticsCommand = new RelayCommand(async _ => ShowAnalytics());
-            ShowSettingsCommand = new RelayCommand(async _ => ShowSettings());
+            Initialization = InitializeNavigationAsync();
         }
 
-        private async void InitializeNavigationAsync()
+        internal async Task InitializeNavigationAsync()
         {
             try
             {
@@ -62,20 +50,57 @@ namespace ProgressApp.WpfUI.ViewModels
                 {
                     case DbStatus.NotCreated: ShowInitialsSetup(); break;
                     case DbStatus.Encrypted: ShowLogin(); break;
-                    case DbStatus.Unencrypted: ShowToday(); break;
+                    case DbStatus.Unencrypted:
+                        await _authService.PrepareExistingDatabaseAsync();
+                        ShowToday();
+                        break;
                 }
             }
-
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not AppException)
             {
                 Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
             }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "MainViewModel: Database preparation failed during startup");
+                await _messageService.ShowErrorAsync(ex);
+            }
+        }
+
+        [RelayCommand]
+        private void ShowToday()
+        {
+            var todayVm = _serviceProvider.GetRequiredService<TodayViewModel>();
+            todayVm.RequestShowGoal = ShowGoal;
+            CurrentView = todayVm;
+            IsNavigationVisible = true;
+        }
+
+        [RelayCommand]
+        private void ShowGoal()
+        {
+            CurrentView = _serviceProvider.GetRequiredService<GoalViewModel>();
+            IsNavigationVisible = true;
+        }
+
+        [RelayCommand]
+        private void ShowAnalytics()
+        {
+            CurrentView = _serviceProvider.GetRequiredService<AnalyticsViewModel>();
+            IsNavigationVisible = true;
+        }
+
+        [RelayCommand]
+        private void ShowSettings()
+        {
+            CurrentView = _serviceProvider.GetRequiredService<SettingsViewModel>();
+            IsNavigationVisible = true;
         }
 
         private void ShowLogin()
         {
             var vm = _serviceProvider.GetRequiredService<LoginViewModel>();
-            vm.Completed = async () =>
+            vm.Completed = () =>
             {
                 IsNavigationVisible = true;
                 ShowToday();
@@ -88,8 +113,7 @@ namespace ProgressApp.WpfUI.ViewModels
         private void ShowInitialsSetup()
         {
             var vm = _serviceProvider.GetRequiredService<InitialSetupViewModel>();
-
-            vm.Completed = async () =>
+            vm.Completed = () =>
             {
                 IsNavigationVisible = true;
                 ShowToday();
@@ -97,24 +121,6 @@ namespace ProgressApp.WpfUI.ViewModels
 
             CurrentView = vm;
             IsNavigationVisible = false;
-         }
-
-        private void ShowAnalytics() 
-        {
-            CurrentView = _serviceProvider.GetRequiredService<AnalyticsViewModel>();
-            IsNavigationVisible = true;
-        }
-
-        private void ShowToday()
-        {
-            CurrentView = _serviceProvider.GetRequiredService<TodayViewModel>();
-            IsNavigationVisible = true;
-        }
-
-        private void ShowSettings()
-        {
-            CurrentView = _serviceProvider.GetRequiredService<SettingsViewModel>();
-            IsNavigationVisible = true;
         }
     }
 }

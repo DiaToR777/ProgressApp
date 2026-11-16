@@ -1,9 +1,14 @@
-﻿using FluentAssertions;
+﻿using CommunityToolkit.Mvvm.Input;
+using FluentAssertions;
 using Moq;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Config;
-using ProgressApp.Core.Models.Enums;
-using ProgressApp.Core.Models.Localization;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Enums;
+using ProgressApp.Domain.Models.User;
+using ProgressApp.Infrastructure.Configuration;
+using ProgressApp.WpfUI.Localization;
+using ProgressApp.WpfUI.Localization.Managers;
+using ProgressApp.WpfUI.Services;
+using ProgressApp.WpfUI.Themes;
 using ProgressApp.WpfUI.ViewModels.Settings;
 
 namespace ProgressAppTest.ViewModelTests;
@@ -11,100 +16,94 @@ namespace ProgressAppTest.ViewModelTests;
 [TestClass]
 public sealed class SettingsViewModelTests
 {
-    private Mock<ISettingsService> _serviceMock;
     private Mock<IMessageService> _messageMock;
     private Mock<ILocalizationService> _localizationMock;
     private Mock<IAppThemeService> _themeMock;
     private Mock<IAppConfigService> _configMock;
-    private Mock<IDataExchangeService> _dataExchangeMock;
     private Mock<IAuthService> _authMock;
+    private Mock<IUserService> _userMock;
+
+
+    private readonly AppConfig _config = new() { Theme = "Dark", Language = "uk-UA" };
+    private readonly User _testUser = new() { Id = Guid.NewGuid(), Username = "TestName" };
 
     [TestInitialize]
     public void TestInit()
     {
         _messageMock = new Mock<IMessageService>();
-        _serviceMock = new Mock<ISettingsService>();
         _localizationMock = new Mock<ILocalizationService>();
         _themeMock = new Mock<IAppThemeService>();
         _configMock = new Mock<IAppConfigService>();
-        _dataExchangeMock = new Mock<IDataExchangeService>();
         _authMock = new Mock<IAuthService>();
+        _userMock = new Mock<IUserService>();
 
-        var config = new AppConfig
-        {
-            Username = "TestName",
-            Theme = "Dark",
-            Language = "uk-UA"
-        };
-        _configMock.Setup(c => c.Load()).Returns(config);
-        _serviceMock.Setup(s => s.GetGoalAsync()).ReturnsAsync("TestDescription");
+        _userMock.Setup(u => u.GetCurrentUserAsync()).ReturnsAsync(_testUser);
+        _configMock.Setup(c => c.Load()).Returns(_config);
         _authMock.Setup(a => a.GetDbStatusAsync()).ReturnsAsync(DbStatus.Encrypted);
     }
 
     [TestMethod]
     public async Task Constructor_ShouldLoadSettings_AndHandleParallelLoading()
     {
-        var vm = new SettingsViewModel(
-            _serviceMock.Object, _configMock.Object, _messageMock.Object,
-            _localizationMock.Object, _themeMock.Object, _dataExchangeMock.Object, _authMock.Object);
-
-        await Task.Delay(50);
+        var vm = await CreateAndInitVmAsync();
 
         vm.Username.Should().Be("TestName");
-        vm.Goal.Should().Be("TestDescription");
         vm.SelectedTheme.Should().Be(AppTheme.Dark);
         vm.IsDbEncrypted.Should().BeTrue();
     }
 
     [TestMethod]
-    public void SaveSettingsCommand_ShouldBeDisabled_WhenUsernameIsEmpty()
+    public async Task SaveSettingsCommand_ShouldBeDisabled_WhenUsernameIsEmpty()
     {
-        var vm = CreateViewModel();
+        var vm = await CreateAndInitVmAsync();
         vm.Username = "";
         vm.SaveSettingsCommand.CanExecute(null).Should().BeFalse();
     }
 
     [TestMethod]
-    public async Task SaveSettingsCommand_ShouldInvokeEverything_AndShowSuccess()
+    public async Task SaveSettingsCommand_WhenValid_ShouldSaveAndApplySettings()
     {
-        var vm = CreateViewModel();
-        await Task.Delay(50); 
-
+        var vm = await CreateAndInitVmAsync();
         vm.Username = "NewName";
-        vm.Goal = "NewGoal";
         var newLang = LanguageConfig.AvailableLanguages.Last();
         vm.SelectedLanguage = newLang;
 
-        vm.SaveSettingsCommand.Execute(null);
-        await Task.Delay(50); 
+        await ((IAsyncRelayCommand)vm.SaveSettingsCommand).ExecuteAsync(null);
 
-        _configMock.Verify(c => c.Save(It.Is<AppConfig>(acc => acc.Username == "NewName")), Times.Once);
-        _serviceMock.Verify(s => s.SaveGoalAsync("NewGoal"), Times.Once);
+        _userMock.Verify(u => u.UpdateUsernameAsync("NewName"), Times.Once);
+        _configMock.Verify(c => c.Save(It.Is<AppConfig>(cfg => cfg.Language == newLang.CultureCode)), Times.Once);
+        _localizationMock.Verify(l => l.ChangeLanguage(newLang.CultureCode), Times.Once);
         _messageMock.Verify(m => m.ShowInfoAsync("Msg_SettingsSaved"), Times.Once);
     }
 
     [TestMethod]
     public async Task ApplyNewPassword_WhenPasswordsMatch_ShouldChangeAndReset()
     {
-        var vm = CreateViewModel();
-        await Task.Delay(50);
+        var vm= await CreateAndInitVmAsync();
 
         vm.NewDbPassword = "pass";
         vm.ConfirmDbPassword = "pass";
         vm.IsDbEncrypted = true;
 
-        vm.ApplyNewPasswordCommand.Execute(null);
-        await Task.Delay(50);
+        await ((IAsyncRelayCommand)vm.ApplyNewPasswordCommand).ExecuteAsync(null);
 
         _authMock.Verify(a => a.ChangePasswordAsync("pass"), Times.Once);
         vm.NewDbPassword.Should().BeEmpty();
         vm.IsChangingPassword.Should().BeFalse();
     }
 
-    private SettingsViewModel CreateViewModel()
+    private async Task<SettingsViewModel> CreateAndInitVmAsync()
     {
-        return new SettingsViewModel(
-            _serviceMock.Object, _configMock.Object, _messageMock.Object,
-            _localizationMock.Object, _themeMock.Object, _dataExchangeMock.Object, _authMock.Object);
+        var vm = new SettingsViewModel(
+            _configMock.Object,
+            _messageMock.Object,
+            _localizationMock.Object,
+            _themeMock.Object,
+            _authMock.Object,
+            _userMock.Object);
+
+        await vm.Initialization;
+
+        return vm;
     }
 }

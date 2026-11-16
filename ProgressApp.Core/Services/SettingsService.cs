@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Settings;
 using Serilog;
 
 namespace ProgressApp.Core.Services

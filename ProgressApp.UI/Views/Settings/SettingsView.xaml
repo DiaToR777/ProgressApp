@@ -35,18 +35,7 @@
                                     PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_EnterName]}" 
                                     Height="38" 
                                     Margin="0,0,0,15" MaxLength="35"/>
-
-                        <Label Content="{Binding Source={StaticResource Langs}, Path=[Title_YourGoal]}" Margin="0,0,0,5" />
-
-                        <ScrollViewer Height="100" VerticalScrollBarVisibility="Visible">
-                            <ui:TextBox Text="{Binding Goal, UpdateSourceTrigger=PropertyChanged}"
-                                    TextWrapping="Wrap" 
-                                    AcceptsReturn="True"
-                                    VerticalScrollBarVisibility="Auto"
-                                    PlaceholderText="{Binding Source={StaticResource Langs}, Path=[Placeholder_WhatIsGoal]}"
-                                    VerticalContentAlignment="Top" 
-                                    MaxLength="150"/>
-                        </ScrollViewer>
+                        
                     </StackPanel>
                 </ui:Card>
 
@@ -86,43 +75,6 @@
 
                 <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_DataManagement]}" 
                               FontWeight="SemiBold" Margin="0,10,0,10"/>
-
-                <Grid Margin="0,0,0,40">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <ui:Button Grid.Column="0" 
-                               Margin="0,0,5,0"
-                               Height="70"
-                               HorizontalAlignment="Stretch"
-                               Command="{Binding ExportEntriesCommand}"
-                               Appearance="Secondary">
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="DocumentArrowUp20" FontSize="24" Margin="0,0,12,0"/>
-                            <StackPanel VerticalAlignment="Center">
-                                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ExportData]}" FontWeight="Medium"/>
-                                <ui:TextBlock Text="CSV" FontSize="10" Opacity="0.6"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </ui:Button>
-
-                    <ui:Button Grid.Column="1" 
-                               Margin="5,0,0,0"
-                               Height="70"
-                               HorizontalAlignment="Stretch"
-                               Command="{Binding ImportEntriesCommand}"
-                               Appearance="Secondary">
-                        <StackPanel Orientation="Horizontal">
-                            <ui:SymbolIcon Symbol="DocumentArrowDown20" FontSize="24" Margin="0,0,12,0"/>
-                            <StackPanel VerticalAlignment="Center">
-                                <ui:TextBlock Text="{Binding Source={StaticResource Langs}, Path=[Title_ImportData]}" FontWeight="Medium"/>
-                                <ui:TextBlock Text="CSV" FontSize="10" Opacity="0.6"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </ui:Button>
-                </Grid>
 
                 <StackPanel>
                     <Grid Margin="0,0,0,10"

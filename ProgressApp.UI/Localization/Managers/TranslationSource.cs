@@ -1,5 +1,4 @@
-﻿using ProgressApp.Core.Interfaces.IService;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Globalization;
 using System.Resources;
 using System.Windows;
@@ -51,9 +50,9 @@ namespace ProgressApp.WpfUI.Localization.Managers
         public void UpdateVisualLanguage()
         {
             var lang = XmlLanguage.GetLanguage(currentCulture.IetfLanguageTag);
-            if (Application.Current?.MainWindow != null)
+            if (System.Windows.Application.Current?.MainWindow != null)
             {
-                Application.Current.MainWindow.Language = lang;
+                System.Windows.Application.Current.MainWindow.Language = lang;
             }
         }
         public event PropertyChangedEventHandler? PropertyChanged;

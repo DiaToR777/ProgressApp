@@ -1,66 +1,67 @@
-﻿using ProgressApp.Core.Exceptions;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Journal;
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using CommunityToolkit.Mvvm.ComponentModel;
+using ProgressApp.Domain.Exceptions;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Journal;
+using ProgressApp.WpfUI.Services;
 using Serilog;
-using System.Collections.ObjectModel;
 
 namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
 {
-    public class TableViewModel : ViewModelBase
+    public partial class TableViewModel : ObservableObject
     {
-        private readonly IJournalService _service;
+        private readonly ICheckinService _service;
         private readonly IMessageService _messageService;
+        public Task Initialization { get; }
 
-        private JournalEntry? _selectedEntry;
-
-        public ObservableCollection<JournalEntry> Entries { get; } = new();
-
-        private bool _showTable;
-        public bool ShowTable
+        
+        public ObservableCollection<DailyCheckin> Entries { get; } = new();
+        public bool HasActionLogs => SelectedEntry?.ActionLogs.Count > 0;
+        partial void OnSelectedEntryChanged(DailyCheckin? value)
         {
-            get => _showTable;
-            set => SetProperty(ref _showTable, value);
+            OnPropertyChanged(nameof(HasActionLogs));
         }
 
+        [ObservableProperty]
+        private DailyCheckin? _selectedEntry;
+
+        [ObservableProperty]
+        private bool _showTable;
+
+        [ObservableProperty]
         private bool _showEmptyState;
-        public bool ShowEmptyState
+
+        [ObservableProperty]
+        private bool _isBusy;
+
+        public TableViewModel(ICheckinService service, IMessageService messageService)
         {
-            get => _showEmptyState;
-            set => SetProperty(ref _showEmptyState, value);
+            _service = service;
+            _messageService = messageService;
+
+            Entries.CollectionChanged += OnEntriesChanged;
+
+            Initialization = LoadEntriesAsync();
+        }
+
+        private void OnEntriesChanged(object? sender, NotifyCollectionChangedEventArgs e)
+        {
+            UpdateUIState();
         }
 
         private void UpdateUIState()
         {
-            if (Entries.Count > 0)
-            {
-                ShowTable = true;
-                ShowEmptyState = false;
-            }
-            else
-            {
-                ShowTable = false;
-                ShowEmptyState = true;
-            }
-        }
-        public JournalEntry? SelectedEntry
-        {
-            get => _selectedEntry;
-            set => SetProperty(ref _selectedEntry, value);
+            ShowTable = Entries.Count > 0;
+            ShowEmptyState = !ShowTable;
         }
 
-        public TableViewModel(IJournalService service, IMessageService messageService)
-        {
-            _service = service;
-            _messageService = messageService;
-            Entries.CollectionChanged += (s, e) => UpdateUIState();
-
-            GetEntries();
-        }
-
-        private async void GetEntries()
+        private async Task LoadEntriesAsync()
         {
             try
             {
+                IsBusy = true;
+
                 var data = await _service.GetAllEntriesAsync();
 
                 Entries.Clear();
@@ -69,12 +70,18 @@ namespace ProgressApp.WpfUI.ViewModels.Analytics.Table
                     Entries.Add(entry);
                 }
 
+                Log.Debug("TableViewModel: Entries refreshed. Count: {Count}", Entries.Count);
+
                 UpdateUIState();
             }
             catch (AppException ex)
             {
                 Log.Error(ex, "TableViewModel: Failed to load journal entries");
                 await _messageService.ShowErrorAsync(ex);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

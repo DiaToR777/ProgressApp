@@ -1,6 +1,8 @@
+using CommunityToolkit.Mvvm.Input;
 using FluentAssertions;
 using Moq;
-using ProgressApp.Core.Interfaces.IService;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.Login;
 
 namespace ProgressAppTest.ViewModelTests;
@@ -29,8 +31,7 @@ public sealed class LoginViewModelTests
 
         _authMock.Setup(a => a.LoginAsync("correct_pass")).ReturnsAsync(true);
 
-        vm.LoginCommand.Execute(null);
-        await Task.Delay(100); 
+        await ((IAsyncRelayCommand)vm.LoginCommand).ExecuteAsync(null);
 
         completedCalled.Should().BeTrue();
         _authMock.Verify(a => a.LoginAsync("correct_pass"), Times.Once);
@@ -44,8 +45,7 @@ public sealed class LoginViewModelTests
 
         _authMock.Setup(a => a.LoginAsync("wrong_pass")).ReturnsAsync(false);
 
-        vm.LoginCommand.Execute(null);
-        await Task.Delay(100);
+        await ((IAsyncRelayCommand)vm.LoginCommand).ExecuteAsync(null);
 
         vm.Password.Should().BeEmpty(); 
         _messageMock.Verify(m => m.ShowErrorIncorrectPasswordAsync(), Times.Once);

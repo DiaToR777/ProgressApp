@@ -1,4 +1,4 @@
-﻿using ProgressApp.Core.Models.Journal;
+﻿using ProgressApp.Domain.Models.Journal;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;

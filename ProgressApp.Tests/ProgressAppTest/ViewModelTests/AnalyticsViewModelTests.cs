@@ -1,7 +1,8 @@
 using FluentAssertions;
 using Moq;
-using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Heatmap;
+using ProgressApp.Domain.Interfaces.IService;
+using ProgressApp.Domain.Models.Heatmap;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.Analytics;
 using ProgressApp.WpfUI.ViewModels.Analytics.Enums;
 using ProgressApp.WpfUI.ViewModels.Analytics.Heatmap;
@@ -26,7 +27,7 @@ public sealed class AnalyticsViewModelTests
         var msgMock = new Mock<IMessageService>();
 
         anaMock.Setup(a => a.GetFirstEntryDateAsync()).ReturnsAsync(DateTime.Today);
-        anaMock.Setup(a => a.GetHeatmapCells(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+        anaMock.Setup(a => a.GetHeatmapCellsAsync(It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                .ReturnsAsync(new List<DayCell>());
 
         var heatmapVm = new HeatmapViewModel(anaMock.Object, msgMock.Object);
@@ -38,9 +39,9 @@ public sealed class AnalyticsViewModelTests
 
         vm.SelectedViewOption = AnalyticsMode.Heatmap;
 
-        await Task.Delay(300);
+        await vm.UpdateViewCommand.ExecuteAsync(AnalyticsMode.Heatmap);
 
-        vm.CurrentAnalyticsView.Should().NotBeNull("потому что UpdateView должен был завершиться");
+        vm.CurrentAnalyticsView.Should().NotBeNull("because UpdateView should have completed");
         vm.CurrentAnalyticsView.Should().BeSameAs(heatmapVm);
     }
 }

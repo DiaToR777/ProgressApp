@@ -5,8 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using ProgressApp.Core.Data;
 using ProgressApp.Core.Exceptions;
 using ProgressApp.Core.Interfaces.IService;
-using ProgressApp.Core.Models.Journal;
-using ProgressApp.Core.Models.Settings;
 using Serilog;
 using System.Globalization;
 
@@ -44,7 +42,7 @@ namespace ProgressApp.Core.Services
                     Log.Warning("Export attempted with no journal entries found in the database.");
                     throw new AppException("Msg_NoEntriesToExportError");
                 }
-                if (goal == null || string.IsNullOrEmpty(goal.Value))
+                if (string.IsNullOrEmpty(goal.Value))
                 {
                     Log.Warning("Export: Goal setting is missing or empty in the database. It will be exported as empty.");
                     throw new AppException("Msg_NoGoalToExportError");
@@ -147,9 +145,9 @@ namespace ProgressApp.Core.Services
             try
             {
                 entries.ForEach(e => e.Date = e.Date.Date);
-                context.Entries.RemoveRange(context.Entries);
+                context.Entries.RemoveRange(context.Entries); //TODO ExecuteDeleteAsync();
                 await context.Entries.AddRangeAsync(entries);
-
+ 
                 if (goalValue != null)
                 {
                     var setting = await context.Settings.FirstOrDefaultAsync(s => s.Key == SettingsKeys.Goal);

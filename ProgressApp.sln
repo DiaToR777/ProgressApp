@@ -5,9 +5,13 @@ VisualStudioVersion = 18.3.11512.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressApp.WpfUI", "ProgressApp.UI\ProgressApp.WpfUI.csproj", "{BF0F431D-AA79-4E37-BAC8-620B270109D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressApp.Core", "ProgressApp.Core\ProgressApp.Core.csproj", "{6009930C-0559-47CB-AD33-C384AFD25B6E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressAppTest", "ProgressApp.Tests\ProgressAppTest\ProgressAppTest.csproj", "{E6B9E614-C0C5-40EE-ADC1-56AE00CB02AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressApp.Domain", "ProgressApp.Domain\ProgressApp.Domain.csproj", "{38B41F24-8F81-4986-BBAB-F2D51C01C85A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressApp.Infrastructure", "ProgressApp.Infrastructure\ProgressApp.Infrastructure.csproj", "{00FE8971-E523-4D4C-AABE-57142212A149}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProgressApp.Application", "ProgressApp.Application\ProgressApp.Application.csproj", "{8A2E5D14-FE80-4D08-B7BF-4129F73B1D2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +23,22 @@ Global
 		{BF0F431D-AA79-4E37-BAC8-620B270109D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF0F431D-AA79-4E37-BAC8-620B270109D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF0F431D-AA79-4E37-BAC8-620B270109D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6009930C-0559-47CB-AD33-C384AFD25B6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6009930C-0559-47CB-AD33-C384AFD25B6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6009930C-0559-47CB-AD33-C384AFD25B6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6009930C-0559-47CB-AD33-C384AFD25B6E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E6B9E614-C0C5-40EE-ADC1-56AE00CB02AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E6B9E614-C0C5-40EE-ADC1-56AE00CB02AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6B9E614-C0C5-40EE-ADC1-56AE00CB02AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6B9E614-C0C5-40EE-ADC1-56AE00CB02AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38B41F24-8F81-4986-BBAB-F2D51C01C85A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38B41F24-8F81-4986-BBAB-F2D51C01C85A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38B41F24-8F81-4986-BBAB-F2D51C01C85A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38B41F24-8F81-4986-BBAB-F2D51C01C85A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00FE8971-E523-4D4C-AABE-57142212A149}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00FE8971-E523-4D4C-AABE-57142212A149}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00FE8971-E523-4D4C-AABE-57142212A149}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00FE8971-E523-4D4C-AABE-57142212A149}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A2E5D14-FE80-4D08-B7BF-4129F73B1D2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A2E5D14-FE80-4D08-B7BF-4129F73B1D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A2E5D14-FE80-4D08-B7BF-4129F73B1D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A2E5D14-FE80-4D08-B7BF-4129F73B1D2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
