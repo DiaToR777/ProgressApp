@@ -392,7 +392,7 @@
     <value>Ви ще не додали жодного запису. Створіть перший запис, щоб почати відстежувати свій прогрес.</value>
   </data>
   <data name="Title_MilestoneDuration" xml:space="preserve">
-    <value>Тривалість рубежу (дні)</value>
+    <value>Тривалість етапу (дні)</value>
   </data>
   <data name="Title_ActionToReachGoal" xml:space="preserve">
     <value>Дія для досягнення цілі (не обов'язково)</value>
@@ -458,10 +458,10 @@
     <value>Ім'я користувача занадто довге (максимум 50 символів)</value>
   </data>
   <data name="Msg_InvalidMilestoneStatus" xml:space="preserve">
-    <value>Статус рубежу '{0}' є неприпустимим. Дозволені значення: Success або Fail</value>
+    <value>Статус етапу '{0}' є неприпустимим. Дозволені значення: Success або Fail</value>
   </data>
   <data name="Msg_MilestoneNotFound" xml:space="preserve">
-    <value>Вказаний рубеж не знайдено</value>
+    <value>Вказаний етап не знайдено</value>
   </data>
   <data name="Msg_ErrorCompletingMilestone" xml:space="preserve">
     <value>Сталася помилка під час завершення етапу. Перегляньте тлоги для деталей</value>
@@ -470,10 +470,10 @@
     <value>Некоректна кількість додаткових днів. Дозволений діапазон: від 1 до 365</value>
   </data>
   <data name="Msg_ErrorExtendingMilestone" xml:space="preserve">
-    <value>Не вдалося продовжити рубеж. Перегляньте логи</value>
+    <value>Не вдалося продовжити етап. Перегляньте логи</value>
   </data>
   <data name="Btn_ExtendMilestone" xml:space="preserve">
-    <value>Продовжити рубеж</value>
+    <value>Продовжити етап</value>
   </data>
   <data name="Btn_NotAchieved" xml:space="preserve">
     <value>Не досягнуто</value>
@@ -482,13 +482,13 @@
     <value>Досягнуто</value>
   </data>
   <data name="Hint_SuggestSuccess" xml:space="preserve">
-    <value>Чудова стабільність! Схоже, ви успішно закрили цей рубеж</value>
+    <value>Чудова стабільність! Схоже, ви успішно закрили цей етап</value>
   </data>
   <data name="Hint_SuggestFail" xml:space="preserve">
-    <value>Стабільність виконання низька. Можливо, варто переглянути план або продовжити рубеж</value>
+    <value>Стабільність виконання низька. Можливо, варто переглянути план або продовжити етап</value>
   </data>
   <data name="Title_MilestoneFinished" xml:space="preserve">
-    <value>Рубеж завершено</value>
+    <value>Етап завершено</value>
   </data>
   <data name="Title_NoActiveGoal" xml:space="preserve">
     <value>Немає активної цілі</value>
@@ -506,7 +506,7 @@
     <value>Створіть мету, щоб відстежувати свої успіхи</value>
   </data>
   <data name="Hint_MilestoneExpiredToday" xml:space="preserve">
-    <value>Час поточного рубежу вийшов. Підбийте підсумки або продовжте ціль</value>
+    <value>Час поточного етапу вийшов. Підбийте підсумки або продовжте ціль</value>
   </data>
   <data name="Btn_GoToGoal" xml:space="preserve">
     <value>До цілі</value>
@@ -515,7 +515,7 @@
     <value>Завершити поточну ціль?</value>
   </data>
   <data name="Msg_ConfirmExtendMilestone" xml:space="preserve">
-    <value>Продовжити термін дії поточного рубежу?</value>
+    <value>Продовжити термін дії поточного етапу?</value>
   </data>
   <data name="Msg_ErrorDatabaseMigration" xml:space="preserve">
     <value>Не вдалося оновити структуру бази даних. Оригінальний бекап збережено. Перегляньте логи для деталей</value>
