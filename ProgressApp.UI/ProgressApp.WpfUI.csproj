@@ -9,6 +9,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UseWPF>true</UseWPF>
 		<StartupObject>ProgressApp.WpfUI.App</StartupObject>
+		<Version>2.0.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -52,4 +53,5 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
+	
 </Project>

@@ -9,8 +9,10 @@ namespace ProgressApp.Application.Services
     public class AuthService : IAuthService
     {
         private readonly IAuthRepository _authRepository;
-        public AuthService(IAuthRepository authRepository)
+        private readonly IUserService _userService;
+        public AuthService(IAuthRepository authRepository,  IUserService userService)
         {
+            _userService =  userService;
             _authRepository = authRepository;
         }
 
@@ -28,6 +30,7 @@ namespace ProgressApp.Application.Services
             {
                 if (await _authRepository.CanConnectAsync(password))
                 {
+                    await _userService.EnsureUserExistsAsync();
                     Log.Information("AuthService: Login successful");
                     return true;
                 }
@@ -99,6 +102,22 @@ namespace ProgressApp.Application.Services
             {
                 Log.Error(ex, "AuthService: Error during password removal");
                 throw new AppException("Msg_ChangePasswordFailedError", isCritical: true);
+            }
+        }
+
+        public async Task PrepareExistingDatabaseAsync()
+        {
+            Log.Information("AuthService: Preparing existing database (checking migrations and user state)...");
+            try
+            {
+                await _authRepository.EnsureDatabaseUpToDateAsync();
+                await _userService.EnsureUserExistsAsync();
+                Log.Information("AuthService: Existing database prepared successfully");
+            }
+            catch (Exception ex) 
+            {
+                Log.Fatal(ex, "AuthService: Failed to prepare existing database");
+                throw new AppException("Msg_ErrorDatabaseMigration", isCritical: true); 
             }
         }
     }

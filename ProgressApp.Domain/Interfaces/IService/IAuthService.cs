@@ -10,6 +10,7 @@ public interface IAuthService
     Task ChangePasswordAsync(string newPassword);
     Task RemovePasswordAsync();
     Task SetPasswordAsync(string password);
+    Task PrepareExistingDatabaseAsync();
 
 
 }

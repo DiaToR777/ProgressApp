@@ -88,7 +88,26 @@ namespace ProgressApp.Infrastructure.Repositories
             _dbState.SetPassword(password);
             using var scope = _scopeFactory.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
-            return await context.Database.CanConnectAsync();
+            if (!await context.Database.CanConnectAsync()) return false;
+ 
+            await EnsureDatabaseUpToDateAsync();
+            return true;
         }
+        
+        public async Task EnsureDatabaseUpToDateAsync()
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ProgressDbContext>();
+ 
+            var pending = await context.Database.GetPendingMigrationsAsync();
+            if (!pending.Any()) return;
+            
+            SqliteConnection.ClearAllPools();
+            var backupPath = $"{_dbState.DbPath}.bak-{DateTime.Now:yyyyMMddHHmmss}";
+            File.Copy(_dbState.DbPath, backupPath, overwrite: false);
+ 
+            await context.Database.MigrateAsync();
+        }
+        
     }
 }

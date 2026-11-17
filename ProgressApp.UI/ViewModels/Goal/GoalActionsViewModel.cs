@@ -81,7 +81,7 @@ namespace ProgressApp.WpfUI.ViewModels.Goal
         [RelayCommand]
         private async Task RemoveAction(GoalAction action)
         {
-            var confirmed = await _messageService.ShowConfirmationAsync("Msg_ConfirmRemoveAction");
+            var confirmed = await _messageService.ShowConfirmationAsync("Msg_ConfirmRemoveAction", action.Title);
             if (!confirmed) return;
 
             try

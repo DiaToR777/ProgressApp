@@ -54,4 +54,32 @@ public class UserService : IUserService
             throw new AppException("Msg_ErrorUpdatingUser", isCritical: true);
         }
     }
+    
+    public async Task EnsureUserExistsAsync()
+    {
+        try
+        {
+            var existingUser = await _userRepository.GetUserAsync();
+            if (existingUser != null)
+            {
+                Log.Debug("UserService: Existing user found (Id: {UserId})", existingUser.Id);
+                return;
+            }
+
+            var newUser = new User
+            {
+                Id = Guid.NewGuid(),
+                Username = "User",
+                CreatedAt = DateTime.Now
+            };
+
+            await _userRepository.CreateUserAsync(newUser);
+            Log.Information("UserService: Default user created during database migration (Id: {UserId})", newUser.Id);
+        }
+        catch (Exception ex) 
+        {
+            Log.Error(ex, "UserService: Failed to ensure user exists");
+            throw new AppException("Msg_ErrorLoadingUser", isCritical: true);
+        }
+    }
 }

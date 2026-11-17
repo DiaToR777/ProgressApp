@@ -1,8 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
+using ProgressApp.Domain.Exceptions;
 using ProgressApp.Domain.Interfaces.IService;
 using ProgressApp.Domain.Models.Enums;
+using ProgressApp.WpfUI.Services;
 using ProgressApp.WpfUI.ViewModels.Analytics;
 using ProgressApp.WpfUI.ViewModels.Goal;
 using ProgressApp.WpfUI.ViewModels.InitialSetup;
@@ -17,22 +19,22 @@ namespace ProgressApp.WpfUI.ViewModels
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IAuthService _authService;
+        private readonly IMessageService _messageService;
         public Task Initialization { get; }
 
-        [ObservableProperty]
-        private object? _currentView;
+        [ObservableProperty] private object? _currentView;
 
-        [ObservableProperty]
-        private bool _isNavigationVisible = true;
+        [ObservableProperty] private bool _isNavigationVisible = true;
 
         partial void OnCurrentViewChanged(object? value)
         {
             Log.Information("Navigation: switched to {ViewModelName}", value?.GetType().Name ?? "null");
         }
 
-        public MainViewModel(IAuthService authSevice, IServiceProvider serviceProvider)
+        public MainViewModel(IAuthService authService, IServiceProvider serviceProvider, IMessageService messageService)
         {
-            _authService = authSevice;
+            _authService = authService;
+            _messageService = messageService;
             _serviceProvider = serviceProvider;
 
             Initialization = InitializeNavigationAsync();
@@ -48,12 +50,20 @@ namespace ProgressApp.WpfUI.ViewModels
                 {
                     case DbStatus.NotCreated: ShowInitialsSetup(); break;
                     case DbStatus.Encrypted: ShowLogin(); break;
-                    case DbStatus.Unencrypted: ShowToday(); break;
+                    case DbStatus.Unencrypted:
+                        await _authService.PrepareExistingDatabaseAsync();
+                        ShowToday();
+                        break;
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex is not AppException)
             {
                 Log.Fatal(ex, "MainViewModel: Failed to initialize navigation.");
+            }
+            catch (AppException ex)
+            {
+                Log.Error(ex, "MainViewModel: Database preparation failed during startup");
+                await _messageService.ShowErrorAsync(ex);
             }
         }
 

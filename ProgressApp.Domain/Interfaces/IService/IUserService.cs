@@ -6,4 +6,5 @@ public interface IUserService
 {
     Task<User?> GetCurrentUserAsync();
     Task UpdateUsernameAsync(string newUsername);
+    Task EnsureUserExistsAsync();
 }
